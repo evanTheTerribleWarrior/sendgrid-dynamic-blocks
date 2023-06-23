@@ -1,0 +1,3 @@
+- Sanitize HTML
+- Fetch paged templates
+- When finalising, ask if they want to create a new version or not
