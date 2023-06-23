@@ -1,13 +1,20 @@
 import React from 'react';
-import MainAppBar from './Components/MainAppBar/MainAppBar';
 import MainPage from './Components/MainPage/MainPage';
-import MiniDrawer from './Components/MiniDrawer/MiniDrawer';
+import Layout from './Components/Layout/Layout';
+import SavedCollection from './Components/SavedCollection/SavedCollection';
+import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 
 const App = () => {
   return (
-    <div>
-      <MiniDrawer/>
-    </div>
+    <Router>
+      <Layout>
+        <Routes>
+          <Route path="/build" element={<MainPage />} />
+          <Route path="/update" element={<><div>Testing...</div></>} />
+          <Route path="/collection" element={<SavedCollection />} />
+        </Routes>
+      </Layout>
+    </Router>
   );
 };
 

@@ -11,6 +11,7 @@ import {
 import { Prism as SyntaxHighlighter } from 'react-syntax-highlighter';
 import { atomDark } from 'react-syntax-highlighter/dist/esm/styles/prism';
 import { darcula } from 'react-syntax-highlighter/dist/esm/styles/prism';
+import { Container } from '@mui/system';
 
 
 const DynamicBlockGenerator = ({onGenerateDynamicBlock}) => {
@@ -51,8 +52,10 @@ const DynamicBlockGenerator = ({onGenerateDynamicBlock}) => {
           <FileUpload onFileUpload={handleGeneratedDynamicBlock} />
         </div>
       )}*/}
-
+      <Container>
       <BlockCreation getCustomBlock={handleGeneratedDynamicBlock}  />
+      </Container>
+      
 
       <Grid container direction="column" spacing={10}>
         <Grid item xs={6} >

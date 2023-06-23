@@ -20,87 +20,116 @@ import BuildIcon from '@mui/icons-material/Build';
 import SaveIcon from '@mui/icons-material/Save';
 import SettingsIcon from '@mui/icons-material/Settings';
 import TaskIcon from '@mui/icons-material/Task';
-import MainPage from '../MainPage/MainPage';
+import { useNavigate } from 'react-router-dom';
 
-const drawerWidth = 240;
+  const drawerWidth = 240;
 
-const openedMixin = (theme) => ({
-  width: drawerWidth,
-  transition: theme.transitions.create('width', {
-    easing: theme.transitions.easing.sharp,
-    duration: theme.transitions.duration.enteringScreen,
-  }),
-  overflowX: 'hidden',
-});
-
-const closedMixin = (theme) => ({
-  transition: theme.transitions.create('width', {
-    easing: theme.transitions.easing.sharp,
-    duration: theme.transitions.duration.leavingScreen,
-  }),
-  overflowX: 'hidden',
-  width: `calc(${theme.spacing(7)} + 1px)`,
-  [theme.breakpoints.up('sm')]: {
-    width: `calc(${theme.spacing(8)} + 1px)`,
-  },
-});
-
-const DrawerHeader = styled('div')(({ theme }) => ({
-  display: 'flex',
-  alignItems: 'center',
-  justifyContent: 'flex-end',
-  padding: theme.spacing(0, 1),
-  ...theme.mixins.toolbar,
-}));
-
-const AppBar = styled(MuiAppBar, {
-  shouldForwardProp: (prop) => prop !== 'open',
-})(({ theme, open }) => ({
-  zIndex: theme.zIndex.drawer + 1,
-  transition: theme.transitions.create(['width', 'margin'], {
-    easing: theme.transitions.easing.sharp,
-    duration: theme.transitions.duration.leavingScreen,
-  }),
-  ...(open && {
-    marginLeft: drawerWidth,
-    width: `calc(100% - ${drawerWidth}px)`,
-    transition: theme.transitions.create(['width', 'margin'], {
+  const openedMixin = (theme) => ({
+    width: drawerWidth,
+    transition: theme.transitions.create('width', {
       easing: theme.transitions.easing.sharp,
       duration: theme.transitions.duration.enteringScreen,
     }),
-  }),
-}));
+    overflowX: 'hidden',
+  });
 
-const Drawer = styled(MuiDrawer, { shouldForwardProp: (prop) => prop !== 'open' })(
-  ({ theme, open }) => ({
-    width: drawerWidth,
-    flexShrink: 0,
-    whiteSpace: 'nowrap',
-    boxSizing: 'border-box',
+  const closedMixin = (theme) => ({
+    transition: theme.transitions.create('width', {
+      easing: theme.transitions.easing.sharp,
+      duration: theme.transitions.duration.leavingScreen,
+    }),
+    overflowX: 'hidden',
+    width: `calc(${theme.spacing(7)} + 1px)`,
+    [theme.breakpoints.up('sm')]: {
+      width: `calc(${theme.spacing(8)} + 1px)`,
+    },
+  });
+
+  const DrawerHeader = styled('div')(({ theme }) => ({
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'flex-end',
+    padding: theme.spacing(0, 1),
+    ...theme.mixins.toolbar,
+  }));
+
+  const AppBar = styled(MuiAppBar, {
+    shouldForwardProp: (prop) => prop !== 'open',
+  })(({ theme, open }) => ({
+    zIndex: theme.zIndex.drawer + 1,
+    transition: theme.transitions.create(['width', 'margin'], {
+      easing: theme.transitions.easing.sharp,
+      duration: theme.transitions.duration.leavingScreen,
+    }),
     ...(open && {
-      ...openedMixin(theme),
-      '& .MuiDrawer-paper': openedMixin(theme),
+      marginLeft: drawerWidth,
+      width: `calc(100% - ${drawerWidth}px)`,
+      transition: theme.transitions.create(['width', 'margin'], {
+        easing: theme.transitions.easing.sharp,
+        duration: theme.transitions.duration.enteringScreen,
+      }),
     }),
-    ...(!open && {
-      ...closedMixin(theme),
-      '& .MuiDrawer-paper': closedMixin(theme),
+  }));
+
+  const Drawer = styled(MuiDrawer, { shouldForwardProp: (prop) => prop !== 'open' })(
+    ({ theme, open }) => ({
+      width: drawerWidth,
+      flexShrink: 0,
+      whiteSpace: 'nowrap',
+      boxSizing: 'border-box',
+      ...(open && {
+        ...openedMixin(theme),
+        '& .MuiDrawer-paper': openedMixin(theme),
+      }),
+      ...(!open && {
+        ...closedMixin(theme),
+        '& .MuiDrawer-paper': closedMixin(theme),
+      }),
     }),
-  }),
-);
+  );
 
-export default function MiniDrawer() {
-  const theme = useTheme();
-  const [open, setOpen] = React.useState(false);
+  const itemList = [
+    {
+      text: 'Create New Block',
+      icon: <BuildIcon />,
+      route: '/build'
+    },
+    {
+      text: 'Update Templates',
+      icon: <TaskIcon />,
+      route: '/update'
+    },
+    {
+      text: 'Saved Blocks',
+      icon: <SaveIcon />,
+      route: '/collection'
+    },
+    {
+      text: 'Settings',
+      icon: <SettingsIcon />,
+      route: '/settings'
+    }
+  ]
 
-  const handleDrawerOpen = () => {
-    setOpen(true);
-  };
 
-  const handleDrawerClose = () => {
-    setOpen(false);
-  };
+  const  MiniDrawer = () => {
+    const navigate = useNavigate();
+    const theme = useTheme();
+    const [open, setOpen] = React.useState(false);
 
-  return (
+    const handleDrawerOpen = () => {
+      setOpen(true);
+    };
+
+    const handleDrawerClose = () => {
+      setOpen(false);
+    };
+
+    const handleNavigationClick = (route) => {
+      navigate(route);
+    }
+
+    return (
     <Box sx={{ display: 'flex' }}>
       <CssBaseline />
       <AppBar position="fixed" open={open}>
@@ -130,8 +159,8 @@ export default function MiniDrawer() {
         </DrawerHeader>
         <Divider />
         <List>
-          {['Create New Block', 'Update Templates', 'Saved Blocks', 'Settings'].map((text, index) => (
-            <ListItem key={text} disablePadding sx={{ display: 'block' }}>
+          {itemList.map((item) => (
+            <ListItem key={ListItemText.text} disablePadding sx={{ display: 'block' }} onClick={() => handleNavigationClick(item.route)}>
               <ListItemButton
                 sx={{
                   minHeight: 48,
@@ -146,21 +175,15 @@ export default function MiniDrawer() {
                     justifyContent: 'center',
                   }}
                 >
-                  {index === 0 ? <BuildIcon /> : <></>}
-                  {index === 1 ? <TaskIcon /> : <></>}
-                  {index === 2 ? <SaveIcon /> : <></>}
-                  {index === 3 ? <SettingsIcon /> : <></>}
+                  {item.icon}
                 </ListItemIcon>
-                <ListItemText primary={text} sx={{ opacity: open ? 1 : 0 }} />
+                <ListItemText primary={item.text} sx={{ opacity: open ? 1 : 0 }} />
               </ListItemButton>
             </ListItem>
           ))}
         </List>
       </Drawer>
-      <Box component="main" sx={{ flexGrow: 1, p: 3 }}>
-        <DrawerHeader />
-        <MainPage/>
-      </Box>
     </Box>
   );
 }
+export default MiniDrawer;
