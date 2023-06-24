@@ -35,7 +35,8 @@ export const HANDLEBARS = {
     GET_SINGLE_TEMPLATE: 'dynamic-block-get-single-4e1f28a8333724c532f030c5ee29b312',
     GET_ALL_TEMPLATES: 'dynamic-block-b6335ecab3375517003bc1c1ba7e63b96ca52136',
     UPDATE_TEMPLATE: 'dynamic-block-edit-template-5e441bdfe03eb984877763becc00877d',
-    GET_SINGLE_TEMPLATE_VERSION: 'dynamic-block-get-version-caa8210c26afd3004b4b6c80022c48fa'
+    GET_SINGLE_TEMPLATE_VERSION: 'dynamic-block-get-version-caa8210c26afd3004b4b6c80022c48fa',
+    GET_FOLDER_STRUCTURE:'dynamic-block-get-structure-3b3c5ec1fd4ea3e4fb76a6c2a623f4b2'
   };
 
   export const COMPONENTS = {

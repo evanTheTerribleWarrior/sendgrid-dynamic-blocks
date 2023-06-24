@@ -81,6 +81,19 @@ export async function updateSingleTemplate (template_data, mergedTemplateHtml) {
     }
 };
 
+export async function getFolderStructure () {
+  try {
+    const url = API_URLS.PROTOCOL + API_URLS.BASE_URL + API_URLS.GET_FOLDER_STRUCTURE    
+    const response = await fetch(url, {
+        method: 'POST'
+    });
+    const data = await response.json();
+    return data;
+  } catch (error) {
+      throw new Error(`Failed to update template: ${error}`);
+  }
+};
+
 // Helper function to get a specific handlebar object
 // It is used when creating the dynamic block mainly
 export const getHandlebarsObject = (condition) => {

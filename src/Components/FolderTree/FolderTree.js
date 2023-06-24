@@ -4,6 +4,7 @@ import { Folder, InsertDriveFile } from '@mui/icons-material';
 
 const FolderTree = ({ folderStructure, onSelectFolder, onFileClick }) => {
   const renderTree = (nodes) => {
+    console.log("nodes: " + JSON.stringify(nodes))
     return nodes.map((node) => {
       if (node.children) {
         return (
