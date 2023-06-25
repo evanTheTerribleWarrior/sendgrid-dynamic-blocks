@@ -1,4 +1,4 @@
-import React, { useState, useContext } from 'react';
+import React, { useState } from 'react';
 import { useSelector } from 'react-redux';
 import { Box, Button, Dialog, DialogActions, DialogTitle, DialogContent } from '@mui/material';
 import CodeRenderer from './CodeRenderer/CodeRenderer'; 

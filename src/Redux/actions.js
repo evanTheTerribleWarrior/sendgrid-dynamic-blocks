@@ -1,12 +1,41 @@
-export const SET_FOLDER_STRUCTURE = 'SET_FOLDER_STRUCTURE';
-export const UPDATE_FOLDER_STRUCTURE = 'UPDATE_FOLDER_STRUCTURE';
+const FETCH_FOLDER_STRUCTURE = 'FETCH_FOLDER_STRUCTURE';
+const SET_FOLDER_STRUCTURE = 'SET_FOLDER_STRUCTURE';
 
-export const setFolderStructure = (folderStructure) => ({
+const fetchFolderStructureAction = (folderStructure) => ({
+  type: FETCH_FOLDER_STRUCTURE,
+  payload: folderStructure,
+});
+
+const setFolderStructureAction = (folderStructure) => ({
   type: SET_FOLDER_STRUCTURE,
   payload: folderStructure,
 });
 
-export const updateFolderStructure = (updatedFolderStructure) => ({
-  type: UPDATE_FOLDER_STRUCTURE,
-  payload: updatedFolderStructure,
-});
+const fetchFolderStructure = () => {
+  return async (dispatch) => {
+    try {
+      const response = await fetch('/api/folder-structure');
+      const data = await response.json();
+      dispatch(fetchFolderStructureAction(data));
+    } catch (error) {
+      console.error('Failed to fetch folder structure:', error);
+    }
+  };
+};
+
+export const setFolderStructure = (folderStructure) => {
+  return async (dispatch) => {
+    try {
+      await fetch('/api/folder-structure', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(folderStructure),
+      });
+      dispatch(setFolderStructureAction(folderStructure));
+    } catch (error) {
+      console.error('Failed to set folder structure:', error);
+    }
+  };
+};

@@ -25,8 +25,7 @@ const SavedCollection = () => {
                 <Paper>
                     <div dangerouslySetInnerHTML={{ __html: selectedFileContent }} />
                 </Paper>
-                
-
+              
             </Grid>
         </Grid>
     )

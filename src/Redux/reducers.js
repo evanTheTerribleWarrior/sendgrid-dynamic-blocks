@@ -1,6 +1,4 @@
-import { SET_FOLDER_STRUCTURE, UPDATE_FOLDER_STRUCTURE } from './actions';
-
-const folderStructure = [
+const folderStructureSample = [
     { id: '1', name: 'Folder 1', children: [{ id: '2', name: 'test.html', content: `<table class="module" role="module" data-type="code">
     <tr>
       <td style="" bgcolor="" role="module-content">
@@ -17,23 +15,19 @@ const folderStructure = [
     { id: '3', name: 'Folder 2', children: [{ id: '4', name: 'Subfolder 2' }] },
   ]
 
-const initialState = {
-  folderStructure: folderStructure,
-};
-
-export const folderStructureReducer = (state = initialState, action) => {
-  switch (action.type) {
-    case SET_FOLDER_STRUCTURE:
-      return {
-        ...state,
-        folderStructure: action.payload,
-      };
-    case UPDATE_FOLDER_STRUCTURE:
-      return {
-        ...state,
-        folderStructure: action.payload,
-      };
-    default:
-      return state;
-  }
-};
+  const initialState = {
+    folderStructure: folderStructureSample,
+  };
+  
+  const folderReducer = (state = initialState, action) => {
+    switch (action.type) {
+      case 'FETCH_FOLDER_STRUCTURE':
+        return { ...state, folderStructure: action.payload };
+      case 'SET_FOLDER_STRUCTURE':
+        return { ...state, folderStructure: action.payload };
+      default:
+        return state;
+    }
+  };
+  
+  export default folderReducer;

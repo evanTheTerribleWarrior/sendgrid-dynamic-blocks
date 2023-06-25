@@ -1,10 +1,12 @@
 import { configureStore } from '@reduxjs/toolkit';
-import { folderStructureReducer } from './reducers';
+import thunkMiddleware from 'redux-thunk';
+import folderReducer from './reducers';
 
 const store = configureStore({
   reducer: {
-    folderStructure: folderStructureReducer,
+    folderStructure: folderReducer,
   },
+  middleware: [thunkMiddleware],
 });
 
 export default store;
