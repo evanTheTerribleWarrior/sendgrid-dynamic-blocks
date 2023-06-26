@@ -13,8 +13,6 @@ const DynamicBlockGenerator = () => {
     const [selectedFolder, setSelectedFolder] = useState("")
     const [fileName, setFileName] = useState('');
 
-    let filename_temp = ""
-
     const folderStructure = useSelector((state) => state.folderStructure);
     const dispatch = useDispatch()
     
@@ -33,7 +31,7 @@ const DynamicBlockGenerator = () => {
       handleSaveModalClose()
     }
 
-    const handleOnFolderClick = (folder) => {
+    const handleOnFolderSelected = (folder) => {
       console.table(folder)
       setSelectedFolder(folder)
     }
@@ -53,14 +51,6 @@ const DynamicBlockGenerator = () => {
     const handleGeneratedDynamicBlock = (dynamicBlock) => {
       setGeneratedBlock(dynamicBlock)
     }
-
-    const TextFieldMemoized = React.memo(({ value, onChange }) => (
-      <TextField value={value} onChange={onChange} />
-    ));
-
-    const memoizedTextField = useMemo(() => (
-      <TextFieldMemoized value={fileName} onChange={handleFileNameChange} />
-    ), [fileName]);
 
     const DialogRenderer = () => {
     return (
@@ -84,7 +74,7 @@ const DynamicBlockGenerator = () => {
         <Typography variant="h6" gutterBottom>
           Choose Folder
         </Typography>
-        {folderStructure && <FolderTree folderStructure={folderStructure.folderStructure} onFolderClick={handleOnFolderClick} showFiles={false}/>}
+        {folderStructure && <FolderTree onFolderSelected={handleOnFolderSelected} showFiles={false}/>}
         <Typography variant="h6" gutterBottom>
           Save File
         </Typography>
