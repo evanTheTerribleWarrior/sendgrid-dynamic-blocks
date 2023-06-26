@@ -1,13 +1,11 @@
 import React, { useState, useEffect } from 'react';
 import { v4 as uuid } from 'uuid';
-import './styles.css';
 import HandlebarsSelect from '../HandlebarsSelect/HandlebarsSelect';
 import ComponentsSelect from '../ComponentsSelect/ComponentsSelect';
 import ItemCreation from '../ItemCreation/ItemCreation'
 import { getCloseHandlebar, getHandlebarsObject, getComponentsObject, getCodeBlockObject } from '../../../Utils/functions';
 import {
   TextField,
-  Button,
   Grid,
   Paper,
   Popover,
@@ -15,27 +13,12 @@ import {
   IconButton, Tooltip
 } from '@mui/material';
 import GetAppIcon from '@mui/icons-material/GetApp';
-import DeleteIcon from '@mui/icons-material/Delete';
 import CloseIcon from "@mui/icons-material/Close";
 import AddIcon from '@mui/icons-material/Add';
-import { Light as SyntaxHighlighter } from 'react-syntax-highlighter';
-import html from 'react-syntax-highlighter/dist/esm/languages/hljs/htmlbars';
-import { atomDark } from 'react-syntax-highlighter/dist/esm/styles/prism';
-SyntaxHighlighter.registerLanguage('html', html);
-const codeStyle = {
-  ...atomDark,
-  'code[class*="language-"]': {
-    borderRadius: '0.4em',
-    boxShadow: '0 0.3em 1em -0.2em rgba(0, 0, 0, 0.4)',
-    padding: '0.5em',
-    margin: '0.5em 0',
-  },
-};
 
 const BlockCreation = ({getCustomBlock}) => {
   const [rows, setRows] = useState([]);
   const [rowIdClicked, setRowClicked] = useState('');
-  const [generatedCode, setGeneratedCode] = useState('');
   const [generatedHtml, setGeneratedHtml] = useState('');
   const [anchorEl, setAnchorEl] = useState(null);
   
@@ -269,7 +252,6 @@ const BlockCreation = ({getCustomBlock}) => {
       generateRowCodeAndHtml(row, 0);
     });
     setGeneratedHtml(html);
-    setGeneratedCode(html);
     getCustomBlock(html, code);
     console.table(rows)
     return code;

@@ -1,4 +1,4 @@
-import * as React from 'react';
+import React, {useState} from 'react';
 import { styled, useTheme } from '@mui/material/styles';
 import Box from '@mui/material/Box';
 import MuiDrawer from '@mui/material/Drawer';
@@ -91,22 +91,26 @@ import { useNavigate } from 'react-router-dom';
   const itemList = [
     {
       text: 'Create New Block',
-      icon: <BuildIcon />,
+      icon: BuildIcon,
+      iconName: "build",
       route: '/build'
     },
     {
       text: 'Update Templates',
-      icon: <TaskIcon />,
+      icon: TaskIcon,
+      iconName: "update",
       route: '/update'
     },
     {
       text: 'Saved Blocks',
-      icon: <SaveIcon />,
+      icon: SaveIcon,
+      iconName: "collection",
       route: '/collection'
     },
     {
       text: 'Settings',
-      icon: <SettingsIcon />,
+      icon: SettingsIcon,
+      iconName: "settings",
       route: '/settings'
     }
   ]
@@ -116,6 +120,7 @@ import { useNavigate } from 'react-router-dom';
     const navigate = useNavigate();
     const theme = useTheme();
     const [open, setOpen] = React.useState(false);
+    const [activeIcon, setActiveIcon] = useState(null);
 
     const handleDrawerOpen = () => {
       setOpen(true);
@@ -125,8 +130,9 @@ import { useNavigate } from 'react-router-dom';
       setOpen(false);
     };
 
-    const handleNavigationClick = (route) => {
-      navigate(route);
+    const handleNavigationClick = (item) => {
+      setActiveIcon(item.iconName)
+      navigate(item.route);
     }
 
     return (
@@ -160,7 +166,7 @@ import { useNavigate } from 'react-router-dom';
         <Divider />
         <List>
           {itemList.map((item) => (
-            <ListItem key={ListItemText.text} disablePadding sx={{ display: 'block' }} onClick={() => handleNavigationClick(item.route)}>
+            <ListItem key={ListItemText.text} disablePadding sx={{ display: 'block' }} onClick={() => handleNavigationClick(item)}>
               <ListItemButton
                 sx={{
                   minHeight: 48,
@@ -174,8 +180,9 @@ import { useNavigate } from 'react-router-dom';
                     mr: open ? 3 : 'auto',
                     justifyContent: 'center',
                   }}
+                  
                 >
-                  {item.icon}
+                  <item.icon color={activeIcon === item.iconName ? 'primary' : 'inherit'}/>
                 </ListItemIcon>
                 <ListItemText primary={item.text} sx={{ opacity: open ? 1 : 0 }} />
               </ListItemButton>

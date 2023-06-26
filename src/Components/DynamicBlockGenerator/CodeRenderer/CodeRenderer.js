@@ -16,11 +16,6 @@ const CodeRenderer = ({onGenerateDynamicBlock}) => {
   const [generatedCode, setGeneratedCode] = useState('');
   const [generatedHtml, setGeneratedHtml] = useState('');
   const [codeView, setCodeView] = useState(false);
-  const [activeTab, setActiveTab] = useState(0);
-
-  const handleTabChange = (event, newTab) => {
-    setActiveTab(newTab);
-  };          
   
   const handleGeneratedDynamicBlock = (html, code) => {
     setGeneratedCode(code)
@@ -34,27 +29,10 @@ const CodeRenderer = ({onGenerateDynamicBlock}) => {
 
   return (
     <div>
-      {/*<Tabs value={activeTab} onChange={handleTabChange}>
-        <Tab label="Build it" />
-        <Tab label="Import it" />
-      </Tabs>
-
-      {activeTab === 0 && (
-        <div>
-          <BlockCreation getCustomBlock={handleGeneratedDynamicBlock}  />
-        </div>
-      )}
-
-      {activeTab === 1 && (
-        <div>
-          <FileUpload onFileUpload={handleGeneratedDynamicBlock} />
-        </div>
-      )}*/}
       <Container>
       <BlockCreation getCustomBlock={handleGeneratedDynamicBlock}  />
       </Container>
       
-
       <Grid container direction="column" spacing={10}>
         <Grid item xs={6} >
         <Typography variant="h6" align="center" sx={{ pt: 2 }}>

@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { Card, CardMedia, CardContent, Typography, Grid, Checkbox, Select, MenuItem, FormControl, InputLabel, CircularProgress } from '@mui/material';
-import { fetchAllTemplates } from '../../Utils/functions';
+import { fetchAllTemplates } from '../../../Utils/functions';
 
 const DynamicTemplateList = ({ onSelectTemplates, onSelectVersions }) => {
   const [templates, setTemplates] = useState([]);

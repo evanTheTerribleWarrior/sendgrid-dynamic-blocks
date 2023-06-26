@@ -6,9 +6,6 @@ import FolderTree from '../FolderTree/FolderTree';
 
 const DynamicBlockGenerator = () => {
 
-    const [selectedTemplates, setSelectedTemplates] = useState([]);
-    const [selectedVersions, setSelectedVersions] = useState([]);
-    const [currentStep, setCurrentStep] = useState(0);
     const [generatedBlock, setGeneratedBlock] = useState([]);
     const [saveDialogOpen, setSaveDialogOpen] = useState(false);
 

@@ -1,4 +1,6 @@
 - Sanitize HTML
+- Add ability to change styles in elements
+- Finalise components and code that can be used to build the block
 - Fetch paged templates
 - When finalising, ask if they want to create a new version or not
 - web vitals to connect with segment/analytics?

@@ -1,7 +1,7 @@
 import React, { useEffect, useState, useRef } from 'react';
 import ExampleTemplateSelect from './ExampleTemplateSelect/ExampleTemplateSelect';
 import { Card, CardMedia, CardContent, Typography, Box,Button, Grid, Checkbox, RadioGroup, FormControlLabel, Radio} from '@mui/material';
-import { fetchSingleTemplateVersion } from '../../Utils/functions';
+import { fetchSingleTemplateVersion } from '../../../Utils/functions';
 import { Prism as SyntaxHighlighter } from 'react-syntax-highlighter';
 import { atomDark } from 'react-syntax-highlighter/dist/esm/styles/prism';
 import { darcula } from 'react-syntax-highlighter/dist/esm/styles/prism';

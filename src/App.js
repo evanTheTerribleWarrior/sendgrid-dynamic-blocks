@@ -1,6 +1,7 @@
 import React from 'react';
 import DynamicBlockGenerator from './Components/DynamicBlockGenerator/DynamicBlockGenerator';
 import Layout from './Components/Layout/Layout';
+import TemplateUpdater from './Components/TemplateUpdater/TemplateUpdater';
 import SavedCollection from './Components/SavedCollection/SavedCollection';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import { Provider } from 'react-redux';
@@ -14,7 +15,7 @@ const App = () => {
         <Layout>
           <Routes>
             <Route exact path="/build" element={<DynamicBlockGenerator/>} />
-            <Route exact path="/update" element={<><div>Testing...</div></>} />
+            <Route exact path="/update" element={<TemplateUpdater/>} />
             <Route exact path="/collection" element={<SavedCollection />} />
           </Routes>
         </Layout>
