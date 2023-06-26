@@ -1,29 +1,34 @@
 import React, {useContext, useState} from 'react';
+import { useSelector, useDispatch } from 'react-redux';
 import {CardContent, Grid, Card, Paper} from '@mui/material'
 import FolderTree from '../FolderTree/FolderTree';
 
 const SavedCollection = () => {
 
+    const folderStructure = useSelector((state) => state.folderStructure);
+
       const [selectedFolder, setSelectedFolder] = useState(null);
-      const [selectedFileContent, setSelectedFileContent] = useState('');
+      const [selectedFile, setSelectedFile] = useState('');
 
-      const handleSelectFolder = (folderId) => {
-        setSelectedFolder(folderId);
-      };
+      const handleOnFolderClick = (folder) => {
+        console.table(folder)
+        setSelectedFolder(folder)
+      }
 
-      const handleFileClick = (fileId, fileName, fileContent) => {
-        setSelectedFileContent(fileContent)
+      const handleBlockClick = (file) => {
+          console.log(file.content)
+        setSelectedFile(file)
       }
     
 
     return(
         <Grid container direction="row" spacing={10}>
             <Grid item xs={3}>
-                {/*<FolderTree folderStructure={folderStructure} onSelectFolder={handleSelectFolder} onFileClick={handleFileClick}/>*/}
+                <FolderTree folderStructure={folderStructure.folderStructure} onFolderClick={handleOnFolderClick} onBlockClick={handleBlockClick} showFiles={true}/>
             </Grid>
             <Grid item xs={9}>
                 <Paper>
-                    <div dangerouslySetInnerHTML={{ __html: selectedFileContent }} />
+                    <div dangerouslySetInnerHTML={{ __html: selectedFile.content }} />
                 </Paper>
               
             </Grid>

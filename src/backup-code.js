@@ -466,3 +466,22 @@ export default BlockCreation;
   const handleNextStep = () => {
     setCurrentStep((prevStep) => prevStep + 1);
 };
+
+{/*<Dialog open={saveDialogOpen} onClose={handleSaveDialogClose}>
+        <DialogTitle>Save Block</DialogTitle>
+        <DialogContent>
+          {folderStructure && <FolderTree folderStructure={folderStructure.folderStructure} onFolderClick={handleOnFolderClick} showFiles={false}/>}
+          <TextField
+          label="File Name"
+          value={fileName}
+          onChange={(e) => setFileName(e.target.value)}
+          fullWidth
+          />
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={handleSaveDialogClose}>Cancel</Button>
+          <Button onClick={handleSaveDynamicBlock} disabled={!fileName}>
+            Save
+          </Button>
+        </DialogActions>
+    </Dialog>*/}

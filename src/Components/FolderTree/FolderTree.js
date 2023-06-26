@@ -2,22 +2,23 @@ import React from 'react';
 import { TreeView, TreeItem } from '@mui/lab';
 import { Folder, InsertDriveFile } from '@mui/icons-material';
 
-const FolderTree = ({ folderStructure, onSelectFolder, onBlockClick }) => {
-  console.log(folderStructure)
+const FolderTree = ({ folderStructure, onBlockClick, onFolderClick, showFiles }) => {
   const renderTree = (nodes) => {
-    console.log("nodes: " + JSON.stringify(nodes))
     return nodes.map((node) => {
       if (node.children) {
         return (
-          <TreeItem key={node.id} nodeId={node.id} label={node.name}>
+          <TreeItem key={node.id} nodeId={node.id} label={node.name} onClick={() => onFolderClick(node)}>
             {renderTree(node.children)}
           </TreeItem>
         );
       } else {
-        return (
-          <TreeItem key={node.id} nodeId={node.id} label={node.name} onClick={() => onBlockClick(node)}>
-          </TreeItem>
-        );
+        if(showFiles){
+          return (
+            <TreeItem key={node.id} nodeId={node.id} label={node.name} onClick={() => onBlockClick(node)}>
+            </TreeItem>
+          );
+        }
+        
       }
     });
   };
