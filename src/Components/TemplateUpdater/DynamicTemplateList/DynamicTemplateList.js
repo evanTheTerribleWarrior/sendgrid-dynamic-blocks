@@ -98,6 +98,9 @@ const DynamicTemplateList = ({ onSelectTemplates, onSelectVersions }) => {
                         handleVersionSelect(event.target.value, template.id)
                       }
                     >
+                      {/*<MenuItem key="all-versions" value="all-versions">
+                        All Versions
+                    </MenuItem>*/}
                     {template.versions_array.map((version) => (
                       <MenuItem key={version.id} value={version.id}>
                         {version.name}

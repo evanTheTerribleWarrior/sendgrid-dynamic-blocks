@@ -5,7 +5,6 @@ import { fetchSingleTemplateVersion } from '../../../Utils/functions';
 import { Prism as SyntaxHighlighter } from 'react-syntax-highlighter';
 import { atomDark } from 'react-syntax-highlighter/dist/esm/styles/prism';
 import { darcula } from 'react-syntax-highlighter/dist/esm/styles/prism';
-const cheerio = require('cheerio');
 
 
 const Preview = ({ selectedBlock, selectedTemplates, selectedVersions }) => {
@@ -13,6 +12,7 @@ const Preview = ({ selectedBlock, selectedTemplates, selectedVersions }) => {
   const [exampleSelectedTemplate,setExampleSelectedTemplate] = useState(null);
   const [selectedTemplateVersion, setSelectedTemplateVersion] = useState({});
   const [selectedRadioOption, setSelectedRadioOption] = useState('');
+  const [mergedHTML, setMergedHTML] = useState('')
 
   const handleRadioChange = (event) => {
     setSelectedRadioOption(event.target.value);
@@ -28,56 +28,42 @@ const Preview = ({ selectedBlock, selectedTemplates, selectedVersions }) => {
     }
   };
 
-  const handleExampleTemplateSelect = (template) => {
-    console.log(template);
-    console.log(selectedVersions)
-    const template_version_obj = selectedVersions.find(template_version => template_version.template_id === template.id)
+  const handleExampleTemplateSelect = (event) => {
+    const template_id = event.target.value;
+    const template_version_obj = selectedVersions.find(template_version => template_version.template_id === template_id)
     fetchTemplateVersion(template_version_obj)
-    setExampleSelectedTemplate(template)
+    setExampleSelectedTemplate(template_id)
   }
 
-  const handleMergeContent = () => {
+  const domParserMerge = () => {
+
+    const parser = new DOMParser();
+    const doc = parser.parseFromString(selectedTemplateVersion.html_content, 'text/html');
+    const newElement = parser.parseFromString(selectedBlock.content, 'text/html').body;
+
+    if (selectedRadioOption === "header"){
+      const table = doc.querySelector('table[data-type="preheader"]');
+      if (table) {
+        table.insertAdjacentElement('afterend', newElement);
+      }
+      console.log("Result: " + doc.documentElement.innerHTML)
+      return doc.documentElement.innerHTML;
+    }
+    else if(selectedRadioOption === "footer") {
+      const tables = doc.querySelectorAll('table');
+      if (tables.length > 0) {
+        const lastTable = tables[tables.length - 1];
+        lastTable.insertAdjacentElement('afterend', newElement);
+      }
+      return doc.documentElement.outerHTML;
+    }
+
     
   }
-
-  /*const [megredTemplateHtml, setMergedTemplateHtml] = useState('');
-  const [randomTemplateHtml, setRandomTemplateHtml] = useState('');
-  const [randomTemplateAllData, setRandomTemplateAllData] = useState('');
-  const leftSectionRef = useRef(null);
-  const [leftSectionHeight, setLeftSectionHeight] = useState(0);
-
-  const randomTemplate = selectedTemplates[Math.floor(Math.random() * selectedTemplates.length)];
-
-  const mergeTemplate = async () => {
-    const $ = cheerio.load(randomTemplateHtml);
-    const tables = $('body').find('table');
-    const lastTable = tables.last();
-    const lastTableStyle = lastTable.attr('style');
-
-    const modifiedHtml = randomTemplateHtml.replace('</table>', `</table>${generatedBlock}`);
-    console.log(`Modified HTML:  ${modifiedHtml}`)
-    setMergedTemplateHtml(modifiedHtml);
-  };
-
-  useEffect(() => {
-    if (leftSectionRef.current) {
-      const height = leftSectionRef.current.clientHeight;
-      setLeftSectionHeight(height);
-    }
-    const fetchTemplateHtml = async () => {
-      try {
-        const data = await fetchSingleTemplate(randomTemplate.id);
-        setRandomTemplateAllData(data);
-        // This needs updating, with the user choosing which version they want to update
-        setRandomTemplateHtml(data.versions.find((version) => version.html_content)?.html_content)
-      } catch (error) {
-        console.error('Error fetching templates:', error);
-      }
-    };
-    fetchTemplateHtml();
-  }, [randomTemplate.id]);
-*/
-
+  const handleMergeContent = () => {
+    setMergedHTML(domParserMerge())
+  }
+  
   return (
 
     <Grid container spacing={10} direction="row" sx={{marginTop: "10px"}}>
@@ -86,7 +72,7 @@ const Preview = ({ selectedBlock, selectedTemplates, selectedVersions }) => {
         
             <Grid container spacing={5} direction="row">
               <Grid item xs={6}>
-                <ExampleTemplateSelect selectedTemplates={selectedTemplates} onSelectedTemplate={handleExampleTemplateSelect} />
+                <ExampleTemplateSelect selectedTemplates={selectedTemplates} onChange={handleExampleTemplateSelect} />
                 <RadioGroup name="options" value={selectedRadioOption} onChange={handleRadioChange}>
                   <FormControlLabel value="header" control={<Radio />} label="Set as Header" />
                   <FormControlLabel value="footer" control={<Radio />} label="Set as Footer" />
@@ -109,79 +95,18 @@ const Preview = ({ selectedBlock, selectedTemplates, selectedVersions }) => {
       <Grid item xs={12} sx={{marginTop: "20px"}}>
         <Card style={{border: "1px solid #ccc"}}>
           {
-            selectedTemplateVersion ? 
+            selectedTemplateVersion && mergedHTML ? 
               (
-                <Box dangerouslySetInnerHTML={{ __html: selectedTemplateVersion.html_content }} /> 
+                <Box dangerouslySetInnerHTML={{ __html: mergedHTML }} /> 
               )
               :
               (
-              <CardMedia 
-                src='./logo512.png' 
-                sx={{height: "80%"}}
-                component="img"
-              >
-              </CardMedia>
+                <Box dangerouslySetInnerHTML={{ __html: selectedTemplateVersion.html_content }} /> 
               )
             }
         </Card>
       </Grid>
-    </Grid>
-
-   /* {<Grid container spacing={2}>
-       <Grid item xs={6} key="preview-generated-code">
-       <Card style={{ display: 'flex' }}>
-        <div
-          ref={leftSectionRef}
-          style={{ flex: 1, padding: '1rem' }}
-        >
-        <CardContent>
-          <Typography variant="h6" gutterBottom>
-            Generated Code
-          </Typography>
-          <SyntaxHighlighter language="html" style={codeStyle}  height="100%">
-            {generatedBlock}
-          </SyntaxHighlighter>
-          
-        </CardContent>
-        </div>
-        </Card>
-      </Grid>
-
-      <Grid item xs={6} key="preview-random-template">
-        <Card>
-          <CardContent>
-        <Typography variant="h6" gutterBottom>
-          Template for Preview
-          {randomTemplate.name}
-        </Typography>
-        </CardContent>
-        <CardMedia
-        component="img"
-        style={{ flex: 1, height: leftSectionHeight }}
-        image={randomTemplate.thumbnail_url}
-        alt={randomTemplate.name}
-        >
-        
-        </CardMedia>
-        </Card>
-      </Grid>
-        <Grid item xs={12}>
-          <Button variant="contained" color="primary" onClick={mergeTemplate}>
-            Merge
-          </Button>
-      </Grid>
-
-      <Paper elevation={2} sx={{ p: 4, height: '100%', overflow: 'auto' }}>
-      <Typography variant="h6" gutterBottom>
-        Result
-      </Typography>
-      {/* Render the generated HTML here }*/
-      //<Box dangerouslySetInnerHTML={{ __html: megredTemplateHtml }} />
-     // </Paper>
-  //</Grid>*/}
-
-
-    
+    </Grid>  
   );
 };
 

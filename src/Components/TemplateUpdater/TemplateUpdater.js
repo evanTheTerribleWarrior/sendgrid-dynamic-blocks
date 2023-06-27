@@ -10,7 +10,6 @@ const TemplateUpdater = () => {
     const [currentStep, setCurrentStep] = useState(0)
     const [selectedTemplates, setSelectedTemplates] = useState([])
     const [selectedVersions, setSelectedVersions] = useState([])
-    const [generatedBlock, setGeneratedBlock] = useState("")
     const [selectedBlock, setSelectedBlock] = useState("")
 
     const TAB_SIZE = 4;
@@ -39,10 +38,12 @@ const TemplateUpdater = () => {
 
     const handleTemplatesSelect = (selectedTemplates) => {
         console.log(selectedTemplates)
+        setSelectedTemplates(selectedTemplates)
     }
 
     const handleVersionsSelect = (selectedVersions) => {
         console.log(selectedVersions)
+        setSelectedVersions(selectedVersions)
     }
 
     const renderStep = () => {

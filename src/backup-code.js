@@ -485,3 +485,20 @@ export default BlockCreation;
           </Button>
         </DialogActions>
     </Dialog>*/}
+
+    const domParserMerge = () => {
+
+      console.log(selectedTemplateVersion.html_content)
+      console.log("Selected block: " + selectedBlock.content)
+  
+      const parser = new DOMParser();
+      const doc = parser.parseFromString(selectedTemplateVersion.html_content, 'text/html');
+  
+      const table = doc.querySelector('table[data-type="preheader"]');
+      if (table) {
+        const newElement = parser.parseFromString(selectedBlock.content, 'text/html').body;
+        table.insertAdjacentElement('afterend', newElement);
+      }
+      console.log("Result: " + doc.documentElement.innerHTML)
+      return doc.documentElement.innerHTML;
+    }

@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { Select, MenuItem, FormControl, InputLabel } from '@mui/material';
 
-const ExampleTemplateSelect = ({ onSelectedTemplate, selectedTemplates }) => {
+const ExampleTemplateSelect = ({ onChange, selectedTemplates }) => {
 
     const [selectedTemplate, setSelectedTemplate] = useState("")
 
@@ -11,13 +11,13 @@ const ExampleTemplateSelect = ({ onSelectedTemplate, selectedTemplates }) => {
         const selectedObj = selectedTemplates.find(template => template.id === event.target.value);
         console.log("selected: " + selectedObj)
         setSelectedTemplate(selectedObj)
-        onSelectedTemplate(selectedObj)
+        //onSelectedTemplate(selectedObj)
     }
 
     return (
         <FormControl fullWidth>
             <InputLabel>Select Test Template</InputLabel>
-            <Select value={selectedTemplate.id || ''} onChange={handleTemplateSelect}>
+            <Select onChange={onChange}>
             {selectedTemplates.map((template) => (
                 <MenuItem key={template.id} value={template.id}>
                     {template.name}

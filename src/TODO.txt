@@ -1,9 +1,12 @@
 - only allow edits of folder structure in savedcollection (DONE)
+- On Preview. Add tabs that allows some individual updates on templates and some batch
+- DynamicTemplateList: allow to select all versions or some?
 - Sanitize HTML
 - Add ability to change styles in elements
 - Finalise components and code that can be used to build the block
 - Fetch paged templates
 - When finalising, ask if they want to create a new version or not
 - web vitals to connect with segment/analytics?
+- config file through Assets? (to contain variables/URLs etc)
 - Move as much as possible to variables files e.g. name of the app, itemList of drawer icons and other strings
 Every time publishing on github, clear any function URLs
