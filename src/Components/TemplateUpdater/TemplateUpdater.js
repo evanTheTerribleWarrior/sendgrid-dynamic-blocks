@@ -37,24 +37,24 @@ const TemplateUpdater = () => {
         setSelectedBlock(block)
     }
 
-    const handleTemplatesSelect = () => {
-
+    const handleTemplatesSelect = (selectedTemplates) => {
+        console.log(selectedTemplates)
     }
 
-    const handleVersionsSelect = () => {
-        
+    const handleVersionsSelect = (selectedVersions) => {
+        console.log(selectedVersions)
     }
 
     const renderStep = () => {
         switch (currentStep) {
         case 0:
-            return <BlockChooser onBlockSelected={handleSelectedBlock}/>
+            return <BlockChooser onFileSelected={handleSelectedBlock}/>
         case 1:
             return <DynamicTemplateList onSelectTemplates={handleTemplatesSelect} onSelectVersions={handleVersionsSelect} />;
         case 2:
             return (
                         <Preview 
-                            generatedBlock={generatedBlock}
+                            selectedBlock={selectedBlock}
                             selectedTemplates={selectedTemplates} 
                             selectedVersions={selectedVersions}
                         />

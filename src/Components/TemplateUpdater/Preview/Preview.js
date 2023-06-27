@@ -8,7 +8,7 @@ import { darcula } from 'react-syntax-highlighter/dist/esm/styles/prism';
 const cheerio = require('cheerio');
 
 
-const Preview = ({ generatedBlock, selectedTemplates, selectedVersions }) => {
+const Preview = ({ selectedBlock, selectedTemplates, selectedVersions }) => {
 
   const [exampleSelectedTemplate,setExampleSelectedTemplate] = useState(null);
   const [selectedTemplateVersion, setSelectedTemplateVersion] = useState({});
@@ -98,7 +98,7 @@ const Preview = ({ generatedBlock, selectedTemplates, selectedVersions }) => {
               <Grid item xs={6}>
               <Card>
           <CardContent>
-              <Box dangerouslySetInnerHTML={{ __html: generatedBlock }} />
+              <Box dangerouslySetInnerHTML={{ __html: selectedBlock.content }} />
               </CardContent>
         </Card>
               </Grid>

@@ -1,25 +1,21 @@
 import React, {useState} from 'react';
 import {Grid, Box, Paper, Container} from '@mui/material';
 import FolderTree from '../../FolderTree/FolderTree';
-import { useSelector } from 'react-redux';
 
-const BlockChooser = ({onBlockSelected}) => {
+const BlockChooser = ({onFileSelected}) => {
 
-    const [blockSelected, setBlockSelected] = useState("")
+    const [blockSelected, setFileSelected] = useState("")
 
-    const folderStructure = useSelector((state) => state.folderStructure);
-    console.log(folderStructure)
-
-    const handleBlockClick = (node) => {
-        setBlockSelected(node)
-        onBlockSelected(node)
+    const handleOnFileSelected = (node) => {
+        setFileSelected(node)
+        onFileSelected(node)
     }
 
     return (
         <Container>
         <Grid container direction="row" spacing={2} sx={{margin: "20px"}} >
             <Grid item xs={4}>
-                <FolderTree folderStructure={folderStructure.folderStructure} onBlockClick={handleBlockClick}/>
+                <FolderTree onFileSelected={handleOnFileSelected} showFiles={true}/>
             </Grid>
             <Grid item xs={8}>
                 <Paper elevation={3} style={{ height: '100%' }}>
