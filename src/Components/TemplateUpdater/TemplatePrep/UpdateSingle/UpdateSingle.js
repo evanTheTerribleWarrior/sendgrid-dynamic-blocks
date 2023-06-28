@@ -1,15 +1,11 @@
-import React, { useEffect, useState, useRef } from 'react';
-import ExampleTemplateSelect from './ExampleTemplateSelect/ExampleTemplateSelect';
+import React, {useState} from 'react';
+import TemplateVersionSelect from './TemplateVersionSelect/TemplateVersionSelect';
 import { Card, CardMedia, CardContent, Typography, Box,Button, Grid, Checkbox, RadioGroup, FormControlLabel, Radio} from '@mui/material';
-import { fetchSingleTemplateVersion } from '../../../Utils/functions';
-import { Prism as SyntaxHighlighter } from 'react-syntax-highlighter';
-import { atomDark } from 'react-syntax-highlighter/dist/esm/styles/prism';
-import { darcula } from 'react-syntax-highlighter/dist/esm/styles/prism';
+import { fetchSingleTemplateVersion } from '../../../../Utils/functions';
 
+const UpdateSingle = ({ selectedBlock, selectedTemplates, selectedVersions }) => {
 
-const Preview = ({ selectedBlock, selectedTemplates, selectedVersions }) => {
-
-  const [exampleSelectedTemplate,setExampleSelectedTemplate] = useState(null);
+  const [exampleSelectedTemplate,setSelectedTemplate] = useState(null);
   const [selectedTemplateVersion, setSelectedTemplateVersion] = useState({});
   const [selectedRadioOption, setSelectedRadioOption] = useState('');
   const [mergedHTML, setMergedHTML] = useState('')
@@ -28,11 +24,9 @@ const Preview = ({ selectedBlock, selectedTemplates, selectedVersions }) => {
     }
   };
 
-  const handleExampleTemplateSelect = (event) => {
-    const template_id = event.target.value;
-    const template_version_obj = selectedVersions.find(template_version => template_version.template_id === template_id)
-    fetchTemplateVersion(template_version_obj)
-    setExampleSelectedTemplate(template_id)
+  const handleTemplateVersionSelect = (templateVersionObj) => {
+    console.log(templateVersionObj)
+    fetchTemplateVersion(templateVersionObj)
   }
 
   const domParserMerge = () => {
@@ -57,11 +51,13 @@ const Preview = ({ selectedBlock, selectedTemplates, selectedVersions }) => {
       }
       return doc.documentElement.outerHTML;
     }
-
-    
   }
   const handleMergeContent = () => {
     setMergedHTML(domParserMerge())
+  }
+
+  const handleUpdate = () => {
+
   }
   
   return (
@@ -72,13 +68,16 @@ const Preview = ({ selectedBlock, selectedTemplates, selectedVersions }) => {
         
             <Grid container spacing={5} direction="row">
               <Grid item xs={6}>
-                <ExampleTemplateSelect selectedTemplates={selectedTemplates} onChange={handleExampleTemplateSelect} />
+                <TemplateVersionSelect selectedTemplates={selectedTemplates} selectedVersions={selectedVersions} onChosenVersion={handleTemplateVersionSelect} />
                 <RadioGroup name="options" value={selectedRadioOption} onChange={handleRadioChange}>
                   <FormControlLabel value="header" control={<Radio />} label="Set as Header" />
                   <FormControlLabel value="footer" control={<Radio />} label="Set as Footer" />
                 </RadioGroup>
                   <Button onClick={() => handleMergeContent()}>
                   Merge
+                </Button>
+                <Button onClick={() => handleUpdate()}>
+                  Apply Update
                 </Button>
               </Grid>
               <Grid item xs={6}>
@@ -108,6 +107,6 @@ const Preview = ({ selectedBlock, selectedTemplates, selectedVersions }) => {
       </Grid>
     </Grid>  
   );
-};
+}
 
-export default Preview;
+export default UpdateSingle;

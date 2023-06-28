@@ -5,6 +5,7 @@ import { fetchAllTemplates } from '../../../Utils/functions';
 const DynamicTemplateList = ({ onSelectTemplates, onSelectVersions }) => {
   const [templates, setTemplates] = useState([]);
   const [selectedTemplates, setSelectedTemplates] = useState([]);
+  const [selectedVersionsArray, setSelectedVersionsArray] = useState({});
   const [selectedTemplatesAndVersions, setSelectedTemplatesAndVersions] = useState([])
 
   const fetchTemplates = async () => {
@@ -26,9 +27,7 @@ const DynamicTemplateList = ({ onSelectTemplates, onSelectVersions }) => {
   }, [selectedTemplates, selectedTemplatesAndVersions, onSelectTemplates, onSelectVersions]);
 
   const handleTemplateSelect = (_template) => (event) =>  {
-
     const selectedTemplate = templates.find((template) => template.id === _template.id);
-  
     if (event.target.checked) {
       setSelectedTemplates((prevSelectedTemplates) => [...prevSelectedTemplates, selectedTemplate]);   
     } else {
@@ -42,20 +41,26 @@ const DynamicTemplateList = ({ onSelectTemplates, onSelectVersions }) => {
     onSelectTemplates(selectedTemplates);
   };
 
-  const handleVersionSelect = (versionId, templateId) => {
+  const handleVersionSelect = (selected_versions_array, template) => {
 
     let updatedArray = [];
 
-    const index = selectedTemplatesAndVersions.findIndex(element => element.template_id === templateId)
+    setSelectedVersionsArray((prevOptions) => ({
+      ...prevOptions,
+      [template.id]: selected_versions_array,
+    }));
+
+    const index = selectedTemplatesAndVersions.findIndex(element => element.template_id === template.id)
 
     if(index === -1){
-      updatedArray = [...selectedTemplatesAndVersions, {version_id: versionId, template_id: templateId}]
+      updatedArray = [...selectedTemplatesAndVersions, {versions_array: selected_versions_array, template_id: template.id}]
     }
     else {
       updatedArray = [...selectedTemplatesAndVersions]
-      updatedArray[index].version_id = versionId
+      updatedArray[index].versions_array = selected_versions_array
     }
-    setSelectedTemplatesAndVersions(updatedArray)
+    const updatedArrayWithVersions = updatedArray.filter((obj) => obj.versions_array.length > 0);
+    setSelectedTemplatesAndVersions(updatedArrayWithVersions)
     onSelectVersions(selectedTemplatesAndVersions)
   };
 
@@ -94,9 +99,13 @@ const DynamicTemplateList = ({ onSelectTemplates, onSelectVersions }) => {
                 </Typography>
                 <FormControl fullWidth>
                   <InputLabel>Select Version</InputLabel>
-                  <Select disabled={!selectedTemplates.some((selected) => selected.id === template.id)} onChange={(event) =>
-                        handleVersionSelect(event.target.value, template.id)
-                      }
+                  <Select 
+                    value={selectedVersionsArray[template.id] || []}
+                    multiple disabled={!selectedTemplates.some((selected) => selected.id === template.id)} 
+                    renderValue={(selected) => selected.join(', ')}
+                    onChange={(event) =>
+                        handleVersionSelect(event.target.value, template)
+                    }
                     >
                       {/*<MenuItem key="all-versions" value="all-versions">
                         All Versions

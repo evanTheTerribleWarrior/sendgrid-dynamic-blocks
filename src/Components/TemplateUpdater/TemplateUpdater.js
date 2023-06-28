@@ -1,7 +1,7 @@
 import React, {useState} from 'react'
 import {Tabs, Tab, Button} from '@mui/material'
 import DynamicTemplateList from './DynamicTemplateList/DynamicTemplateList';
-import Preview from './Preview/Preview'
+import TemplatePrep from './TemplatePrep/TemplatePrep';
 import BlockChooser from './BlockChooser/BlockChooser'
 
 const TemplateUpdater = () => {
@@ -54,7 +54,7 @@ const TemplateUpdater = () => {
             return <DynamicTemplateList onSelectTemplates={handleTemplatesSelect} onSelectVersions={handleVersionsSelect} />;
         case 2:
             return (
-                        <Preview 
+                        <TemplatePrep 
                             selectedBlock={selectedBlock}
                             selectedTemplates={selectedTemplates} 
                             selectedVersions={selectedVersions}
@@ -73,7 +73,7 @@ const TemplateUpdater = () => {
         <Tabs value={currentStep} onChange={handleTabChange} centered>
           <Tab label="1. Select Block"  />
           <Tab label="2. Select Templates" disabled={currentStep < 1} />
-          <Tab label="3. Preview" disabled={currentStep < 2} />
+          <Tab label="3. Prepare" disabled={currentStep < 2} />
           <Tab label="4. Finish" disabled={currentStep < 3} />
         </Tabs>
         <Button
