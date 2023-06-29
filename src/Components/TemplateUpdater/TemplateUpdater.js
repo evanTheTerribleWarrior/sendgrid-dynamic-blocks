@@ -1,8 +1,15 @@
 import React, {useState} from 'react'
-import {Tabs, Tab, Button} from '@mui/material'
+import {Tabs, Tab, Button, Grid} from '@mui/material'
 import DynamicTemplateList from './DynamicTemplateList/DynamicTemplateList';
 import TemplatePrep from './TemplatePrep/TemplatePrep';
-import BlockChooser from './BlockChooser/BlockChooser'
+import BlockChooser from './BlockChooser/BlockChooser';
+import SectionHeader from '../SectionHeader/SectionHeader'
+
+const sectionHeaderContent = {
+  title: "Update Your Templates",
+  subtitle: "Here you can update your Sendgrid templates with a Dynamic Block you have created"
+}
+
 
 const TemplateUpdater = () => {
 
@@ -70,28 +77,37 @@ const TemplateUpdater = () => {
     };
 
     return (<>
-        <Tabs value={currentStep} onChange={handleTabChange} centered>
-          <Tab label="1. Select Block"  />
-          <Tab label="2. Select Templates" disabled={currentStep < 1} />
-          <Tab label="3. Prepare" disabled={currentStep < 2} />
-          <Tab label="4. Finish" disabled={currentStep < 3} />
-        </Tabs>
-        <Button
+        <Grid container direction="row">
+            <Grid item xs={12}>
+                <SectionHeader title={sectionHeaderContent.title} subtitle={sectionHeaderContent.subtitle}/>
+            </Grid>
+            <Grid item xs={12}>
+            {/*<Button
             variant="contained"
             color="primary"
             onClick={handleNextStep}
-            sx={{ position: 'fixed', top: 80, right: 16 }}
-        >
-            Next
-        </Button>
-        <Button
-            variant="contained"
-            color="primary"
-            onClick={handlePreviousStep}
-            sx={{ position: 'fixed', top: 80, left: 80 }}
-        >
-            Back
-        </Button>
+            sx={{ position: 'fixed', right: 16 }}
+            >
+                Next
+            </Button>
+            <Button
+                variant="contained"
+                color="primary"
+                onClick={handlePreviousStep}
+                sx={{ position: 'fixed', left: 80 }}
+            >
+                Back
+    </Button>*/}
+            <Tabs value={currentStep} onChange={handleTabChange} centered>
+                <Tab label="1. Select Block" onClick={() => setCurrentStep(0)}  />
+                <Tab label="2. Select Templates" disabled={!selectedBlock} onClick={() => setCurrentStep(1)} />
+                <Tab label="3. Prepare" disabled={selectedTemplates.length === 0} onClick={() => setCurrentStep(2)} />
+                <Tab label="4. Finish" disabled={currentStep < 3} />
+            </Tabs>
+            </Grid>
+        </Grid>
+        
+        
         {renderStep()}
         </>
     )

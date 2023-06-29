@@ -224,7 +224,7 @@ const FolderTree = ({ onItemSelected, onItemDeleted, showFiles, allowUpdates }) 
 
   return (
     <>
-    {allowUpdates ? (<Button variant="outlined" size="small" onClick={handleAddTopFolder}>Add top folder</Button>) : <></>}
+    {allowUpdates ? (<Button variant="outlined" size="small" onClick={handleAddTopFolder}>Add top level folder</Button>) : <></>}
     <TreeView
       sx={{ width: '100%', overflowY: 'auto', marginTop: "20px" }}
       defaultCollapseIcon={<MinusSquare />}

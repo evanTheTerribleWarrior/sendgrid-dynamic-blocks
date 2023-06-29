@@ -1,11 +1,7 @@
 SavedCollection:
-- Tip to say about the right click functionality
 - Allow to export a chosen template
-- Button to update the structure after changes? (NO - UPDATING STATE AUTOMATICALLY)
 - Drag and drop of a file to another folder in the structure
-- Add, delete, rename also for files (DONE)
-- Button to add root folders (DONE)
-- Icon based on node type
+- Export/Import File structure
 
 Build block:
 - Add Settings to allow edit styles

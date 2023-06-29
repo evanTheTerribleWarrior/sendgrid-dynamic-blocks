@@ -1,10 +1,16 @@
 import React, { useState, useMemo } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { v4 as uuid } from 'uuid';
-import { Box, Button, Dialog, DialogActions, DialogTitle, DialogContent, TextField, Modal, Typography } from '@mui/material';
+import { Box, Button, Grid, TextField, Modal, Typography } from '@mui/material';
 import CodeRenderer from './CodeRenderer/CodeRenderer'; 
 import FolderTree from '../FolderTree/FolderTree';
 import { updateFolderStructure } from '../../Redux/reducers';
+import SectionHeader from '../SectionHeader/SectionHeader'
+
+const sectionHeaderContent = {
+  title: "Build Your Block",
+  subtitle: "Here you can build your Sendgrid block. Use Conditions like if..else and Components like images and text. Finally save to your library"
+}
 
 const DynamicBlockGenerator = () => {
 
@@ -99,9 +105,14 @@ const DynamicBlockGenerator = () => {
   }
 
   return (
-  
-      <Box>
-        <CodeRenderer onGenerateDynamicBlock={handleGeneratedDynamicBlock} />
+      <Grid container direction="row">
+        <Grid item xs={12}>
+          <SectionHeader title={sectionHeaderContent.title} subtitle={sectionHeaderContent.subtitle}/>
+        </Grid>
+      
+        <Grid item xs={12}>
+          <CodeRenderer onGenerateDynamicBlock={handleGeneratedDynamicBlock} />
+        </Grid>
         <Button
           variant="contained"
           color="primary"
@@ -110,8 +121,10 @@ const DynamicBlockGenerator = () => {
         >
           Save
         </Button>
-        <DialogRenderer/>
-      </Box>
+        <Grid item xs={12}>
+          <DialogRenderer/>
+        </Grid>
+      </Grid>
   );
 };
 

@@ -3,11 +3,6 @@ import {CardContent, Grid, Card, Paper, Box, Button} from '@mui/material'
 import FolderTree from '../FolderTree/FolderTree';
 import SectionHeader from '../SectionHeader/SectionHeader';
 
-const boxContainerStyle = {
-    maxHeight: '100vh', 
-    overflow: 'auto', 
-};
-
 const sectionHeaderContent = {
     title: "My Saved Content",
     subtitle: "Here you can manage your dynamic blocks folder structure. You can right click on a folder to add/rename/delete. You can also rename/delete your dynamic block"
@@ -34,7 +29,7 @@ const SavedCollection = () => {
             <Grid item xs={4}>
                 <FolderTree onItemSelected={handleSelectedItem} onItemDeleted={handleDeletedItem} showFiles={true} allowUpdates={true}/>
             </Grid>
-            <Grid item xs={8}>
+            <Grid item xs={7} sx={{marginLeft: "20px"}}>
                 <Box >
                     <div dangerouslySetInnerHTML={{ __html: selectedFile ? selectedFile.content : "" }} />
                 </Box>
