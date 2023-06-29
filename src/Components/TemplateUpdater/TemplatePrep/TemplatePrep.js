@@ -24,7 +24,7 @@ const TemplatePrep = ({ selectedBlock, selectedTemplates, selectedVersions }) =>
   return (
     <div style={tabContainerStyle}>
       <div style={contentStyle}>
-        <Tabs value={selectedTab} onChange={handleTabChange} centered>
+        <Tabs value={selectedTab} onChange={handleTabChange} centered variant='fullWidth'>
           <Tab label="Update Single" />
           <Tab label="Update Multiple" />
         </Tabs>

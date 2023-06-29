@@ -502,3 +502,274 @@ export default BlockCreation;
       console.log("Result: " + doc.documentElement.innerHTML)
       return doc.documentElement.innerHTML;
     }
+
+
+
+    WORKING TREE 
+
+    import React, { useState } from 'react';
+import { TreeView, TreeItem } from '@mui/lab';
+import { useSelector, useDispatch } from 'react-redux';
+import { v4 as uuid } from 'uuid';
+import {Menu, MenuItem} from '@mui/material'
+import { Folder, InsertDriveFile } from '@mui/icons-material';
+import { updateFolderStructure } from '../../Redux/reducers';
+
+const FolderTree = ({ onFolderSelected, onFileSelected, showFiles, allowUpdates }) => {
+
+  const [selectedFolder, setSelectedFolder] = useState("")
+  const [selectedFile, setSelectedFile] = useState("")
+  const [contextMenuPosition, setContextMenuPosition] = useState({ x: 0, y: 0 });
+  const [menuAnchorEl, setMenuAnchorEl] = useState(null);
+  const [renamingFolderId, setRenamingFolderId] = useState(null);
+  const [renamingFolderName, setRenamingFolderName] = useState('');
+  const [renamingFileId, setRenamingFileId] = useState(null);
+  const [renamingFileName, setRenamingFileName] = useState('');
+  const [currentElementType, setCurrentElementType] = useState("")
+
+  const folderStructure = useSelector((state) => state.folderStructure);
+  const dispatch = useDispatch()
+
+  const handleContextMenu = (event, node, isFolder) => {
+    event.preventDefault();
+    event.stopPropagation();
+    console.log(event.button)
+    console.log(node.id)
+    if (isFolder) {
+      setSelectedFolder(node)
+      setCurrentElementType("folder")
+    }
+    else {
+      setSelectedFile(node)
+      setCurrentElementType("file")
+    }
+    setMenuAnchorEl(event.currentTarget);
+    setContextMenuPosition({ x: event.clientX, y: event.clientY }); 
+  }
+
+  const handleMenuClose = () => {
+    setMenuAnchorEl(null);
+  };
+
+  const handleOnFolderClick = (folder) => {
+    setSelectedFolder(folder)
+    if (onFolderSelected) onFolderSelected(folder)
+    handleMenuClose()
+  }
+
+  const handleOnFileClick = (file) => {
+    setSelectedFile(file)
+    if (onFileSelected) onFileSelected(file)
+    handleMenuClose()
+  }
+
+  const handleAddFolderRecursive = (folders) => {
+    return folders.map((folder) => {
+      if (folder.id === selectedFolder.id) {
+        return {
+          ...folder,
+          children: [...folder.children, { id: uuid(), type: 'folder', name: "New Folder", children: [] }],
+        };
+      } else if ( folder.children && folder.children.length > 0) {
+        return {
+          ...folder,
+          children: handleAddFolderRecursive(folder.children)
+        };
+      }
+      return folder;
+    });
+  }
+
+  const handleAddFolder = () => {
+    dispatch(updateFolderStructure(handleAddFolderRecursive(folderStructure.folderStructure)));
+    handleMenuClose()
+  };
+
+
+  const handleDeleteFolder = () => {
+    console.log(selectedFolder)
+    handleMenuClose()
+  };
+
+  const handleRenameFolder = () => {
+    setRenamingFolderId(selectedFolder.id);
+    setRenamingFolderName(selectedFolder.name);
+    handleMenuClose()
+  };
+
+  const handleRenameFile = () => {
+    setRenamingFileId(selectedFile.id);
+    setRenamingFileName(selectedFile.name);
+    handleMenuClose()
+  };
+
+  const handleInputChange = (event) => {
+    setRenamingFolderName(event.target.value);
+  };
+
+  const handleInputFileChange = (event) => {
+    setRenamingFileName(event.target.value);
+  };
+
+  const handleInputKeyPress = (event) => {
+    if (event.key === 'Enter') {
+      dispatch(updateFolderStructure(handleRenameFolderRecursive(folderStructure.folderStructure, renamingFolderName)));
+      setRenamingFolderId(null);
+      setRenamingFolderName('');
+    }
+  };
+
+  const handleInputKeyPressFile = (event) => {
+    if (event.key === 'Enter') {
+      dispatch(updateFolderStructure(handleRenameFileRecursive(folderStructure.folderStructure, renamingFileName)));
+      setRenamingFileId(null);
+      setRenamingFileName('');
+    }
+  };
+
+  const handleRenameFolderRecursive = (folders, newName) => {
+    return folders.map((folder) => {
+      if (folder.id === selectedFolder.id) {
+        return {
+          ...folder,
+          name: newName
+        };
+      } else if ( folder.children && folder.children.length > 0) {
+        return {
+          ...folder,
+          children: handleRenameFolderRecursive(folder.children, newName)
+        };
+      }
+      return folder;
+    });
+  }
+
+  const handleRenameFileRecursive = (folders, newName) => {
+    return folders.map((item) => {
+      if (item.id === selectedFile.id) {
+        return {
+          ...item,
+          name: newName
+        };
+      } else if ( item.children && item.children.length > 0) {
+        return {
+          ...item,
+          children: handleRenameFileRecursive(item.children, newName)
+        };
+      }
+      return item;
+    });
+  }
+
+  const renderTree = (nodes) => {
+    return nodes.map((node) => {
+      if (node.children) {
+        return (
+          <TreeItem 
+            key={node.id} 
+            nodeId={node.id} 
+            label={
+              renamingFolderId === node.id ? (
+                <input
+                  type="text"
+                  value={renamingFolderName}
+                  onChange={handleInputChange}
+                  onKeyPress={(event) => handleInputKeyPress(event, node.id)}
+                  onBlur={() => {
+                    setRenamingFolderId(null);
+                    setRenamingFolderName('');
+                  }}
+                />
+              ) : (
+                <>{node.name}</>
+              )
+            }
+            endIcon={<Folder />}
+            onContextMenu={(event) => handleContextMenu(event, node, true)} 
+            onClick={() => handleOnFolderClick(node)}
+              >
+            {renderTree(node.children)}
+          </TreeItem>
+        );
+      } else {
+        if(showFiles){
+          return (
+            <TreeItem 
+              key={node.id} 
+              nodeId={node.id} 
+              label={
+                renamingFileId === node.id ? (
+                  <input
+                    type="text"
+                    value={renamingFileName}
+                    onChange={handleInputFileChange}
+                    onKeyPress={(event) => handleInputKeyPressFile(event, node.id)}
+                    onBlur={() => {
+                      setRenamingFileId(null);
+                      setRenamingFileName('');
+                    }}
+                  />
+                ) : (
+                  <>{node.name}</>
+                )
+              }
+              endIcon={<InsertDriveFile />}
+              onContextMenu={(event) => handleContextMenu(event, node, false)} 
+              onClick={() => handleOnFileClick(node)}
+              >
+            </TreeItem>
+          );
+        }
+        
+      }
+    });
+  };
+
+  const renderMenu = () => {
+    return (
+      <Menu
+        anchorEl={menuAnchorEl}
+        open={Boolean(menuAnchorEl)}
+        anchorReference="anchorPosition"
+        anchorPosition={{
+          top: contextMenuPosition.y,
+          left: contextMenuPosition.x,
+        }}
+        onClose={handleMenuClose}
+      >
+        {
+          currentElementType === "folder" ?
+          (
+            <>
+            <MenuItem onClick={handleAddFolder}>Add Folder</MenuItem>
+            <MenuItem onClick={handleRenameFolder}>Rename Folder</MenuItem>
+            <MenuItem onClick={handleDeleteFolder}>Delete Folder</MenuItem>
+            </>
+          )
+          :
+          (
+            <>
+              <MenuItem onClick={handleRenameFile}>Rename File</MenuItem>
+              <MenuItem onClick={handleDeleteFolder}>Delete Folder</MenuItem>
+            </>
+          )
+        }
+        
+      </Menu>
+    )
+  }
+
+  return (
+    <TreeView
+      sx={{ width: '100%', overflowY: 'auto' }}
+      defaultCollapseIcon={<Folder />}
+      defaultExpandIcon={<Folder />}
+    >
+      {renderTree(folderStructure.folderStructure)}
+      { allowUpdates ? renderMenu() : <></>}
+      
+    </TreeView>
+  );
+};
+
+export default FolderTree;

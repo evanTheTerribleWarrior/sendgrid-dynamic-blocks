@@ -1,3 +1,18 @@
+SavedCollection:
+- Tip to say about the right click functionality
+- Allow to export a chosen template
+- Button to update the structure after changes? (NO - UPDATING STATE AUTOMATICALLY)
+- Drag and drop of a file to another folder in the structure
+- Add, delete, rename also for files (DONE)
+- Button to add root folders
+
+Build block:
+- Add Settings to allow edit styles
+- Allow import of existing? It will need to read the code and reproduce the building blocks
+
+
+
+
 - only allow edits of folder structure in savedcollection (DONE)
 - On Preview. Add tabs that allows some individual updates on templates and some batch
 - DynamicTemplateList: allow to select all versions or some?

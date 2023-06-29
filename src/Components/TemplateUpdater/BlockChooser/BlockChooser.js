@@ -6,16 +6,19 @@ const BlockChooser = ({onFileSelected}) => {
 
     const [blockSelected, setFileSelected] = useState("")
 
-    const handleOnFileSelected = (node) => {
-        setFileSelected(node)
-        onFileSelected(node)
+    const handleOnItemSelected = (item) => {
+        if(item.type === "file"){
+            setFileSelected(item)
+            onFileSelected(item)
+        }
+        
     }
 
     return (
         <Container>
         <Grid container direction="row" spacing={2} sx={{margin: "20px"}} >
             <Grid item xs={4}>
-                <FolderTree onFileSelected={handleOnFileSelected} showFiles={true}/>
+                <FolderTree onItemSelected={handleOnItemSelected} showFiles={true}/>
             </Grid>
             <Grid item xs={8}>
                 <Paper elevation={3} style={{ height: '100%' }}>

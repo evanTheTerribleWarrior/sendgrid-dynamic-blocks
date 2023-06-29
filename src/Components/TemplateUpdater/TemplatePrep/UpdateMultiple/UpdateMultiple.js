@@ -1,5 +1,6 @@
 import React, { useEffect, useState, useRef } from 'react';
-import { Card, CardMedia, CardContent, Typography, Box,Button, Grid, Checkbox, RadioGroup, FormControlLabel, Radio} from '@mui/material';
+import { Card, CardMedia, CardContent, Typography, Box,Button, Grid, Checkbox, 
+RadioGroup, FormControlLabel, Radio, FormControl, InputLabel, Select, MenuItem} from '@mui/material';
 import { fetchSingleTemplateVersion } from '../../../../Utils/functions';
 import { Prism as SyntaxHighlighter } from 'react-syntax-highlighter';
 import { atomDark } from 'react-syntax-highlighter/dist/esm/styles/prism';
@@ -30,13 +31,15 @@ const UpdateMultiple = ({ selectedBlock, selectedTemplates, selectedVersions }) 
   const handleExampleTemplateSelect = (event) => {
     const template_id = event.target.value;
     const template_version_obj = selectedVersions.find(template_version => template_version.template_id === template_id)
-    fetchTemplateVersion(template_version_obj)
+    const template_to_get = {"template_id": template_id, "version_id": template_version_obj.versions_array[0]}
+    fetchTemplateVersion(template_to_get)
     setExampleSelectedTemplate(template_id)
   }
 
   const domParserMerge = () => {
 
     const parser = new DOMParser();
+    
     const doc = parser.parseFromString(selectedTemplateVersion.html_content, 'text/html');
     const newElement = parser.parseFromString(selectedBlock.content, 'text/html').body;
 
@@ -62,6 +65,11 @@ const UpdateMultiple = ({ selectedBlock, selectedTemplates, selectedVersions }) 
   const handleMergeContent = () => {
     setMergedHTML(domParserMerge())
   }
+
+  const handleUpdateAll = () => {
+    console.log(selectedTemplates);
+    console.log(selectedVersions)
+  }
   
   return (
 
@@ -71,13 +79,25 @@ const UpdateMultiple = ({ selectedBlock, selectedTemplates, selectedVersions }) 
         
             <Grid container spacing={5} direction="row">
               <Grid item xs={6}>
-                {/*<ExampleTemplateSelect selectedTemplates={selectedTemplates} onChange={handleExampleTemplateSelect} />*/}
+              <FormControl fullWidth>
+                <InputLabel>Select Sample Template</InputLabel>
+                <Select onChange={handleExampleTemplateSelect}>
+                {selectedTemplates.map((template) => (
+                    <MenuItem key={template.id} value={template.id}>
+                        {template.name}
+                    </MenuItem>
+                ))}
+                </Select>
+            </FormControl>
                 <RadioGroup name="options" value={selectedRadioOption} onChange={handleRadioChange}>
                   <FormControlLabel value="header" control={<Radio />} label="Set as Header" />
                   <FormControlLabel value="footer" control={<Radio />} label="Set as Footer" />
                 </RadioGroup>
                   <Button onClick={() => handleMergeContent()}>
                   Merge
+                </Button>
+                <Button onClick={() => handleUpdateAll()}>
+                  Update all
                 </Button>
               </Grid>
               <Grid item xs={6}>
