@@ -5,6 +5,8 @@ import { v4 as uuid } from 'uuid';
 import {Menu, MenuItem, Dialog, DialogActions, DialogTitle, DialogContent, Button} from '@mui/material'
 import { Folder, InsertDriveFile } from '@mui/icons-material';
 import { updateFolderStructure } from '../../Redux/reducers';
+import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
+import { MinusSquare, PlusSquare, CloseSquare, StyledTreeItem } from './FolderTreeStyles';
 
 const FolderTree = ({ onItemSelected, onItemDeleted, showFiles, allowUpdates }) => {
 
@@ -137,9 +139,15 @@ const FolderTree = ({ onItemSelected, onItemDeleted, showFiles, allowUpdates }) 
     });
   }
 
+  const setItemIcon = (node) => {
+    if(node.type === "folder" && node.children.length > 0) return <PlusSquare/>
+    return <CloseSquare/>
+  }
+
   const renderTreeItem = (node) => {
+
     return (
-      <TreeItem 
+      <StyledTreeItem 
         key={node.id} 
         nodeId={node.id} 
         label={
@@ -158,12 +166,12 @@ const FolderTree = ({ onItemSelected, onItemDeleted, showFiles, allowUpdates }) 
             <>{node.name}</>
           )
         }
-        endIcon={node.type === "folder" ? <Folder /> : <InsertDriveFile />}
+        //endIcon={(node) => setItemIcon(node)}
         onContextMenu={(event) => handleContextMenu(event, node, node.type === "folder" ? true : false)} 
         onClick={() => handleOnItemClick(node)}
         >
         {node.children ? renderTree(node.children) : <></>}
-      </TreeItem>
+      </StyledTreeItem>
     );
   }
 
@@ -216,11 +224,12 @@ const FolderTree = ({ onItemSelected, onItemDeleted, showFiles, allowUpdates }) 
 
   return (
     <>
-    {allowUpdates ? (<Button variant="outlined" onClick={handleAddTopFolder}>Add top folder</Button>) : <></>}
+    {allowUpdates ? (<Button variant="outlined" size="small" onClick={handleAddTopFolder}>Add top folder</Button>) : <></>}
     <TreeView
-      sx={{ width: '100%', overflowY: 'auto' }}
-      defaultCollapseIcon={<Folder />}
-      defaultExpandIcon={<Folder />}
+      sx={{ width: '100%', overflowY: 'auto', marginTop: "20px" }}
+      defaultCollapseIcon={<MinusSquare />}
+      defaultExpandIcon={<PlusSquare />}
+      defaultEndIcon={<CloseSquare />}
     >
       {renderTree(folderStructure.folderStructure)}
       { allowUpdates ? renderMenu() : <></>}
