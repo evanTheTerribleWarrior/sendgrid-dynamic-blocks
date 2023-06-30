@@ -2,11 +2,10 @@ import React, { useState } from 'react';
 import { TreeView, TreeItem } from '@mui/lab';
 import { useSelector, useDispatch } from 'react-redux';
 import { v4 as uuid } from 'uuid';
-import {Menu, MenuItem, Dialog, DialogActions, DialogTitle, DialogContent, Button} from '@mui/material'
-import { Folder, InsertDriveFile } from '@mui/icons-material';
+import {Menu, MenuItem, Dialog, DialogActions, DialogTitle, DialogContent, Button, Grid, Typography} from '@mui/material'
 import { updateFolderStructure } from '../../Redux/reducers';
-import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import { MinusSquare, PlusSquare, CloseSquare, StyledTreeItem } from './FolderTreeStyles';
+import ImportTemplate from './ImportTemplate/ImportTemplate'
 
 const FolderTree = ({ onItemSelected, onItemDeleted, showFiles, allowUpdates }) => {
 
@@ -19,9 +18,12 @@ const FolderTree = ({ onItemSelected, onItemDeleted, showFiles, allowUpdates }) 
   const [renamingItemName, setRenamingItemName] = useState('');
   const [currentElementType, setCurrentElementType] = useState("")
   const [showDeleteConfirmation, setShowDeleteConfirmation] = useState(false);
+  const [importedFile, setImportedFile] = useState(null);
 
   const folderStructure = useSelector((state) => state.folderStructure);
   const dispatch = useDispatch()
+
+  console.log(folderStructure.folderStructure)
 
   const handleContextMenu = (event, node, isFolder) => {
     event.preventDefault();
@@ -139,9 +141,52 @@ const FolderTree = ({ onItemSelected, onItemDeleted, showFiles, allowUpdates }) 
     });
   }
 
-  const setItemIcon = (node) => {
-    if(node.type === "folder" && node.children.length > 0) return <PlusSquare/>
-    return <CloseSquare/>
+  const handleImportedFile = (fileObj) => {
+    console.log("Obj" + JSON.stringify(fileObj))
+    setImportedFile({
+      id: uuid(),
+      ...fileObj
+    })
+  }
+
+  const handleAddImported = () => {
+    dispatch(updateFolderStructure(handleAddImportedRecursive(folderStructure.folderStructure, importedFile)));
+    setImportedFile(null);
+    handleMenuClose()
+  }
+
+  const handleAddImportedRecursive = (folders, file) => {
+
+    console.log(selectedItem)
+
+    return folders.map((item) => {
+      if (item.id === selectedItem.id) {
+        return {
+          ...item,
+          children: [...item.children, file]
+        };
+      } 
+      
+      else if ( item.children && item.children.length > 0) {
+        return {
+          ...item,
+          children: handleAddImportedRecursive(item.children, file)
+        };
+      }
+      return item;
+    });
+
+  }
+
+  const handleDownloadItem = () => {
+    const blob = new Blob([selectedItem.content], { type: 'text/html' });
+    const url = URL.createObjectURL(blob);
+    const link = document.createElement('a');
+    link.href = url;
+    link.download = 'dynamic_block.html';
+    link.click();
+    URL.revokeObjectURL(url);
+    link.remove();
   }
 
   const renderTreeItem = (node) => {
@@ -207,6 +252,7 @@ const FolderTree = ({ onItemSelected, onItemDeleted, showFiles, allowUpdates }) 
             <MenuItem onClick={handleAddFolder}>Add Folder</MenuItem>
             <MenuItem onClick={handleRenameItem}>Rename Folder</MenuItem>
             <MenuItem onClick={handleDeleteItem}>Delete Folder</MenuItem>
+            {importedFile ? <MenuItem onClick={handleAddImported}>Add {importedFile.name}</MenuItem> : <></> }
             </div>
           )
           :
@@ -214,6 +260,7 @@ const FolderTree = ({ onItemSelected, onItemDeleted, showFiles, allowUpdates }) 
             <div>
               <MenuItem onClick={handleRenameItem}>Rename File</MenuItem>
               <MenuItem onClick={handleDeleteItem}>Delete File</MenuItem>
+              <MenuItem onClick={handleDownloadItem}>Download File</MenuItem>
             </div>
           )
         }
@@ -224,7 +271,16 @@ const FolderTree = ({ onItemSelected, onItemDeleted, showFiles, allowUpdates }) 
 
   return (
     <>
-    {allowUpdates ? (<Button variant="outlined" size="small" onClick={handleAddTopFolder}>Add top level folder</Button>) : <></>}
+    {allowUpdates ? 
+    (<Grid container direction="row">
+    <Button variant="outlined" size="small" onClick={handleAddTopFolder}>Add top level folder</Button>
+    <ImportTemplate onImportedFile={handleImportedFile} />
+    {importedFile ? (<Typography variant='subtitle1'>{importedFile.name} imported. Right click on a folder to add it</Typography>) : <></>}
+    </Grid>) 
+    
+    : 
+    
+    <></>}
     <TreeView
       sx={{ width: '100%', overflowY: 'auto', marginTop: "20px" }}
       defaultCollapseIcon={<MinusSquare />}

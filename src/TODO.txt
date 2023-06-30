@@ -2,23 +2,20 @@ SavedCollection:
 - Allow to export a chosen template
 - Drag and drop of a file to another folder in the structure
 - Export/Import File structure
+- Have an "Expand all" button
+- Importing works, but depending on HTML it drags the UI to the right. Also fix styles on import
 
 Build block:
 - Add Settings to allow edit styles
 - Allow import of existing? It will need to read the code and reproduce the building blocks
 
-
-
-
-- only allow edits of folder structure in savedcollection (DONE)
-- On Preview. Add tabs that allows some individual updates on templates and some batch
-- DynamicTemplateList: allow to select all versions or some?
+Security:
 - Sanitize HTML
-- Add ability to change styles in elements
-- Finalise components and code that can be used to build the block
+- Protected Functions calling
+
+
 - Fetch paged templates
 - When finalising, ask if they want to create a new version or not
 - web vitals to connect with segment/analytics?
 - config file through Assets? (to contain variables/URLs etc)
-- Move as much as possible to variables files e.g. name of the app, itemList of drawer icons and other strings
 Every time publishing on github, clear any function URLs

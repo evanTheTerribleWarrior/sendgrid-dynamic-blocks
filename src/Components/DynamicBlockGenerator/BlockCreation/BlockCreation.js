@@ -10,17 +10,20 @@ import {
   Paper,
   Popover,
   MenuItem,
-  IconButton, Tooltip
+  IconButton, Modal, Button, Typography, Box
 } from '@mui/material';
-import GetAppIcon from '@mui/icons-material/GetApp';
 import CloseIcon from "@mui/icons-material/Close";
 import AddIcon from '@mui/icons-material/Add';
+import SettingsIcon from '@mui/icons-material/Settings';
 
 const BlockCreation = ({getCustomBlock}) => {
   const [rows, setRows] = useState([]);
   const [rowIdClicked, setRowClicked] = useState('');
   const [generatedHtml, setGeneratedHtml] = useState('');
   const [anchorEl, setAnchorEl] = useState(null);
+
+  const [shouldOpenSettings, setOpenSettings] = useState(false);
+  const [settingsRow, setSettingsRow] = useState("")
   
   /* We use useEffect to update the resulting code every time
   the user changes something. We provide as input all the rows
@@ -212,6 +215,21 @@ const BlockCreation = ({getCustomBlock}) => {
     setAnchorEl(null);
   };
 
+  /* Function to allow user to change styles for a component */
+  const openSettings = (row) => {
+
+    const component = getComponentsObject(row.component.type, true)
+    const data = {
+      component: JSON.parse(JSON.stringify(component))
+    }
+    setOpenSettings(true)
+    setSettingsRow(row)
+  }
+
+  const handleCloseSettings = () => {
+    setOpenSettings(false);
+  };
+
   /* Recursive function that generates the code/steps and HTML
   it is used by useEffect to present changes as they happen
   It uses helper functions to get the right code blocks and also the "close" part
@@ -257,19 +275,6 @@ const BlockCreation = ({getCustomBlock}) => {
     return code;
   };
 
-  /* Allows to export the generated HTML in a file. The code should
-  be compatible with the Sendgrid Design Editor*/
-  const handleExport = () => {
-    const blob = new Blob([generatedHtml], { type: 'text/html' });
-    const url = URL.createObjectURL(blob);
-    const link = document.createElement('a');
-    link.href = url;
-    link.download = 'dynamic_block.html';
-    link.click();
-    URL.revokeObjectURL(url);
-    link.remove();
-  };
-
   /* Function that applies to rows that are Components, not conditions */
   const renderComponent = (row) => {
     return ( row.type === "component" && (
@@ -286,6 +291,13 @@ const BlockCreation = ({getCustomBlock}) => {
           </>
         )
       }
+
+      <Grid item>
+        <IconButton size="small" disabled={!row.component} onClick={() =>  openSettings(row)}>
+          <SettingsIcon />
+        </IconButton>
+      </Grid>
+
       <Grid item>
         <IconButton size="small" onClick={() =>  removeRow(row.id)}>
           <CloseIcon />
@@ -293,6 +305,42 @@ const BlockCreation = ({getCustomBlock}) => {
       </Grid>
     </>)
     )
+  }
+
+  const renderComponentSettings = (row) => {
+    return (<>{
+      row.type === "component" && shouldOpenSettings && (
+      <Modal scrollable={true} open={shouldOpenSettings} onClose={handleCloseSettings}>
+
+      <Box
+        sx={{
+          position: 'absolute',
+          top: '50%',
+          left: '50%',
+          transform: 'translate(-50%, -50%)',
+          bgcolor: 'background.paper',
+          boxShadow: 24,
+          p: 4,
+          maxWidth: 400,
+          width: '100%',
+          outline: 'none',
+        }}
+      >
+        <Typography variant="h6" gutterBottom>
+          Choose Styles
+        </Typography>
+        <Box sx={{ mt: 2, display: 'flex', justifyContent: 'flex-end' }}>
+          <Button onClick={handleCloseSettings} sx={{ mr: 1 }}>
+            Cancel
+          </Button>
+          <Button onClick={handleCloseSettings} variant="contained" color="primary">
+            Done
+          </Button>
+        </Box>
+      </Box>
+
+      </Modal>)
+    }</>)
   }
 
   
@@ -365,6 +413,9 @@ const BlockCreation = ({getCustomBlock}) => {
           renderComponent(row)    
         }
         {
+          renderComponentSettings(row)
+        }
+        {
           renderConditionVariables(row)    
         }
         {
@@ -396,14 +447,6 @@ const BlockCreation = ({getCustomBlock}) => {
         </Grid>
 
         </Paper>
-      <Tooltip title="Export Block">
-                <IconButton
-                sx={{ top: 0, right: 0 }}
-                onClick={() => handleExport()}
-                >
-                <GetAppIcon />
-            </IconButton>
-      </Tooltip>
       </>);
 };
 

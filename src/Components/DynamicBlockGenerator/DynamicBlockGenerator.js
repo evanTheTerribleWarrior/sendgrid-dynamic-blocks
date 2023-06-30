@@ -80,7 +80,7 @@ const DynamicBlockGenerator = () => {
         <Typography variant="h6" gutterBottom>
           Choose Folder
         </Typography>
-        {folderStructure && <FolderTree onFolderSelected={handleOnFolderSelected} showFiles={false}/>}
+        {folderStructure && <FolderTree onItemSelected={handleOnFolderSelected} showFiles={false}/>}
         <Typography variant="h6" gutterBottom>
           Save File
         </Typography>

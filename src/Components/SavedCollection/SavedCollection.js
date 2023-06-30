@@ -5,7 +5,7 @@ import SectionHeader from '../SectionHeader/SectionHeader';
 
 const sectionHeaderContent = {
     title: "My Saved Content",
-    subtitle: "Here you can manage your dynamic blocks folder structure. You can right click on a folder to add/rename/delete. You can also rename/delete your dynamic block"
+    subtitle: "Here you can manage your dynamic blocks folder structure. Right-click on a folder or file to see your options"
 }
 
 const SavedCollection = () => {
@@ -23,13 +23,13 @@ const SavedCollection = () => {
 
     return(
         <Grid container direction="row">
-            <Grid item xs={12}>
+            <Grid item xs={12} >
                 <SectionHeader title={sectionHeaderContent.title} subtitle={sectionHeaderContent.subtitle}/>
             </Grid>
-            <Grid item xs={4}>
+            <Grid item xs={3} >
                 <FolderTree onItemSelected={handleSelectedItem} onItemDeleted={handleDeletedItem} showFiles={true} allowUpdates={true}/>
             </Grid>
-            <Grid item xs={7} sx={{marginLeft: "20px"}}>
+            <Grid item xs={8} style={{ overflow: 'auto', marginLeft: "20px" }}>
                 <Box >
                     <div dangerouslySetInnerHTML={{ __html: selectedFile ? selectedFile.content : "" }} />
                 </Box>
