@@ -773,3 +773,86 @@ const FolderTree = ({ onFolderSelected, onFileSelected, showFiles, allowUpdates 
 };
 
 export default FolderTree;
+
+
+{/*<div style={tabContainerStyle}>
+      <div style={contentStyle}>
+        <Tabs value={selectedTab} onChange={handleTabChange} centered variant='fullWidth'>
+          <Tab label="Update Single" />
+          <Tab label="Update Multiple" />
+        </Tabs>
+        <Box>
+          {selectedTab === 0 && <UpdateSingle 
+                            selectedBlock={selectedBlock}
+                            selectedTemplates={selectedTemplates} 
+                            selectedVersions={selectedVersions}
+                        />}
+          {selectedTab === 1 && <UpdateMultiple 
+                            selectedBlock={selectedBlock}
+                            selectedTemplates={selectedTemplates} 
+                            selectedVersions={selectedVersions}
+          />}
+        </Box>
+      </div>
+    </div>*/}
+
+
+
+
+    Update multiple:
+
+
+    <Grid container spacing={5} direction="row" sx={{marginTop: "10px"}}>
+      <Grid item xs={6}>
+        <div style={selectContainerStyle} >
+        <div style={blockContainerStyle}>
+        <FormControl fullWidth>
+          <InputLabel>Select Sample Template</InputLabel>
+          <Select onChange={handleExampleTemplateSelect} style={selectStyle}>
+          {selectedTemplates.map((template) => (
+              <MenuItem key={template.id} value={template.id}>
+                  {template.name}
+              </MenuItem>
+          ))}
+          </Select>
+        </FormControl>
+        <RadioGroup name="options" value={selectedRadioOption} onChange={handleRadioChange}>
+          <FormControlLabel value="header" control={<Radio />} label="Set as Header" />
+          <FormControlLabel value="footer" control={<Radio />} label="Set as Footer" />
+        </RadioGroup>
+        <div>
+          <Checkbox
+            color="primary"
+            checked={createVersionChecked}
+            onChange={handleCreateVersionChange}
+          />
+          <span>Create new Version</span>
+          <Tooltip title="If selected, a new version will be created for every merged template. If not selected, the current selected versions will be updated">
+            <HelpIcon />
+          </Tooltip>
+          
+        </div>
+          <Button onClick={() => handleMergeContent()}>
+          Merge
+        </Button>
+        <Button onClick={() => handleUpdateAll()}>
+          Update all
+        </Button>
+        </div>
+        </div>
+      </Grid>
+      <Grid item xs={6}>
+        <Card style={{border: "1px solid #ccc"}}>
+          {
+            selectedTemplateVersion && mergedHTML ? 
+              (
+                <Box dangerouslySetInnerHTML={{ __html: mergedHTML }} /> 
+              )
+              :
+              (
+                <Box dangerouslySetInnerHTML={{ __html: selectedTemplateVersion.html_content }} /> 
+              )
+            }
+        </Card>
+      </Grid>
+    </Grid>  

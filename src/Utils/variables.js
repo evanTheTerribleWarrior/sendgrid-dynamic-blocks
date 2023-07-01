@@ -40,10 +40,26 @@ export const HANDLEBARS = {
   };
 
   export const COMPONENTS = {
-    IMAGE: { type: "image", label: "Image", fields: [{name: "imageUrl", type: "text", value: ""}] },
+    IMAGE: { 
+      type: "image",
+      label: "Image", 
+      fields: [{name: "imageUrl", type: "text", value: ""}], 
+      styles: {
+        altText: "", 
+        paddingLeft: "",
+        paddingRight: "",
+        paddingTop: "",
+        paddingBottom: "",
+        responsive: false,
+        width: "",
+        height: "",
+        responsiveWidthPercentage: "",
+        alignment: ""
+      }
+    },
     TEXT: { type: "text", label: "Text", fields: [{name: "text", type: "text", value: ""}] },
     //IMAGE_TEXT: "ImageText",
-    CODE: { type: "code", label: "Code", fields: [{name: "code", type: "text", value: ""}] },
+    //CODE: { type: "code", label: "Code", fields: [{name: "code", type: "text", value: ""}] },
     //COLUMNS: "Columns",
     //BUTTON: "Button",
     DIVIDER: { type: "divider", label: "Divider", fields: [{name: "colour", type: "text", value: ""}, {name: height, type: "text", value: ""}]},

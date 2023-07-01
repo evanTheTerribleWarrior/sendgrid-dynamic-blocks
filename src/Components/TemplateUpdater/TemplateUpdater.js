@@ -82,27 +82,10 @@ const TemplateUpdater = () => {
                 <SectionHeader title={sectionHeaderContent.title} subtitle={sectionHeaderContent.subtitle}/>
             </Grid>
             <Grid item xs={12}>
-            {/*<Button
-            variant="contained"
-            color="primary"
-            onClick={handleNextStep}
-            sx={{ position: 'fixed', right: 16 }}
-            >
-                Next
-            </Button>
-            <Button
-                variant="contained"
-                color="primary"
-                onClick={handlePreviousStep}
-                sx={{ position: 'fixed', left: 80 }}
-            >
-                Back
-    </Button>*/}
             <Tabs value={currentStep} onChange={handleTabChange} centered>
                 <Tab label="1. Select Block" onClick={() => setCurrentStep(0)}  />
                 <Tab label="2. Select Templates" disabled={!selectedBlock} onClick={() => setCurrentStep(1)} />
                 <Tab label="3. Prepare" disabled={selectedTemplates.length === 0} onClick={() => setCurrentStep(2)} />
-                <Tab label="4. Finish" disabled={currentStep < 3} />
             </Tabs>
             </Grid>
         </Grid>

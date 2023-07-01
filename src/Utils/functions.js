@@ -49,9 +49,9 @@ export async function fetchSingleTemplateVersion (template_version_obj) {
         }
     });
     const data = await response.json();
-    return data[0].body;
+    return data;
   } catch (error) {
-      throw new Error(`Failed to fetch single template: ${error}`);
+      throw new Error(`Failed to fetch single template version: ${error}`);
   }
 };
 
@@ -61,14 +61,13 @@ export async function fetchSingleTemplateVersion (template_version_obj) {
 
 // It passes in the template data along with the updated HTML we want to apply
 // The HTML is in SG Editor format (i.e. using <table> etc as defined by SG)
-export async function updateSingleTemplate (template_data, mergedTemplateHtml) {
+export async function updateSingleTemplate (template_data) {
     try {
       const url = API_URLS.PROTOCOL + API_URLS.BASE_URL + API_URLS.UPDATE_TEMPLATE    
       const response = await fetch(url, {
           method: 'POST',
           body: JSON.stringify({
-              "template_data": template_data,
-              "mergedTemplateHtml": mergedTemplateHtml
+              "template_data": template_data
             }),
           headers: {
             'Content-Type': 'application/json'

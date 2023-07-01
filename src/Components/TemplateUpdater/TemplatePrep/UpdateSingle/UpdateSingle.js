@@ -93,11 +93,6 @@ const UpdateSingle = ({ selectedBlock, selectedTemplates, selectedVersions }) =>
                   Parse
                 </Button>
               <Grid item xs={6}>
-              <Card>
-                <CardContent>
-                  <Box dangerouslySetInnerHTML={{ __html: selectedBlock.content }} />
-                </CardContent>
-              </Card>
               </Grid>
           </Grid>
           

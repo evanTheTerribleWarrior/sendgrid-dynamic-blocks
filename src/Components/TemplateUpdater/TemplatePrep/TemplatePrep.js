@@ -22,26 +22,12 @@ const TemplatePrep = ({ selectedBlock, selectedTemplates, selectedVersions }) =>
   };
 
   return (
-    <div style={tabContainerStyle}>
-      <div style={contentStyle}>
-        <Tabs value={selectedTab} onChange={handleTabChange} centered variant='fullWidth'>
-          <Tab label="Update Single" />
-          <Tab label="Update Multiple" />
-        </Tabs>
-        <Box>
-          {selectedTab === 0 && <UpdateSingle 
+    <UpdateMultiple 
                             selectedBlock={selectedBlock}
                             selectedTemplates={selectedTemplates} 
                             selectedVersions={selectedVersions}
-                        />}
-          {selectedTab === 1 && <UpdateMultiple 
-                            selectedBlock={selectedBlock}
-                            selectedTemplates={selectedTemplates} 
-                            selectedVersions={selectedVersions}
-                        />}
-        </Box>
-      </div>
-    </div>
+                        />
+    
   );
 }
 

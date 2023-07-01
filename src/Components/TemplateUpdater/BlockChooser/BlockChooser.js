@@ -21,18 +21,20 @@ const BlockChooser = ({onFileSelected}) => {
                 <FolderTree onItemSelected={handleOnItemSelected} showFiles={true}/>
             </Grid>
             <Grid item xs={8}>
-                <Paper elevation={3} style={{ height: '100%' }}>
+                
                 {
                     blockSelected ? (
                             <Box dangerouslySetInnerHTML={{ __html: blockSelected.content }} />
                        
                     ) : (
+                        <Paper elevation={3} style={{ height: '100%' }}>
                         <div style={{ height: '100%', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
                             Select a file from the treeview
                         </div>
+                        </Paper>
                         )
                 }
-                 </Paper>
+                
             </Grid>
         </Grid>
         </Container>

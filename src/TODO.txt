@@ -1,5 +1,4 @@
 SavedCollection:
-- Allow to export a chosen template
 - Drag and drop of a file to another folder in the structure
 - Export/Import File structure
 - Have an "Expand all" button
@@ -13,9 +12,12 @@ Security:
 - Sanitize HTML
 - Protected Functions calling
 
-
+Update Templates
 - Fetch paged templates
 - When finalising, ask if they want to create a new version or not
+- UpdateMultiple: check if HTML is empty and throw error (same in UpdateSingle)
+
+
 - web vitals to connect with segment/analytics?
 - config file through Assets? (to contain variables/URLs etc)
 Every time publishing on github, clear any function URLs

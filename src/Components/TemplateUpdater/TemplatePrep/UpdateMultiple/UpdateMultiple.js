@@ -1,11 +1,8 @@
 import React, { useEffect, useState, useRef } from 'react';
 import { Card, CardMedia, CardContent, Typography, Box,Button, Grid, Checkbox, 
-RadioGroup, FormControlLabel, Radio, FormControl, InputLabel, Select, MenuItem} from '@mui/material';
-import { fetchSingleTemplateVersion } from '../../../../Utils/functions';
-import { Prism as SyntaxHighlighter } from 'react-syntax-highlighter';
-import { atomDark } from 'react-syntax-highlighter/dist/esm/styles/prism';
-import { darcula } from 'react-syntax-highlighter/dist/esm/styles/prism';
-
+RadioGroup, FormControlLabel, Radio, FormControl, InputLabel, Select, MenuItem, Tooltip, FormLabel} from '@mui/material';
+import { fetchSingleTemplateVersion, updateSingleTemplate } from '../../../../Utils/functions';
+import HelpIcon from "@mui/icons-material/Help";
 
 const UpdateMultiple = ({ selectedBlock, selectedTemplates, selectedVersions }) => {
 
@@ -13,16 +10,78 @@ const UpdateMultiple = ({ selectedBlock, selectedTemplates, selectedVersions }) 
   const [selectedTemplateVersion, setSelectedTemplateVersion] = useState({});
   const [selectedRadioOption, setSelectedRadioOption] = useState('');
   const [mergedHTML, setMergedHTML] = useState('')
+  const [createVersionChecked, setCreateVersionChecked] = useState(false);
+  const [selectedRadioUpdateOption, setSelectedRadioUpdateOption] = useState('updateMultiple');
+  const [checkBoxList, setCheckBoxList] = useState([])
+  const [checkedTemplates, setCheckedTemplates] = useState([])
+
+  const parser = new DOMParser();
+
+  useEffect(() => {
+    createCheckboxList();
+  }, []);
+
+  const createCheckboxList = () => {
+
+    const result = selectedVersions.flatMap(({ template_id, versions_array }) =>
+        versions_array
+        .filter((versionId) => {
+        const version = selectedTemplates
+          .flatMap((template) => template.versions_array)
+          .find((version) => version.id === versionId);
+        return version !== undefined;
+        })
+        .map((versionId) => {
+        const template = selectedTemplates.find((template) =>
+          template.versions_array.some((version) => version.id === versionId)
+        );
+        const version = template.versions_array.find((version) => version.id === versionId);
+
+      return {
+        template_id,
+        template_name: template.name,
+        version_id: versionId,
+        version_name: version.name,
+      };
+    })
+);
+
+    setCheckBoxList(result)
+
+  }
 
   const handleRadioChange = (event) => {
-    setSelectedRadioOption(event.target.value);
+    setSelectedRadioUpdateOption(event.target.value);
+    setCheckedTemplates([])
   };
+
+  const handleManageCheckboxList = (template) => {
+
+    console.log("Passed" + template)
+  
+    if (selectedRadioUpdateOption === "updateOne"){
+      setCheckedTemplates([template])
+    }
+    else{
+      const updatedTemplates = [...checkedTemplates];
+      if (updatedTemplates.includes(template)) {
+        const index = updatedTemplates.indexOf(template);
+        updatedTemplates.splice(index, 1);
+      } else {
+        updatedTemplates.push(template);
+      }
+      console.table(updatedTemplates)
+      setCheckedTemplates(updatedTemplates);
+    }
+  }
+
 
   const fetchTemplateVersion = async (template_version_obj) => {
     try {
       const data = await fetchSingleTemplateVersion(template_version_obj);
       console.log("returned data: " + JSON.stringify(data))
       setSelectedTemplateVersion(data);
+      return data;
     } catch (error) {
       console.error('Error fetching templates:', error);
     }
@@ -36,11 +95,9 @@ const UpdateMultiple = ({ selectedBlock, selectedTemplates, selectedVersions }) 
     setExampleSelectedTemplate(template_id)
   }
 
-  const domParserMerge = () => {
+  const domParserMerge = (versionHtmlContent) => {
 
-    const parser = new DOMParser();
-    
-    const doc = parser.parseFromString(selectedTemplateVersion.html_content, 'text/html');
+    const doc = parser.parseFromString(versionHtmlContent ? versionHtmlContent : selectedTemplateVersion.html_content, 'text/html');
     const newElement = parser.parseFromString(selectedBlock.content, 'text/html').body;
 
     if (selectedRadioOption === "header"){
@@ -63,69 +120,110 @@ const UpdateMultiple = ({ selectedBlock, selectedTemplates, selectedVersions }) 
     
   }
   const handleMergeContent = () => {
-    setMergedHTML(domParserMerge())
+    setMergedHTML(domParserMerge(null))
   }
 
+  const handleUpdateAllMerge = async (versionData) => {
+    const resultHtml = domParserMerge(versionData.html_content);
+    console.log(resultHtml);
+    const data = {
+      version_id: versionData.id,
+      template_id: versionData.template_id,
+      name: versionData.name,
+      html_content: resultHtml,
+      subject: versionData.subject
+    }
+    try {
+      const result = await updateSingleTemplate(data)
+      console.log(result)
+    }
+    catch (error) {
+      console.error(`handleUpdateAllMerge error at UpdateMultiple.js: ${error}`)
+    }
+
+  }
   const handleUpdateAll = () => {
+
+    const initialPromises = [];
+
+    selectedVersions.forEach((template_version_item) => {
+      const { template_id, versions_array } = template_version_item;
+
+      versions_array.forEach(async (versionId)=> {
+        let promise = "";
+        const template_version_obj = {
+          "template_id" : template_id,
+          "version_id" : versionId
+        }
+        try {
+          promise = await fetchTemplateVersion(template_version_obj);
+          handleUpdateAllMerge(promise)
+        }
+        catch (error) {
+          console.error(`handleUpdateAll on UpdateMultiple.js failed: ${error}`)
+        }
+        initialPromises.push(promise)
+        
+      })
+    })
     console.log(selectedTemplates);
     console.log(selectedVersions)
   }
-  
+
+  const selectContainerStyle = {
+    display: 'flex',
+    justifyContent: 'flex-end',
+    alignItems: 'center',
+    width: '100%',
+  };
+
+  const selectStyle = {
+    width: '500px', 
+    textOverflow: 'ellipsis',
+    whiteSpace: 'nowrap',
+    overflow: 'hidden',
+  };
+
+
+  const blockContainerStyle = {
+    marginLeft: 'auto',
+    textAlign: 'left',
+  };
   return (
 
-    <Grid container spacing={10} direction="row" sx={{marginTop: "10px"}}>
-      <Grid item xs={12}>
+    <Grid container spacing={2}>
+      <Grid item xs={6}>
+        <FormControl component="fieldset">
+          <FormLabel component="legend">Update Options</FormLabel>
+          <RadioGroup value={selectedRadioUpdateOption} onChange={handleRadioChange} row>
+            <FormControlLabel value="updateOne" control={<Radio />} label="Update One" />
+            <FormControlLabel value="updateMultiple" control={<Radio />} label="Update Multiple" />
+          </RadioGroup>
+        </FormControl>
 
-        
-            <Grid container spacing={5} direction="row">
-              <Grid item xs={6}>
-              <FormControl fullWidth>
-                <InputLabel>Select Sample Template</InputLabel>
-                <Select onChange={handleExampleTemplateSelect}>
-                {selectedTemplates.map((template) => (
-                    <MenuItem key={template.id} value={template.id}>
-                        {template.name}
-                    </MenuItem>
-                ))}
-                </Select>
-            </FormControl>
-                <RadioGroup name="options" value={selectedRadioOption} onChange={handleRadioChange}>
-                  <FormControlLabel value="header" control={<Radio />} label="Set as Header" />
-                  <FormControlLabel value="footer" control={<Radio />} label="Set as Footer" />
-                </RadioGroup>
-                  <Button onClick={() => handleMergeContent()}>
-                  Merge
-                </Button>
-                <Button onClick={() => handleUpdateAll()}>
-                  Update all
-                </Button>
-              </Grid>
-              <Grid item xs={6}>
-              <Card>
-          <CardContent>
-              <Box dangerouslySetInnerHTML={{ __html: selectedBlock.content }} />
-              </CardContent>
-        </Card>
-              </Grid>
-          </Grid>
-          
+        <FormControl component="fieldset">
+          <FormLabel component="legend">Template - Version List</FormLabel>
+          {checkBoxList.map((template) => {
+            return (<FormControlLabel
+              key={`${template.template_id}-${template.version_id}`}
+              control={
+                <Checkbox
+                  checked={checkedTemplates.some((selected) => selected.template_id === template.template_id && selected.version_id === template.version_id)}
+                  onChange={() => handleManageCheckboxList(template)}
+                  //value={template}
+                />
+              }
+              label={`${template.template_name} - ${template.version_name}`}
+            />)
+          })}
+        </FormControl>
+      </Grid>
 
+      <Grid item xs={6}>
+        <div dangerouslySetInnerHTML={{ __html: selectedTemplateVersion.html_content}} />
       </Grid>
-      <Grid item xs={12} sx={{marginTop: "20px"}}>
-        <Card style={{border: "1px solid #ccc"}}>
-          {
-            selectedTemplateVersion && mergedHTML ? 
-              (
-                <Box dangerouslySetInnerHTML={{ __html: mergedHTML }} /> 
-              )
-              :
-              (
-                <Box dangerouslySetInnerHTML={{ __html: selectedTemplateVersion.html_content }} /> 
-              )
-            }
-        </Card>
-      </Grid>
-    </Grid>  
+            </Grid>
+    
   );
 };
 
