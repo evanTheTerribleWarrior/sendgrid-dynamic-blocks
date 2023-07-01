@@ -856,3 +856,18 @@ export default FolderTree;
         </Card>
       </Grid>
     </Grid>  
+
+
+<Grid item xs={4}>
+        <Grid container direction="column">
+          <Grid item>
+          
+          </Grid>
+          <Grid item>
+            <Paper style={blockStyle}>
+              <div dangerouslySetInnerHTML={{ __html: selectedBlock.content}} />
+            </Paper>    
+          </Grid>
+        </Grid>
+        
+      </Grid>

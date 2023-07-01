@@ -1,6 +1,6 @@
 import React, { useEffect, useState, useRef } from 'react';
 import { Card, CardMedia, CardContent, Typography, Box,Button, Grid, Checkbox, 
-RadioGroup, FormControlLabel, Radio, FormControl, InputLabel, Select, MenuItem, Tooltip, FormLabel} from '@mui/material';
+RadioGroup, FormControlLabel, Radio, FormControl, InputLabel, Select, MenuItem, Tooltip, FormLabel, Paper} from '@mui/material';
 import { fetchSingleTemplateVersion, updateSingleTemplate } from '../../../../Utils/functions';
 import HelpIcon from "@mui/icons-material/Help";
 
@@ -50,10 +50,18 @@ const UpdateMultiple = ({ selectedBlock, selectedTemplates, selectedVersions }) 
 
   }
 
+  const handleCreateVersionChange = (event) => {
+    setCreateVersionChecked(event.target.checked)
+  }
+
   const handleRadioChange = (event) => {
     setSelectedRadioUpdateOption(event.target.value);
     setCheckedTemplates([])
   };
+
+  const handlePositionChange = (event) => {
+    setSelectedRadioOption(event.target.value)
+  }
 
   const handleManageCheckboxList = (template) => {
 
@@ -170,60 +178,108 @@ const UpdateMultiple = ({ selectedBlock, selectedTemplates, selectedVersions }) 
     console.log(selectedVersions)
   }
 
-  const selectContainerStyle = {
+  const placeholderStyle = {
+    width: '800px', // Adjust the width as needed
+    height: '500px', // Adjust the height as needed
+    border: '1px solid #ddd', // Visible border style
     display: 'flex',
-    justifyContent: 'flex-end',
+    overflow: 'auto',
+    justifyContent: 'center',
     alignItems: 'center',
-    width: '100%',
   };
 
-  const selectStyle = {
-    width: '500px', 
-    textOverflow: 'ellipsis',
-    whiteSpace: 'nowrap',
-    overflow: 'hidden',
+  const blockStyle = {
+    width: '500px', // Adjust the desired width
+    maxHeight: '300px', // Adjust the desired max height
+    overflow: 'auto', // Add scrollbar when necessary
+    border: '1px solid #ddd', // Visible border style
+    padding: '10px',
   };
 
-
-  const blockContainerStyle = {
-    marginLeft: 'auto',
-    textAlign: 'left',
-  };
   return (
+    <div style={{marginTop: "20px"}}>
+    <Grid container spacing={5}>
+      <Grid item xs={4}>
+        
+        <Grid container direction="column">
+          <FormControl component="fieldset">
+            <FormLabel component="legend">Update Options</FormLabel>
+            <RadioGroup value={selectedRadioUpdateOption} onChange={handleRadioChange} row>
+              <FormControlLabel value="updateOne" control={<Radio />} label="Update One" />
+              <FormControlLabel value="updateMultiple" control={<Radio />} label="Update Multiple" />
+            </RadioGroup>
+          </FormControl>
 
-    <Grid container spacing={2}>
-      <Grid item xs={6}>
-        <FormControl component="fieldset">
-          <FormLabel component="legend">Update Options</FormLabel>
-          <RadioGroup value={selectedRadioUpdateOption} onChange={handleRadioChange} row>
-            <FormControlLabel value="updateOne" control={<Radio />} label="Update One" />
-            <FormControlLabel value="updateMultiple" control={<Radio />} label="Update Multiple" />
-          </RadioGroup>
-        </FormControl>
+          <FormControl component="fieldset" sx={{marginTop: "20px"}}>
+            <FormLabel component="legend">Template -&gt; Version List</FormLabel>
+            {checkBoxList.map((template) => {
+              return (<FormControlLabel
+                key={`${template.template_id}-${template.version_id}`}
+                control={
+                  <Checkbox
+                    checked={checkedTemplates.some((selected) => selected.template_id === template.template_id && selected.version_id === template.version_id)}
+                    onChange={() => handleManageCheckboxList(template)}
+                    //value={template}
+                  />
+                }
+                label={`${template.template_name} -> ${template.version_name}`}
+              />)
+            })}
+          </FormControl>
 
-        <FormControl component="fieldset">
-          <FormLabel component="legend">Template - Version List</FormLabel>
-          {checkBoxList.map((template) => {
-            return (<FormControlLabel
-              key={`${template.template_id}-${template.version_id}`}
-              control={
-                <Checkbox
-                  checked={checkedTemplates.some((selected) => selected.template_id === template.template_id && selected.version_id === template.version_id)}
-                  onChange={() => handleManageCheckboxList(template)}
-                  //value={template}
-                />
-              }
-              label={`${template.template_name} - ${template.version_name}`}
-            />)
-          })}
-        </FormControl>
+          <FormControl disabled={selectedRadioUpdateOption === "updateOne"} component="fieldset" sx={{marginTop: "20px"}}>
+            <FormLabel component="legend">Block Position</FormLabel>
+            <RadioGroup name="options" value={selectedRadioOption} onChange={handlePositionChange}>
+              <FormControlLabel value="header" control={<Radio />} label="Set as Header" />
+              <FormControlLabel value="footer" control={<Radio />} label="Set as Footer" />
+            </RadioGroup>
+          </FormControl>
+
+          <FormControl component="fieldset" sx={{marginTop: "20px"}}>
+            <FormLabel component="legend">Create Version</FormLabel>
+            <div>
+            <Checkbox
+              color="primary"
+              checked={createVersionChecked}
+              onChange={handleCreateVersionChange}
+            />
+            <span>If clicked, a new version will be created for every updated template</span>  
+            </div>
+          </FormControl>  
+          
+
+          <FormControl component="fieldset" sx={{marginTop: "20px"}}>
+            <FormLabel component="legend">Actions</FormLabel>
+            <Button variant="outlined" sx={{marginTop: "20px"}} onClick={() => handleMergeContent()}>
+             Preview
+            </Button>
+            <Button variant="contained" sx={{marginTop: "20px"}} onClick={() => handleUpdateAll()}>
+              Update all
+            </Button>
+          </FormControl>
+            
+          </Grid>
       </Grid>
 
-      <Grid item xs={6}>
-        <div dangerouslySetInnerHTML={{ __html: selectedTemplateVersion.html_content}} />
+      <Grid item xs={4}>
+        {
+          selectedTemplateVersion.html_content ? 
+          (
+            <div dangerouslySetInnerHTML={{ __html: selectedTemplateVersion.html_content}}/>
+          )
+          :
+          (
+            <Paper style={placeholderStyle}>
+              <div>Your updated template will render here</div>
+            </Paper>
+          )
+        }
+         
       </Grid>
+
+      
             </Grid>
-    
+      </div>
   );
 };
 
