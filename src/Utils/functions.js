@@ -133,3 +133,19 @@ export const getCodeBlockObject = (type,value) => {
       if (found) return CODE_BLOCKS[key].generateSGCode(value)
   }
 };
+
+export const getLocalStorageSizeInKB = () => {
+  let totalSize = 0;
+  for (let key in localStorage) {
+    if (localStorage.hasOwnProperty(key)) {
+      totalSize += localStorage[key].length;
+    }
+  }
+  return totalSize / 1024;
+}
+
+export const getAppStateSizeInKB = (store) => {
+  const state = store.getState();
+  const stateString = JSON.stringify(state);
+  return stateString.length / 1024;
+}
