@@ -17,6 +17,7 @@ Update Templates
 - UpdateMultiple: check if HTML is empty and throw error (same in UpdateSingle)
 - While updating give a Loading
 - Before updating all, give final confirmation modal especially if they have selected to not create new version.
+- When adding footer under Social, seems to not render in the Editor for some reason
 
 
 - web vitals to connect with segment/analytics?

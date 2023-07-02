@@ -1,6 +1,7 @@
 import React, {useState} from 'react';
 import {Grid, Box, Paper, Container} from '@mui/material';
 import FolderTree from '../../FolderTree/FolderTree';
+import TemplateRenderer from '../../TemplateRenderer/TemplateRenderer';
 
 const BlockChooser = ({onFileSelected}) => {
 
@@ -28,6 +29,7 @@ const BlockChooser = ({onFileSelected}) => {
         width: '50vw',
         height: '60vh',
         border: '1px solid #ddd',
+        display: 'flex',
         overflow: 'auto',
         justifyContent: 'center',
         alignItems: 'center',
@@ -41,17 +43,7 @@ const BlockChooser = ({onFileSelected}) => {
             </Grid>
             <Grid item xs={7}>
                 
-                {
-                    blockSelected ? (
-                            <Paper style={templateRenderStyle}>
-                                <div dangerouslySetInnerHTML={{ __html: blockSelected.content }} />
-                            </Paper>
-                    ) : (
-                        <Paper style={placeholderStyle}>
-                            Select a file from the treeview
-                        </Paper>
-                        )
-                }
+                <TemplateRenderer template={blockSelected} placeholderText="Your selected template will render here"/>
                 
             </Grid>
         </Grid>

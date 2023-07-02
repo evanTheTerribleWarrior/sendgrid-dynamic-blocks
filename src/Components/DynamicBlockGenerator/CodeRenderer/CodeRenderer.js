@@ -33,7 +33,7 @@ const CodeRenderer = ({onGenerateDynamicBlock}) => {
       <BlockCreation getCustomBlock={handleGeneratedDynamicBlock}  />
       </Container>
       
-      <Grid container direction="column" spacing={10}>
+      <Grid container direction="row" spacing={10} >
         <Grid item xs={6} >
         <Typography variant="h6" align="center" sx={{ pt: 2 }}>
           Generated Steps
@@ -51,7 +51,7 @@ const CodeRenderer = ({onGenerateDynamicBlock}) => {
         <Grid item xs={6} >
             
           <>
-          <Grid container sx={{ height: '100%', flexDirection: 'column' }}>
+          <Grid container sx={{ height: '100%', flexDirection: 'column'}}>
           <Typography variant="h6" align="center" sx={{ pt: 2 }}>
           Generated Code
         </Typography>
@@ -60,17 +60,16 @@ const CodeRenderer = ({onGenerateDynamicBlock}) => {
           {codeView ? (
               <Grid item> 
               {generatedHtml ? (
-                <Paper elevation={2} sx={{ marginTop: '10px' }}>
-                <SyntaxHighlighter language="html" style={darcula}>
+                <SyntaxHighlighter language="html" style={darcula} customStyle={{borderRadius: "5px",marginTop: '10px', overflow: 'auto'}}>
                   {generatedHtml}
                 </SyntaxHighlighter>
-                </Paper>
+            
               ): <Paper elevation={2} sx={{ marginTop: '10px'}}><Grid item><Typography variant="h6" align="center" sx={{ p: 3, color: 'grey' }}>No code yet</Typography></Grid></Paper>}
               </Grid>
             ) : (
               <Grid item>
               
-                {generatedHtml ? (<Paper elevation={2} sx={{ p: 2, border: '1px solid #ccc', marginTop: '10px' }}><Box dangerouslySetInnerHTML={{ __html: generatedHtml }} /></Paper>)
+                {generatedHtml ? (<Paper sx={{ p: 2, border: '1px solid #ccc', marginTop: '10px',  overflow: 'auto'  }}><Box dangerouslySetInnerHTML={{ __html: generatedHtml }} /></Paper>)
                   : <Paper elevation={2} sx={{ marginTop: '10px'}}><Grid item><Typography variant="h6" align="center" sx={{ p: 3, color: 'grey' }}>No code yet</Typography></Grid></Paper>}
           
             </Grid>

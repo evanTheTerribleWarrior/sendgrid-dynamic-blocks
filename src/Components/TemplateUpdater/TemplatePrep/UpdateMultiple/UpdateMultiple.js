@@ -1,6 +1,7 @@
 import React, { useEffect, useState, useRef } from 'react';
 import {Button, Grid, Checkbox, RadioGroup, FormControlLabel, Radio, FormControl, FormLabel, Paper} from '@mui/material';
 import { fetchSingleTemplateVersion, updateSingleTemplate } from '../../../../Utils/functions';
+import TemplateRenderer from '../../../TemplateRenderer/TemplateRenderer';
 
 const UpdateMultiple = ({ selectedBlock, selectedTemplates, selectedVersions }) => {
 
@@ -95,22 +96,34 @@ const UpdateMultiple = ({ selectedBlock, selectedTemplates, selectedVersions }) 
   const domParserMerge = (versionHtmlContent) => {
 
     const doc = parser.parseFromString(versionHtmlContent ? versionHtmlContent : selectedTemplateVersion.html_content, 'text/html');
-    const newElement = parser.parseFromString(selectedBlock.content, 'text/html').body;
+    const preheaderTable = doc.querySelector('table[data-type="preheader"]');
 
     if (selectedRadioOption === "header"){
-      const table = doc.querySelector('table[data-type="preheader"]');
-      if (table) {
-        table.insertAdjacentElement('afterend', newElement);
+      if (preheaderTable) {
+        preheaderTable.insertAdjacentHTML('afterend', selectedBlock.content);
       }
-      console.log("Result: " + doc.documentElement.innerHTML)
-      return doc.documentElement.innerHTML;
+      console.log("Result: " + doc.documentElement.outerHTML)
+      return doc.documentElement.outerHTML;
     }
     else if(selectedRadioOption === "footer") {
-      const tables = doc.querySelectorAll('table');
-      if (tables.length > 0) {
-        const lastTable = tables[tables.length - 1];
-        lastTable.insertAdjacentElement('afterend', newElement);
+      const siblings = [];
+      let currentNode = preheaderTable.nextElementSibling;
+      
+      while (currentNode) {
+        siblings.push(currentNode);
+        currentNode = currentNode.nextElementSibling;
       }
+      console.log(siblings)
+      let lastSiblingIndex = siblings.length - 1;
+      if (siblings[lastSiblingIndex].getAttribute('data-type') === 'unsubscribe') {
+        lastSiblingIndex--;
+      }
+      const lastSiblingParent = siblings[lastSiblingIndex];
+      if (lastSiblingParent) {
+        console.log(lastSiblingParent)
+        lastSiblingParent.insertAdjacentHTML('afterend', selectedBlock.content);
+      }
+      //console.log("Result: " + doc.documentElement.outerHTML)
       return doc.documentElement.outerHTML;
     }
 
@@ -144,11 +157,13 @@ const UpdateMultiple = ({ selectedBlock, selectedTemplates, selectedVersions }) 
   }
 
   const handleCheckBeforeUpdate = () => {
-    
+
   }
   const handleUpdateAll = () => {
 
     const initialPromises = [];
+
+    console.log(checkedTemplates)
 
     checkedTemplates.forEach( async (template_version_item) => {
       const { template_id, version_id } = template_version_item;
@@ -179,9 +194,10 @@ const UpdateMultiple = ({ selectedBlock, selectedTemplates, selectedVersions }) 
   };
 
   const templateRenderStyle = {
-    width: '50vw',
+    width: '60vw',
     height: '60vh',
     border: '1px solid #ddd',
+    //display: 'flex',
     overflow: 'auto',
     justifyContent: 'center',
     alignItems: 'center',
@@ -253,21 +269,7 @@ const UpdateMultiple = ({ selectedBlock, selectedTemplates, selectedVersions }) 
       </Grid>
 
       <Grid item xs={4}>
-        {
-          selectedTemplateVersion || mergedHTML ? 
-          (
-            <Paper style={templateRenderStyle}>
-              <div dangerouslySetInnerHTML={{ __html: mergedHTML ? mergedHTML : selectedTemplateVersion.html_content}}/>
-            </Paper>
-            
-          )
-          :
-          (
-            <Paper style={placeholderStyle}>
-              <div>Your updated template will render here</div>
-            </Paper>
-          )
-        }
+      <TemplateRenderer template={mergedHTML} placeholderText="Your updated template will render here"/>
          
       </Grid>
 

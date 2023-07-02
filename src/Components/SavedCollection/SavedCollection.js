@@ -2,6 +2,7 @@ import React, {useContext, useState} from 'react';
 import {CardContent, Grid, Card, Paper, Box, Button} from '@mui/material'
 import FolderTree from '../FolderTree/FolderTree';
 import SectionHeader from '../SectionHeader/SectionHeader';
+import TemplateRenderer from '../TemplateRenderer/TemplateRenderer';
 
 const sectionHeaderContent = {
     title: "My Saved Content",
@@ -20,6 +21,21 @@ const SavedCollection = () => {
           if(selectedFile && item.id === selectedFile.id) setSelectedFile(null)
       }
     
+      const placeholderStyle = {
+        width: '50vw',
+        height: '60vh',
+        border: '1px solid #ddd',
+        overflow: 'auto',
+        padding: '10px'
+      };
+    
+      const templateRenderStyle = {
+        width: '50vw',
+        height: '60vh',
+        border: '1px solid #ddd',
+        overflow: 'auto',
+        padding: '50px'
+      };
 
     return(
         <Grid container direction="row">
@@ -30,9 +46,9 @@ const SavedCollection = () => {
                 <FolderTree onItemSelected={handleSelectedItem} onItemDeleted={handleDeletedItem} showFiles={true} allowUpdates={true}/>
             </Grid>
             <Grid item xs={8} style={{ overflow: 'auto', marginLeft: "20px" }}>
-                <Box >
-                    <div dangerouslySetInnerHTML={{ __html: selectedFile ? selectedFile.content : "" }} />
-                </Box>
+                
+                    <TemplateRenderer template={selectedFile} placeholderText="Your selected template will render here"/>
+                
             </Grid>
         </Grid>
     )
