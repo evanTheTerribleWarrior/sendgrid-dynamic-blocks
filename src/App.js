@@ -14,6 +14,7 @@ const App = () => {
       <Router>
         <Layout>
           <Routes>
+          <Route exact path="/" element={<DynamicBlockGenerator/>} />
             <Route exact path="/build" element={<DynamicBlockGenerator/>} />
             <Route exact path="/update" element={<TemplateUpdater/>} />
             <Route exact path="/collection" element={<SavedCollection />} />

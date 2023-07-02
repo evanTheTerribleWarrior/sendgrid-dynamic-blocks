@@ -61,13 +61,14 @@ export async function fetchSingleTemplateVersion (template_version_obj) {
 
 // It passes in the template data along with the updated HTML we want to apply
 // The HTML is in SG Editor format (i.e. using <table> etc as defined by SG)
-export async function updateSingleTemplate (template_data) {
+export async function updateSingleTemplate (template_data, create_version_checked) {
     try {
       const url = API_URLS.PROTOCOL + API_URLS.BASE_URL + API_URLS.UPDATE_TEMPLATE    
       const response = await fetch(url, {
           method: 'POST',
           body: JSON.stringify({
-              "template_data": template_data
+              "template_data": template_data,
+              "create_version_checked": create_version_checked
             }),
           headers: {
             'Content-Type': 'application/json'

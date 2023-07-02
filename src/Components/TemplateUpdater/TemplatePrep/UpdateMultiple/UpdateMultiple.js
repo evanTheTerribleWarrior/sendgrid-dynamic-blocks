@@ -1,13 +1,10 @@
 import React, { useEffect, useState, useRef } from 'react';
-import { Card, CardMedia, CardContent, Typography, Box,Button, Grid, Checkbox, 
-RadioGroup, FormControlLabel, Radio, FormControl, InputLabel, Select, MenuItem, Tooltip, FormLabel, Paper} from '@mui/material';
+import {Button, Grid, Checkbox, RadioGroup, FormControlLabel, Radio, FormControl, FormLabel, Paper} from '@mui/material';
 import { fetchSingleTemplateVersion, updateSingleTemplate } from '../../../../Utils/functions';
-import HelpIcon from "@mui/icons-material/Help";
 
 const UpdateMultiple = ({ selectedBlock, selectedTemplates, selectedVersions }) => {
 
-  const [exampleSelectedTemplate,setExampleSelectedTemplate] = useState(null);
-  const [selectedTemplateVersion, setSelectedTemplateVersion] = useState({});
+  const [selectedTemplateVersion, setSelectedTemplateVersion] = useState(null);
   const [selectedRadioOption, setSelectedRadioOption] = useState('');
   const [mergedHTML, setMergedHTML] = useState('')
   const [createVersionChecked, setCreateVersionChecked] = useState(false);
@@ -83,24 +80,16 @@ const UpdateMultiple = ({ selectedBlock, selectedTemplates, selectedVersions }) 
     }
   }
 
-
-  const fetchTemplateVersion = async (template_version_obj) => {
-    try {
-      const data = await fetchSingleTemplateVersion(template_version_obj);
-      console.log("returned data: " + JSON.stringify(data))
-      setSelectedTemplateVersion(data);
-      return data;
-    } catch (error) {
-      console.error('Error fetching templates:', error);
+  const handleExampleTemplateFetch = async () => {
+    
+    const chosen_template = checkedTemplates[Math.floor(Math.random() * checkedTemplates.length)];
+    const template_version_obj = {
+      template_id: chosen_template.template_id,
+      version_id: chosen_template.version_id
     }
-  };
-
-  const handleExampleTemplateSelect = (event) => {
-    const template_id = event.target.value;
-    const template_version_obj = selectedVersions.find(template_version => template_version.template_id === template_id)
-    const template_to_get = {"template_id": template_id, "version_id": template_version_obj.versions_array[0]}
-    fetchTemplateVersion(template_to_get)
-    setExampleSelectedTemplate(template_id)
+    const data = await fetchSingleTemplateVersion(template_version_obj);
+    setSelectedTemplateVersion(data);
+    return data;
   }
 
   const domParserMerge = (versionHtmlContent) => {
@@ -127,13 +116,16 @@ const UpdateMultiple = ({ selectedBlock, selectedTemplates, selectedVersions }) 
 
     
   }
-  const handleMergeContent = () => {
-    setMergedHTML(domParserMerge(null))
+  const handlePreview = async () => {
+    if (selectedRadioUpdateOption === "updateMultiple"){
+      const version = await handleExampleTemplateFetch()
+      setMergedHTML(domParserMerge(version.html_content))
+    }
+    
   }
 
   const handleUpdateAllMerge = async (versionData) => {
     const resultHtml = domParserMerge(versionData.html_content);
-    console.log(resultHtml);
     const data = {
       version_id: versionData.id,
       template_id: versionData.template_id,
@@ -142,7 +134,7 @@ const UpdateMultiple = ({ selectedBlock, selectedTemplates, selectedVersions }) 
       subject: versionData.subject
     }
     try {
-      const result = await updateSingleTemplate(data)
+      const result = await updateSingleTemplate(data, createVersionChecked)
       console.log(result)
     }
     catch (error) {
@@ -150,50 +142,49 @@ const UpdateMultiple = ({ selectedBlock, selectedTemplates, selectedVersions }) 
     }
 
   }
+
+  const handleCheckBeforeUpdate = () => {
+    
+  }
   const handleUpdateAll = () => {
 
     const initialPromises = [];
 
-    selectedVersions.forEach((template_version_item) => {
-      const { template_id, versions_array } = template_version_item;
-
-      versions_array.forEach(async (versionId)=> {
-        let promise = "";
-        const template_version_obj = {
-          "template_id" : template_id,
-          "version_id" : versionId
-        }
-        try {
-          promise = await fetchTemplateVersion(template_version_obj);
-          handleUpdateAllMerge(promise)
-        }
-        catch (error) {
-          console.error(`handleUpdateAll on UpdateMultiple.js failed: ${error}`)
-        }
-        initialPromises.push(promise)
-        
-      })
+    checkedTemplates.forEach( async (template_version_item) => {
+      const { template_id, version_id } = template_version_item;
+      let promise = "";
+      const template_version_obj = {
+        "template_id" : template_id,
+        "version_id" : version_id
+      }
+      try {
+        promise = await fetchSingleTemplateVersion(template_version_obj);
+        handleUpdateAllMerge(promise)
+      }
+      catch (error) {
+        console.error(`handleUpdateAll on UpdateMultiple.js failed: ${error}`)
+      }
+      initialPromises.push(promise) 
     })
-    console.log(selectedTemplates);
-    console.log(selectedVersions)
   }
 
   const placeholderStyle = {
-    width: '800px', // Adjust the width as needed
-    height: '500px', // Adjust the height as needed
-    border: '1px solid #ddd', // Visible border style
-    display: 'flex',
+    width: '50vw',
+    height: '60vh',
+    border: '1px solid #ddd',
     overflow: 'auto',
+    display: 'flex',
     justifyContent: 'center',
     alignItems: 'center',
   };
 
-  const blockStyle = {
-    width: '500px', // Adjust the desired width
-    maxHeight: '300px', // Adjust the desired max height
-    overflow: 'auto', // Add scrollbar when necessary
-    border: '1px solid #ddd', // Visible border style
-    padding: '10px',
+  const templateRenderStyle = {
+    width: '50vw',
+    height: '60vh',
+    border: '1px solid #ddd',
+    overflow: 'auto',
+    justifyContent: 'center',
+    alignItems: 'center',
   };
 
   return (
@@ -250,7 +241,7 @@ const UpdateMultiple = ({ selectedBlock, selectedTemplates, selectedVersions }) 
 
           <FormControl component="fieldset" sx={{marginTop: "20px"}}>
             <FormLabel component="legend">Actions</FormLabel>
-            <Button variant="outlined" sx={{marginTop: "20px"}} onClick={() => handleMergeContent()}>
+            <Button variant="outlined" sx={{marginTop: "20px"}} onClick={() => handlePreview()}>
              Preview
             </Button>
             <Button variant="contained" sx={{marginTop: "20px"}} onClick={() => handleUpdateAll()}>
@@ -263,9 +254,12 @@ const UpdateMultiple = ({ selectedBlock, selectedTemplates, selectedVersions }) 
 
       <Grid item xs={4}>
         {
-          selectedTemplateVersion.html_content ? 
+          selectedTemplateVersion || mergedHTML ? 
           (
-            <div dangerouslySetInnerHTML={{ __html: selectedTemplateVersion.html_content}}/>
+            <Paper style={templateRenderStyle}>
+              <div dangerouslySetInnerHTML={{ __html: mergedHTML ? mergedHTML : selectedTemplateVersion.html_content}}/>
+            </Paper>
+            
           )
           :
           (

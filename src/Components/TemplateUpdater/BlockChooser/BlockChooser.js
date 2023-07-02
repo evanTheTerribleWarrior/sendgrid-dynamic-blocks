@@ -14,23 +14,41 @@ const BlockChooser = ({onFileSelected}) => {
         
     }
 
+    const placeholderStyle = {
+        width: '50vw',
+        height: '60vh',
+        border: '1px solid #ddd',
+        overflow: 'auto',
+        display: 'flex',
+        justifyContent: 'center',
+        alignItems: 'center',
+      };
+    
+      const templateRenderStyle = {
+        width: '50vw',
+        height: '60vh',
+        border: '1px solid #ddd',
+        overflow: 'auto',
+        justifyContent: 'center',
+        alignItems: 'center',
+      };
+
     return (
         <Container>
         <Grid container direction="row" spacing={2} sx={{margin: "20px"}} >
-            <Grid item xs={4}>
+            <Grid item xs={3} >
                 <FolderTree onItemSelected={handleOnItemSelected} showFiles={true}/>
             </Grid>
-            <Grid item xs={8}>
+            <Grid item xs={7}>
                 
                 {
                     blockSelected ? (
-                            <Box dangerouslySetInnerHTML={{ __html: blockSelected.content }} />
-                       
+                            <Paper style={templateRenderStyle}>
+                                <div dangerouslySetInnerHTML={{ __html: blockSelected.content }} />
+                            </Paper>
                     ) : (
-                        <Paper elevation={3} style={{ height: '100%' }}>
-                        <div style={{ height: '100%', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                        <Paper style={placeholderStyle}>
                             Select a file from the treeview
-                        </div>
                         </Paper>
                         )
                 }

@@ -85,7 +85,7 @@ const TemplateUpdater = () => {
             <Tabs value={currentStep} onChange={handleTabChange} centered>
                 <Tab label="1. Select Block" onClick={() => setCurrentStep(0)}  />
                 <Tab label="2. Select Templates" disabled={!selectedBlock} onClick={() => setCurrentStep(1)} />
-                <Tab label="3. Prepare" disabled={selectedTemplates.length === 0} onClick={() => setCurrentStep(2)} />
+                <Tab label="3. Update" disabled={selectedTemplates.length === 0} onClick={() => setCurrentStep(2)} />
             </Tabs>
             </Grid>
         </Grid>

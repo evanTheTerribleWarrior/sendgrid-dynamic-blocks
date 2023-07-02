@@ -14,8 +14,9 @@ Security:
 
 Update Templates
 - Fetch paged templates
-- When finalising, ask if they want to create a new version or not
 - UpdateMultiple: check if HTML is empty and throw error (same in UpdateSingle)
+- While updating give a Loading
+- Before updating all, give final confirmation modal especially if they have selected to not create new version.
 
 
 - web vitals to connect with segment/analytics?
