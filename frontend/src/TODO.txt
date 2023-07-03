@@ -1,0 +1,25 @@
+SavedCollection:
+- Drag and drop of a file to another folder in the structure
+- Export/Import File structure
+- Have an "Expand all" button
+- Fix logic of importing, if the element has embedded tables it replicates - PRIORITY
+
+Build block:
+- Add Settings to allow edit styles
+- Allow import of existing? It will need to read the code and reproduce the building blocks
+
+Security:
+- Sanitize HTML
+- JWT / Auth?
+
+Update Templates
+- Fetch paged templates
+- UpdateMultiple: check if HTML is empty and throw error (same in UpdateSingle)
+- While updating give a Loading
+- Before updating all, give final confirmation modal especially if they have selected to not create new version.
+- When adding footer under Social, seems to not render in the Editor for some reason
+
+
+- web vitals to connect with segment/analytics?
+- config file through Assets? (to contain variables/URLs etc)
+Every time publishing on github, clear any function URLs
