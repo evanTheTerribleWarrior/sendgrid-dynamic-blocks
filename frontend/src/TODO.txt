@@ -2,7 +2,7 @@ SavedCollection:
 - Drag and drop of a file to another folder in the structure
 - Export/Import File structure
 - Have an "Expand all" button
-- Fix logic of importing, if the element has embedded tables it replicates - PRIORITY
+- Fix logic of importing, if the element has embedded tables it replicates - FIXED, do more tests
 
 Build block:
 - Add Settings to allow edit styles

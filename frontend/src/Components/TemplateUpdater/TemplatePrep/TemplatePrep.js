@@ -116,14 +116,13 @@ const TemplatePrep = ({ selectedBlock, selectedTemplates, selectedVersions }) =>
       console.log(siblings)
       let lastSiblingIndex = siblings.length - 1;
       if (siblings[lastSiblingIndex].getAttribute('data-type') === 'unsubscribe') {
-        lastSiblingIndex--;
+        siblings[lastSiblingIndex].insertAdjacentHTML('beforebegin', selectedBlock.content)
+        return doc.documentElement.outerHTML;
       }
       const lastSiblingParent = siblings[lastSiblingIndex];
       if (lastSiblingParent) {
-        console.log(lastSiblingParent)
         lastSiblingParent.insertAdjacentHTML('afterend', selectedBlock.content);
       }
-      //console.log("Result: " + doc.documentElement.outerHTML)
       return doc.documentElement.outerHTML;
     }
 
