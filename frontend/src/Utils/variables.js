@@ -96,7 +96,7 @@ export const HANDLEBARS = {
         return `<table class="wrapper" role="module" data-type="image" >
         <tr>
           <td style="padding:0px 0px 0px 0px;" align='center'>
-            <img src=${value} />
+            <img src=${value}/>
           </td>
         </tr>
       </table>`

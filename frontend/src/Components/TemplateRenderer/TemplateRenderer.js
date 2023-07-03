@@ -1,5 +1,6 @@
 import React from 'react';
 import Paper from '@material-ui/core/Paper';
+import HTMLSanitize from '../HTMLSanitize/HTMLSanitize';
 
 export const templateRenderStyle = {
     width: '50vw',
@@ -23,7 +24,7 @@ const TemplateRenderer = ({ template, placeholderText }) => {
   return (
     <Paper style={templateRenderStyle}>
       {template ? (
-        <div dangerouslySetInnerHTML={{ __html: template.content ? template.content : template }} />
+        <HTMLSanitize html={template.content ? template.content : template}/>
       ) : (
         <div style={placeholderStyle}>
           <p>{placeholderText}</p>
