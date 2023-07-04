@@ -36,7 +36,7 @@ const CodeRenderer = ({onGenerateDynamicBlock}) => {
       
       <Grid container direction="row" spacing={10} >
         <Grid item xs={6} >
-        <Typography variant="h6" align="center" sx={{ pt: 2 }}>
+        <Typography variant="h6" align="center" sx={{ pt: 4 }}>
           Generated Steps
         </Typography>
         <Paper elevation={2} sx={{ marginTop: '10px'}}>
@@ -52,26 +52,32 @@ const CodeRenderer = ({onGenerateDynamicBlock}) => {
         <Grid item xs={6} >
             
           <>
-          <Grid container sx={{ height: '100%', flexDirection: 'column'}}>
-          <Typography variant="h6" align="center" sx={{ pt: 2 }}>
-          Generated Code
-        </Typography>
-          <CodeViewSwitch checked={codeView} onChange={handleViewSwitch} /> 
+          
+          <Grid container  sx={{ height: '100%', flexDirection: "column"}} >
+            <Grid item container >
+              <Grid item>
+              <CodeViewSwitch checked={codeView} onChange={handleViewSwitch}/> 
+              </Grid>
+              <Grid item xs={true}>
+                <Typography align="center" variant="h6" sx={{ pt: 4 }}>Generated Code</Typography>
+              </Grid>
+          </Grid>
+          
           
           {codeView ? (
-              <Grid item> 
+              <Grid item > 
               {generatedHtml ? (
                 <SyntaxHighlighter language="html" style={darcula} customStyle={{borderRadius: "5px",marginTop: '10px', overflow: 'auto'}}>
                   {generatedHtml}
                 </SyntaxHighlighter>
             
-              ): <Paper elevation={2} sx={{ marginTop: '10px'}}><Grid item><Typography variant="h6" align="center" sx={{ p: 3, color: 'grey' }}>No code yet</Typography></Grid></Paper>}
+              ): <Paper elevation={2} sx={{ marginTop: '10px'}}><Grid item ><Typography variant="h6" align="center" sx={{ p: 3, color: 'grey' }}>No code yet</Typography></Grid></Paper>}
               </Grid>
             ) : (
-              <Grid item>
+              <Grid item >
               
                 {generatedHtml ? (<Paper sx={{ p: 2, border: '1px solid #ccc', marginTop: '10px',  overflow: 'auto'  }}><Box><HTMLSanitize html={generatedHtml}/></Box></Paper>)
-                  : <Paper elevation={2} sx={{ marginTop: '10px'}}><Grid item><Typography variant="h6" align="center" sx={{ p: 3, color: 'grey' }}>No code yet</Typography></Grid></Paper>}
+                  : <Paper elevation={2} sx={{ marginTop: '10px'}}><Grid item ><Typography variant="h6" align="center" sx={{ p: 3, color: 'grey' }}>No code yet</Typography></Grid></Paper>}
           
             </Grid>
             )}  

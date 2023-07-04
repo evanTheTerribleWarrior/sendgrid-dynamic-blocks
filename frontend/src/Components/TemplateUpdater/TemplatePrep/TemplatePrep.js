@@ -129,6 +129,7 @@ const TemplatePrep = ({ selectedBlock, selectedTemplates, selectedVersions }) =>
     
   }
   const handlePreview = async () => {
+    if (checkedTemplates.length === 0) return;
     if (selectedRadioUpdateOption === "updateMultiple"){
       const version = await handleExampleTemplateFetch()
       setMergedHTML(domParserMerge(version.html_content))

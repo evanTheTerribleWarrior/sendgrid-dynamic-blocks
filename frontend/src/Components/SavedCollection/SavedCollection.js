@@ -20,22 +20,6 @@ const SavedCollection = () => {
       const handleDeletedItem = (item) => {
           if(selectedFile && item.id === selectedFile.id) setSelectedFile(null)
       }
-    
-      const placeholderStyle = {
-        width: '50vw',
-        height: '60vh',
-        border: '1px solid #ddd',
-        overflow: 'auto',
-        padding: '10px'
-      };
-    
-      const templateRenderStyle = {
-        width: '50vw',
-        height: '60vh',
-        border: '1px solid #ddd',
-        overflow: 'auto',
-        padding: '50px'
-      };
 
     return(
         <Grid container direction="row">

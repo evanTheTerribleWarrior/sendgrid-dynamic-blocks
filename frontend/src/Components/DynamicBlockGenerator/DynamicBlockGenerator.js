@@ -1,7 +1,7 @@
-import React, { useState, useMemo } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { v4 as uuid } from 'uuid';
-import { Box, Button, Grid, TextField, Modal, Typography } from '@mui/material';
+import { Box, Button, Grid, TextField, Modal, Typography, Popover } from '@mui/material';
 import CodeRenderer from './CodeRenderer/CodeRenderer'; 
 import FolderTree from '../FolderTree/FolderTree';
 import { updateFolderStructure } from '../../Redux/reducers';
@@ -16,41 +16,70 @@ const DynamicBlockGenerator = () => {
 
     const [generatedBlock, setGeneratedBlock] = useState([]);
     const [saveModalOpen, setSaveModalOpen] = useState(false);
-    const [selectedFolder, setSelectedFolder] = useState("")
+    const selectedFolderRef = useRef(null);
+    const fileNameRef = useRef('');
+    const [selectedFolder, setSelectedFolder] = useState(null);
     const [fileName, setFileName] = useState('');
+
+    useEffect(() => {
+      selectedFolderRef.current = selectedFolder;
+    }, [selectedFolder]);
+  
+    useEffect(() => {
+      fileNameRef.current = fileName;
+    }, [fileName]);
 
     const folderStructure = useSelector((state) => state.folderStructure);
     const dispatch = useDispatch()
     
-    const handleSaveDynamicBlock = () => {
+    const findFolderToSaveRecursive = (folders, selectedFolder, fileName) => {
 
-      const updatedStructure = folderStructure.folderStructure.map((folder) => {
+      return folders.map((folder) => {
         if (folder.id === selectedFolder.id) {
           return {
             ...folder,
             children: [...folder.children, { id: uuid(), type: 'file', name: fileName + ".html", content: generatedBlock }],
           };
         }
+        else if (folder.children) {
+          return {
+            ...folder,
+            children: findFolderToSaveRecursive(folder.children, selectedFolder, fileName)
+          }
+        }
         return folder;
       });
-      dispatch(updateFolderStructure(updatedStructure));
+
+    }
+
+    const handleSaveDynamicBlock = () => {
+
+      const selectedFolder = selectedFolderRef.current;
+      const fileName = fileNameRef.current;
+      dispatch(updateFolderStructure(findFolderToSaveRecursive(folderStructure.folderStructure, selectedFolder, fileName)));
+      selectedFolderRef.current = null;
+      fileNameRef.current = '';
       handleSaveModalClose()
     }
 
     const handleOnFolderSelected = (folder) => {
-      console.table(folder)
-      setSelectedFolder(folder)
+      selectedFolderRef.current = folder;
+      console.log(selectedFolderRef)
+      //setSelectedFolder(folder)
     }
 
-    const handleFileNameChange = (e) => {
-      setFileName(e.target.value);
+    const handleFileNameChange = (event) => {
+      fileNameRef.current = event.target.value;
     };
 
     const handleSaveModalOpen = () => {
+      
       setSaveModalOpen(true)
     }
 
     const handleSaveModalClose = () => {
+      selectedFolderRef.current = null;
+      fileNameRef.current = '';
       setSaveModalOpen(false);
     };
     
@@ -80,22 +109,24 @@ const DynamicBlockGenerator = () => {
         <Typography variant="h6" gutterBottom>
           Choose Folder
         </Typography>
+        <div>
         {folderStructure && <FolderTree onItemSelected={handleOnFolderSelected} showFiles={false}/>}
+        </div>
         <Typography variant="h6" gutterBottom>
           Save File
         </Typography>
         <TextField
           key="text-field-key"
           label="File Name"
-          value={fileName}
           onChange={handleFileNameChange}
           fullWidth
+          autoFocus
         />
         <Box sx={{ mt: 2, display: 'flex', justifyContent: 'flex-end' }}>
           <Button onClick={handleSaveModalClose} sx={{ mr: 1 }}>
             Cancel
           </Button>
-          <Button onClick={handleSaveDynamicBlock} disabled={!fileName} variant="contained" color="primary">
+          <Button onClick={handleSaveDynamicBlock} variant="contained" color="primary">
             Save
           </Button>
         </Box>

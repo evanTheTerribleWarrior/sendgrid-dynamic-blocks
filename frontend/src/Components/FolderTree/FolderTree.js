@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { TreeView, TreeItem } from '@mui/lab';
 import { useSelector, useDispatch } from 'react-redux';
 import { v4 as uuid } from 'uuid';
-import {Menu, MenuItem, Dialog, DialogActions, DialogTitle, DialogContent, Button, Grid, Typography} from '@mui/material'
+import {Menu, MenuItem, Dialog, DialogActions, DialogTitle, DialogContent, Button, Grid, Typography, Paper, Divider} from '@mui/material'
 import { updateFolderStructure } from '../../Redux/reducers';
 import { MinusSquare, PlusSquare, CloseSquare, StyledTreeItem } from './FolderTreeStyles';
 import ImportTemplate from './ImportTemplate/ImportTemplate'
@@ -19,11 +19,10 @@ const FolderTree = ({ onItemSelected, onItemDeleted, showFiles, allowUpdates }) 
   const [currentElementType, setCurrentElementType] = useState("")
   const [showDeleteConfirmation, setShowDeleteConfirmation] = useState(false);
   const [importedFile, setImportedFile] = useState(null);
+  const [movedItem, setMovedItem] = useState(null)
 
   const folderStructure = useSelector((state) => state.folderStructure);
   const dispatch = useDispatch()
-
-  console.log(folderStructure.folderStructure)
 
   const handleContextMenu = (event, node, isFolder) => {
     event.preventDefault();
@@ -38,8 +37,8 @@ const FolderTree = ({ onItemSelected, onItemDeleted, showFiles, allowUpdates }) 
     setMenuAnchorEl(null);
   };
 
-  const handleOnItemClick = (item) => {
-
+  const handleOnItemClick = (event, item) => {
+    event.stopPropagation();
     setSelectedItem(item)
     onItemSelected(item)
     handleMenuClose()
@@ -47,8 +46,6 @@ const FolderTree = ({ onItemSelected, onItemDeleted, showFiles, allowUpdates }) 
 
   const handleAddFolderRecursive = (folders) => {
     return folders.map((folder) => {
-      console.log("Selected" + selectedItem)
-      console.log("Compare " + folder.id)
       if (folder.id === selectedItem.id) {
         return {
           ...folder,
@@ -86,8 +83,6 @@ const FolderTree = ({ onItemSelected, onItemDeleted, showFiles, allowUpdates }) 
   }
 
   const handleDeleteConfirmation = () => {
-    //setDeleteItemId(selectedItem.id)
-    console.log(selectedItem)
     setShowDeleteConfirmation(false);
     onItemDeleted(selectedItem)
     dispatch(updateFolderStructure(handleDeleteItemRecursive(folderStructure.folderStructure, selectedItem.id)));
@@ -142,7 +137,7 @@ const FolderTree = ({ onItemSelected, onItemDeleted, showFiles, allowUpdates }) 
   }
 
   const handleImportedFile = (fileObj) => {
-    console.log("Obj" + JSON.stringify(fileObj))
+    console.log("in import")
     setImportedFile({
       id: uuid(),
       ...fileObj
@@ -150,14 +145,12 @@ const FolderTree = ({ onItemSelected, onItemDeleted, showFiles, allowUpdates }) 
   }
 
   const handleAddImported = () => {
-    dispatch(updateFolderStructure(handleAddImportedRecursive(folderStructure.folderStructure, importedFile)));
+    dispatch(updateFolderStructure(handleAddRecursive(folderStructure.folderStructure, importedFile)));
     setImportedFile(null);
     handleMenuClose()
   }
 
-  const handleAddImportedRecursive = (folders, file) => {
-
-    console.log(selectedItem)
+  const handleAddRecursive = (folders, file) => {
 
     return folders.map((item) => {
       if (item.id === selectedItem.id) {
@@ -170,13 +163,42 @@ const FolderTree = ({ onItemSelected, onItemDeleted, showFiles, allowUpdates }) 
       else if ( item.children && item.children.length > 0) {
         return {
           ...item,
-          children: handleAddImportedRecursive(item.children, file)
+          children: handleAddRecursive(item.children, file)
         };
       }
       return item;
     });
 
   }
+ 
+  const handleMoveItem = () => {
+    setMovedItem(selectedItem)
+    handleMenuClose()
+  }
+
+  /*const handlePlaceMovedItem = () => {
+    //dispatch(updateFolderStructure(handlePlaceMovedItemRecursive(folderStructure.folderStructure, movedItem)));
+    handlePlaceMovedItemRecursive(folderStructure.folderStructure, movedItem)
+    setMovedItem(null);
+    handleMenuClose()
+  }
+
+  const handlePlaceMovedItemRecursive = (folders, itemToMove) => {
+
+    console.log(`Item to move: ${JSON.stringify(itemToMove)}`)
+
+    if (itemToMove.type === 'file') {
+      console.log("is file")
+      //handleAddRecursive(folders, itemToMove);
+      handleDeleteItemRecursive(folders, itemToMove.id);
+      console.log(JSON.stringify(folders))
+      
+    }
+    else if (itemToMove.type === 'folder') {
+      console.log("is folder")
+    }
+
+  }*/
 
   const handleDownloadItem = () => {
     const blob = new Blob([selectedItem.content], { type: 'text/html' });
@@ -187,6 +209,31 @@ const FolderTree = ({ onItemSelected, onItemDeleted, showFiles, allowUpdates }) 
     link.click();
     URL.revokeObjectURL(url);
     link.remove();
+  }
+
+  const AddActionItemOnUI = ({action}) => {
+
+    const paperStyles = {
+      border: '1px solid red', padding: '10px', marginTop: "10px"
+    }
+
+    let message="";
+    if (action === "import") {
+      message = `"${importedFile.name}" imported. Right click on a folder to add it`
+    }
+    else if (action === "move") {
+      if(movedItem.type === "folder")
+        message = `"${movedItem.name}" is ready to be moved. Right click on the target folder to move it. All contents under "${movedItem.name}" will be moved as well`
+      else if (movedItem.type === "file")
+        message = `"${movedItem.name}" is ready to be moved. Right click on the target folder to move it.`
+    }
+
+    return (
+      <Paper style={paperStyles}>
+        <Typography variant='subtitle1'>{message}</Typography>
+      </Paper>
+    )
+
   }
 
   const renderTreeItem = (node) => {
@@ -213,7 +260,7 @@ const FolderTree = ({ onItemSelected, onItemDeleted, showFiles, allowUpdates }) 
         }
         //endIcon={(node) => setItemIcon(node)}
         onContextMenu={(event) => handleContextMenu(event, node, node.type === "folder" ? true : false)} 
-        onClick={() => handleOnItemClick(node)}
+        onClick={(event) => handleOnItemClick(event, node)}
         >
         {node.children ? renderTree(node.children) : <></>}
       </StyledTreeItem>
@@ -251,8 +298,11 @@ const FolderTree = ({ onItemSelected, onItemDeleted, showFiles, allowUpdates }) 
             <div>
             <MenuItem onClick={handleAddFolder}>Add Folder</MenuItem>
             <MenuItem onClick={handleRenameItem}>Rename Folder</MenuItem>
+            {/*<MenuItem onClick={handleMoveItem}>Move Folder</MenuItem>*/}
             <MenuItem onClick={handleDeleteItem}>Delete Folder</MenuItem>
+            {importedFile  ? (<Divider />) : (<></>)}
             {importedFile ? <MenuItem onClick={handleAddImported}>Add {importedFile.name}</MenuItem> : <></> }
+            {/*{movedItem && selectedItem.type==="folder" ? <MenuItem onClick={handlePlaceMovedItem}>Place {movedItem.name} here</MenuItem> : <></> }*/}
             </div>
           )
           :
@@ -260,6 +310,7 @@ const FolderTree = ({ onItemSelected, onItemDeleted, showFiles, allowUpdates }) 
             <div>
               <MenuItem onClick={handleRenameItem}>Rename File</MenuItem>
               <MenuItem onClick={handleDeleteItem}>Delete File</MenuItem>
+              {/*<MenuItem onClick={handleMoveItem}>Move File</MenuItem>*/}
               <MenuItem onClick={handleDownloadItem}>Download File</MenuItem>
             </div>
           )
@@ -275,7 +326,18 @@ const FolderTree = ({ onItemSelected, onItemDeleted, showFiles, allowUpdates }) 
     (<Grid container direction="row">
     <Button variant="outlined" size="small" onClick={handleAddTopFolder}>Add top level folder</Button>
     <ImportTemplate onImportedFile={handleImportedFile} />
-    {importedFile ? (<Typography variant='subtitle1'>{importedFile.name} imported. Right click on a folder to add it</Typography>) : <></>}
+    {
+      importedFile ? 
+      (
+        <AddActionItemOnUI action="import"/>
+      ) : <></> 
+    }
+    {/*{
+      movedItem ?
+      (
+        <AddActionItemOnUI action="move"/>
+      ) : <></>
+    }*/}
     </Grid>) 
     
     : 

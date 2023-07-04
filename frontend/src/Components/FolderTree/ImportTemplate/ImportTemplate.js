@@ -1,7 +1,11 @@
-import React, { useState } from 'react';
+import React, { useRef, useState } from 'react';
 import { Button } from '@mui/material';
 
 const ImportTemplate = ({onImportedFile}) => {
+
+  const [selectedFile, setSelectedFile] = useState(null);
+  const fileInputRef = useRef(null);
+
 
   const readFileContent = (file) => {
     return new Promise((resolve, reject) => {
@@ -21,6 +25,7 @@ const ImportTemplate = ({onImportedFile}) => {
     const file = event.target.files[0];
 
     if (file) {
+      setSelectedFile(file)
       const importedContent = await readFileContent(file);
       const extractedContent = extractContent(importedContent)
       onImportedFile({
@@ -49,13 +54,13 @@ const ImportTemplate = ({onImportedFile}) => {
       siblings.push(currentNode);
       currentNode = currentNode.nextElementSibling;
     }
-    console.log(siblings)
     const extractedHTML = siblings.map((table) => table.outerHTML);
     return extractedHTML.join('');
   };
 
   const handleButtonClick = () => {
-    document.getElementById('template-upload').click();
+    fileInputRef.current.value = null;
+    fileInputRef.current.click();
   };
 
   return (
@@ -63,7 +68,7 @@ const ImportTemplate = ({onImportedFile}) => {
       <input
         type="file"
         accept=".html"
-        id="template-upload"
+        ref={fileInputRef}
         style={{ display: 'none' }}
         onChange={handleImport}
       />

@@ -3,7 +3,7 @@ import { FormControlLabel, Switch } from '@mui/material';
 
 const CodeViewSwitch = ({ checked, onChange }) => {
   return (
-    <FormControlLabel
+    <FormControlLabel sx={{ pt: 4 }}
       control={<Switch checked={checked} onChange={onChange} />}
       label={checked ? 'Code View' : 'UI View'}
     />
