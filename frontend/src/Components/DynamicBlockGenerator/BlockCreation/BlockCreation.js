@@ -251,8 +251,9 @@ const BlockCreation = ({getCustomBlock}) => {
         html += `${indent}${getCodeBlockObject("code", html_condition_value)}`
 
       } else if (row.type === "component" && row.component) {
-        code += `${indent}${row.component.fields[0].value}`;
-        html += `${indent}${getCodeBlockObject(row.component.type, row.component.fields[0].value)}`
+        code += `${indent}${row.component.fields[0].value}\n`;
+        html += `${indent}${getCodeBlockObject(row.component.type, row.component.fields[0].value)}\n`
+        return;
       }
       
       if (row.nestedRows && row.nestedRows.length > 0) {

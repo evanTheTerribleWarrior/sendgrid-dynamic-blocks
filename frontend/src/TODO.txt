@@ -7,6 +7,7 @@ TEST ALL SCENARIOS TO AVOID ERRORS
 Build block:
 - Add Settings to allow edit styles
 - Allow import of existing? It will need to read the code and reproduce the building blocks
+- Fix errors when choosing some conditions that make it crash. perhaps exclude some conditions from top level like else if/else
 
 Security:
 - JWT / Auth?
