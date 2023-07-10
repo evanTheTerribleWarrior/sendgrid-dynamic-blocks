@@ -2,15 +2,17 @@
 
 Build re-usable component blocks, and update multiple Sendgrid templates at once!
 
-![Application screenshot](https://github.com/evanTheTerribleWarrior/sendgrid-dynamic-blocks/assets/54394422/208d02af-5751-4d16-bcbd-fedb0fe98532)
+![Application screenshot](https://github.com/evanTheTerribleWarrior/sendgrid-dynamic-blocks/assets/54394422/d6a99c54-0660-414c-a282-67f73698083a)
 
 ## Key features
- * Build Editor to easily create/view/save your dynamic blocks
+ * Create blocks based on Sendgrid drag-and-drop compatible code and components
  * Save your collection of blocks and fully manage the collection structure
- * Ability to import existing blocks created on Sendgrid Editor
+ * Ability to import existing blocks created on Sendgrid Design Editor
+ * Export/Import your collections
  * Easy to use interface to update multiple Sendgrid templates with your dynamic block
+ * Upload your zip file with the HTML/CSS/IMG structure and automatically create a template out of it
  * Local storage to persist your collections on the browser
- * Twilio Functions to call the Sendgrid APIs and therefore avoid exposing SG API Keys within the app
+ * Twilio Functions middleware to call the Sendgrid APIs and therefore avoid exposing SG API Keys within the app
 
 
 ## Pre-requisites

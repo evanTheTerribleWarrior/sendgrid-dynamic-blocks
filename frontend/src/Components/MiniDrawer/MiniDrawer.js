@@ -19,7 +19,7 @@ import ListItemText from '@mui/material/ListItemText';
 import BuildIcon from '@mui/icons-material/Build';
 import SaveIcon from '@mui/icons-material/Save';
 import SettingsIcon from '@mui/icons-material/Settings';
-import TaskIcon from '@mui/icons-material/Task';
+import UpdateSharpIcon from '@mui/icons-material/UpdateSharp';
 import CloudUploadIcon from '@mui/icons-material/CloudUpload';
 import { useNavigate } from 'react-router-dom';
 
@@ -98,7 +98,7 @@ import { useNavigate } from 'react-router-dom';
     },
     {
       text: 'Update Templates',
-      icon: TaskIcon,
+      icon: UpdateSharpIcon,
       iconName: "update",
       route: '/update'
     },

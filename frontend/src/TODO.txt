@@ -1,7 +1,6 @@
 SavedCollection:
 TEST ALL SCENARIOS TO AVOID ERRORS
 - Move a file/folder - SOMEHOW CANCELS THE STATE
-- Export/Import File structure
 - Have an "Expand all" button
 
 Build block:
@@ -10,8 +9,6 @@ Build block:
 - Fix errors when choosing some conditions that make it crash. perhaps exclude some conditions from top level like else if/else
 
 - Zip component:
-Add ability to upload created HTML to sendgrid
-Add ability to export created HTML
 Add "Loading file" or similar while html gets created
 
 Security:
