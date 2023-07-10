@@ -81,6 +81,25 @@ export async function updateSingleTemplate (template_data, create_version_checke
     }
 };
 
+export async function createNewTemplate (data) {
+  try {
+    const url = API_URLS.PROTOCOL + API_URLS.BASE_URL + API_URLS.CREATE_NEW_TEMPLATE    
+    const response = await fetch(url, {
+        method: 'POST',
+        body: JSON.stringify({
+            "data": data
+          }),
+        headers: {
+          'Content-Type': 'application/json'
+        }
+    });
+    const res = await response.json();
+    return res;
+  } catch (error) {
+      throw new Error(`Failed to update template: ${error}`);
+  }
+};
+
 export async function uploadImageBase64 (imageFileName, imageFileBase64) {
   try {
     const url = API_URLS.PROTOCOL + API_URLS.BASE_URL + API_URLS.UPLOAD_IMAGE_BASE64    

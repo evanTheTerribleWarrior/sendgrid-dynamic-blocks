@@ -1,7 +1,7 @@
 import React, {useState, useRef} from 'react';
 import SectionHeader from '../SectionHeader/SectionHeader'
 import TemplateRenderer from '../TemplateRenderer/TemplateRenderer';
-import { uploadImageBase64 } from '../../Utils/functions';
+import { uploadImageBase64, createNewTemplate } from '../../Utils/functions';
 import { Grid, Button, TextField, Paper, Typography, Stack, Switch, Tooltip, IconButton } from '@mui/material';
 import { HelpOutline } from '@mui/icons-material';
 import JSZip from 'jszip';
@@ -63,6 +63,17 @@ const ZipUploader = () => {
         URL.revokeObjectURL(url);
         link.remove();
       }  
+    }
+
+    const uploadHTMLToSendgrid = async () => {
+      if(processedHTML){
+        const data = {
+          html: processedHTML,
+          name: uploadedFile ? uploadedFile.name.replace(/\.[^.]+$/, '') : "My Extracted Template"
+        }
+        const result = await createNewTemplate(data);
+        console.log(JSON.stringify(result))
+      }
     }
   
     const handleFileChange = (event) => {
@@ -171,7 +182,7 @@ const ZipUploader = () => {
       
         const imgElements = parsedHTML.querySelectorAll('[src]');
         imgElements.forEach((element) => {
-          const src = element.getAttribute('src').split('/').pop().replace(/\.[^.]+$/, '');;
+          const src = element.getAttribute('src').split('/').pop().replace(/\.[^.]+$/, '');
           if (src === imageNameWithoutExtension) {
             element.setAttribute('src', imagePublicUrl);
           }
@@ -210,22 +221,32 @@ const ZipUploader = () => {
     const processZipFile = async () => {
       try {
         const zip = new JSZip();
-        const zipFile = await zip.loadAsync(uploadedFile);
-        
+        const zipFile = await zip.loadAsync(uploadedFile);   
         const htmlWithCss = await generateHTMLWithCSS(zipFile)
-        const imagesArrayOfObj = await getImageFiles(zipFile)
-        await transformImagesForSendgrid(imagesArrayOfObj)
-        console.table(imagesArrayOfObj)
-        await uploadImagesToSendgrid(imagesArrayOfObj)
-        console.table(imagesArrayOfObj)
-        console.log(`Current html: ${htmlWithCss}`)
-        const updatedHTML = replaceImageReferences(htmlWithCss, imagesArrayOfObj)
-        setProcessedHTML(updatedHTML)
+        if(uploadLocalImages) {
+          const imagesArrayOfObj = await getImageFiles(zipFile)
+          await transformImagesForSendgrid(imagesArrayOfObj)
+          console.table(imagesArrayOfObj)
+          await uploadImagesToSendgrid(imagesArrayOfObj)
+          console.table(imagesArrayOfObj)
+          console.log(`Current html: ${htmlWithCss}`)
+          const updatedHTML = replaceImageReferences(htmlWithCss, imagesArrayOfObj)
+          setProcessedHTML(updatedHTML)
+        }
+        else{
+          setProcessedHTML(htmlWithCss)
+        }
+        
 
       } catch (error) {
         console.log('Error processing zip file:', error);
       }
     };
+
+    const clearFile = () => {
+      setProcessedHTML(null)
+      //if(uploadedFile) setUploadedFile(null)
+    }
   
     return (
           <Grid container direction="row" spacing={5}>
@@ -308,12 +329,15 @@ const ZipUploader = () => {
             </IconButton>
           </Tooltip>
         </Stack>
-          
-            <Button variant="contained" onClick={() => processZipFile()}>Process Zip File</Button>
-            <Button variant="contained" disabled={!processedHTML} onClick={() => processZipFile()}>Create New Template</Button>
-            <Button variant="contained" disabled={!processedHTML} onClick={() => exportHTML()}>Export HTML File</Button>
+        <Stack direction="row" spacing={1}>
+        <Button variant="contained" onClick={() => processZipFile()}>Process Zip File</Button>
+        <Button variant="outlined" onClick={() => clearFile()}>Clear HTML</Button>
+        </Stack>
+            
+        <Button variant="contained" disabled={!processedHTML} onClick={() => uploadHTMLToSendgrid()}>Create New Template</Button>
+        <Button variant="contained" disabled={!processedHTML} onClick={() => exportHTML()}>Export HTML File</Button>
 
-            </Stack>
+        </Stack>
             </Grid>
             <Grid item={8}>
                 <TemplateRenderer template={processedHTML} placeholderText="Your processed HTML file will render here" trusted={trustHtmlSource}/>

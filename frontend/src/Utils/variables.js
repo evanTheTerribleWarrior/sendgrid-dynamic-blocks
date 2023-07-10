@@ -38,7 +38,8 @@ export const HANDLEBARS = {
     UPDATE_TEMPLATE: 'update-template',
     GET_SINGLE_TEMPLATE_VERSION: 'get-template-version',
     GET_FOLDER_STRUCTURE:'get-folder-structure',
-    UPLOAD_IMAGE_BASE64: 'upload-image'
+    UPLOAD_IMAGE_BASE64: 'upload-image',
+    CREATE_NEW_TEMPLATE: 'create-new-template'
   };
 
   export const COMPONENTS = {
