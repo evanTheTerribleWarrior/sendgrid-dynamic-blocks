@@ -1,8 +1,12 @@
 import React, { useState } from 'react';
-import { TreeView, TreeItem } from '@mui/lab';
+import { TreeView } from '@mui/lab';
+import FileDownloadIcon from '@mui/icons-material/FileDownload';
+import FileUploadIcon from '@mui/icons-material/FileUpload';
 import { useSelector, useDispatch } from 'react-redux';
 import { v4 as uuid } from 'uuid';
-import {Menu, MenuItem, Dialog, DialogActions, DialogTitle, DialogContent, Button, Grid, Typography, Paper, Divider} from '@mui/material'
+import {Menu, MenuItem, Dialog, DialogActions, DialogTitle, 
+  DialogContent, Button, Grid, Typography, Paper, Divider, 
+  IconButton, Tooltip} from '@mui/material'
 import { updateFolderStructure } from '../../Redux/reducers';
 import { MinusSquare, PlusSquare, CloseSquare, StyledTreeItem } from './FolderTreeStyles';
 import ImportTemplate from './ImportTemplate/ImportTemplate'
@@ -200,6 +204,28 @@ const FolderTree = ({ onItemSelected, onItemDeleted, showFiles, allowUpdates }) 
 
   }*/
 
+  const handleExportFolderStructure = () => {
+    const jsonData = JSON.stringify(folderStructure.folderStructure, null, 2);
+    const blob = new Blob([jsonData], { type: 'application/json' });
+    const link = document.createElement('a');
+    link.href = URL.createObjectURL(blob);
+    link.download = 'dynamic_blocks_collection.json';
+    link.click();
+    URL.revokeObjectURL(link.href);
+    link.remove();
+  }
+
+  const handleImportFolderStructure = (event) => {
+    const file = event.target.files[0];
+    const reader = new FileReader();
+    reader.onload = () => {
+      const fileContent = reader.result;
+      const importedStructure = JSON.parse(fileContent);
+      dispatch(updateFolderStructure(importedStructure))
+    };
+    reader.readAsText(file);
+  }
+
   const handleDownloadItem = () => {
     const blob = new Blob([selectedItem.content], { type: 'text/html' });
     const url = URL.createObjectURL(blob);
@@ -324,8 +350,32 @@ const FolderTree = ({ onItemSelected, onItemDeleted, showFiles, allowUpdates }) 
     <>
     {allowUpdates ? 
     (<Grid container direction="row">
-    <Button variant="outlined" size="small" onClick={handleAddTopFolder}>Add top level folder</Button>
-    <ImportTemplate onImportedFile={handleImportedFile} />
+      <Grid container spacing={1} alignItems="center">
+
+      <Grid item>
+      <Button variant="outlined" size="small" onClick={handleAddTopFolder}>Add top level folder</Button>
+      </Grid>
+      <Grid item>
+      <ImportTemplate onImportedFile={handleImportedFile} />
+      </Grid>
+      <Grid item>
+      <Tooltip title="Export collection">
+        <IconButton onClick={handleExportFolderStructure}>
+          <FileDownloadIcon />
+        </IconButton>
+      </Tooltip>
+      </Grid>
+      <Grid item>
+      <input id="file-upload" type="file" accept=".json" onChange={handleImportFolderStructure} style={{ display: 'none' }} />
+      <label htmlFor="file-upload">
+        <Tooltip title="Import collection (will override existing)">
+          <IconButton component="span">
+            <FileUploadIcon />
+          </IconButton>
+        </Tooltip>
+      </label>
+      </Grid>
+      </Grid>
     {
       importedFile ? 
       (

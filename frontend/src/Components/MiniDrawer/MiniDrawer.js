@@ -20,7 +20,7 @@ import BuildIcon from '@mui/icons-material/Build';
 import SaveIcon from '@mui/icons-material/Save';
 import SettingsIcon from '@mui/icons-material/Settings';
 import TaskIcon from '@mui/icons-material/Task';
-import UploadFileIcon from '@mui/icons-material/UploadFile';
+import CloudUploadIcon from '@mui/icons-material/CloudUpload';
 import { useNavigate } from 'react-router-dom';
 
   const drawerWidth = 240;
@@ -110,7 +110,7 @@ import { useNavigate } from 'react-router-dom';
     },
     {
       text: 'Upload Your HTML',
-      icon: UploadFileIcon,
+      icon: CloudUploadIcon,
       iconName: "upload",
       route: '/upload'
     },

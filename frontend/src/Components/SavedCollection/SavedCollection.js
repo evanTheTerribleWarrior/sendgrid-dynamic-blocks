@@ -26,10 +26,10 @@ const SavedCollection = () => {
             <Grid item xs={12} >
                 <SectionHeader title={sectionHeaderContent.title} subtitle={sectionHeaderContent.subtitle}/>
             </Grid>
-            <Grid item xs={3} >
+            <Grid item xs={4} >
                 <FolderTree onItemSelected={handleSelectedItem} onItemDeleted={handleDeletedItem} showFiles={true} allowUpdates={true}/>
             </Grid>
-            <Grid item xs={8} style={{ overflow: 'auto', marginLeft: "20px" }}>
+            <Grid item xs={7} style={{ overflow: 'auto', marginLeft: "30px" }}>
                 
                     <TemplateRenderer template={selectedFile} placeholderText="Your selected template will render here"/>
                 
