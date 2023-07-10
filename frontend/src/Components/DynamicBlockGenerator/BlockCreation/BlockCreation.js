@@ -10,7 +10,7 @@ import {
   Paper,
   Popover,
   MenuItem,
-  IconButton, Modal, Button, Typography, Box
+  IconButton, Modal, Button, Typography, Box, FormControl, Radio, RadioGroup,FormControlLabel
 } from '@mui/material';
 import CloseIcon from "@mui/icons-material/Close";
 import AddIcon from '@mui/icons-material/Add';
@@ -24,6 +24,33 @@ const BlockCreation = ({getCustomBlock}) => {
 
   const [shouldOpenSettings, setOpenSettings] = useState(false);
   const [settingsRow, setSettingsRow] = useState("")
+
+  /////////////////////////////////
+  const [popoverOpen, setPopoverOpen] = useState(false);
+  const [altText, setAltText] = useState('');
+  const [padding, setPadding] = useState({ top: 0, right: 0, bottom: 0, left: 0 });
+  const [responsive, setResponsive] = useState(false);
+  const [width, setWidth] = useState('');
+  const [height, setHeight] = useState('');
+  const [alignment, setAlignment] = useState('');
+  const [settingsAnchorEl, setSettingsAnchorEl] = useState(null);
+
+  const handleOpenPopover = (event, row) => {
+    setPopoverOpen(true);
+    setSettingsAnchorEl(event.currentTarget)
+    setSettingsRow(row)
+  };
+
+  const handleClosePopover = () => {
+    setPopoverOpen(false);
+  };
+
+  const handleAlignmentChange = (event) => {
+    setAlignment(event.target.value);
+  };
+
+  ////////////////////////////////
+
   
   /* We use useEffect to update the resulting code every time
   the user changes something. We provide as input all the rows
@@ -294,7 +321,7 @@ const BlockCreation = ({getCustomBlock}) => {
       }
 
       <Grid item>
-        <IconButton size="small" disabled={!row.component} onClick={() =>  openSettings(row)}>
+        <IconButton size="small" disabled={!row.component} onClick={(event) =>  handleOpenPopover(event, row)}>
           <SettingsIcon />
         </IconButton>
       </Grid>
@@ -310,37 +337,49 @@ const BlockCreation = ({getCustomBlock}) => {
 
   const renderComponentSettings = (row) => {
     return (<>{
-      row.type === "component" && shouldOpenSettings && (
-      <Modal scrollable={true} open={shouldOpenSettings} onClose={handleCloseSettings}>
+      row.type === "component" && popoverOpen && (
+      <div>
 
-      <Box
-        sx={{
-          position: 'absolute',
-          top: '50%',
-          left: '50%',
-          transform: 'translate(-50%, -50%)',
-          bgcolor: 'background.paper',
-          boxShadow: 24,
-          p: 4,
-          maxWidth: 400,
-          width: '100%',
-          outline: 'none',
-        }}
-      >
+        <Popover
+          open={Boolean(settingsAnchorEl)}
+          anchorEl={settingsAnchorEl}
+          onClose={() => setSettingsAnchorEl(null)}
+          anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}
+          transformOrigin={{ vertical: 'top', horizontal: 'right' }}
+        >
+           <Box padding={2}>
         <Typography variant="h6" gutterBottom>
           Choose Styles
         </Typography>
-        <Box sx={{ mt: 2, display: 'flex', justifyContent: 'flex-end' }}>
-          <Button onClick={handleCloseSettings} sx={{ mr: 1 }}>
-            Cancel
-          </Button>
-          <Button onClick={handleCloseSettings} variant="contained" color="primary">
-            Done
-          </Button>
-        </Box>
-      </Box>
 
-      </Modal>)
+        <Grid container spacing={2} alignItems="center">
+        <Grid item xs={12}>
+              <FormControl component="fieldset">
+                <RadioGroup value={alignment} onChange={handleAlignmentChange}>
+                  <FormControlLabel
+                    value="left"
+                    control={<Radio />}
+                    label="Left"
+                  />
+                  <FormControlLabel
+                    value="center"
+                    control={<Radio />}
+                    label="Center"
+                  />
+                  <FormControlLabel
+                    value="right"
+                    control={<Radio />}
+                    label="Right"
+                  />
+                </RadioGroup>
+              </FormControl>
+            </Grid>
+
+          </Grid>
+          </Box>
+        </Popover>
+
+      </div>)
     }</>)
   }
 

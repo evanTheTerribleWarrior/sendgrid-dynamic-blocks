@@ -81,6 +81,27 @@ export async function updateSingleTemplate (template_data, create_version_checke
     }
 };
 
+export async function uploadImageBase64 (imageFileName, imageFileBase64) {
+  try {
+    const url = API_URLS.PROTOCOL + API_URLS.BASE_URL + API_URLS.UPLOAD_IMAGE_BASE64    
+    const response = await fetch(url, {
+        method: 'POST',
+        body: JSON.stringify({
+          "imgBase64": imageFileBase64,
+          "imgFileName": imageFileName
+        }),
+      headers: {
+        'Content-Type': 'application/json'
+      }
+    });
+    const data = await response.json();
+    console.log("received url: " + data.url)
+    return data;
+  } catch (error) {
+      throw new Error(`Failed to upload image: ${error}`);
+  }
+};
+
 export async function getFolderStructure () {
   try {
     const url = API_URLS.PROTOCOL + API_URLS.BASE_URL + API_URLS.GET_FOLDER_STRUCTURE    
@@ -90,7 +111,7 @@ export async function getFolderStructure () {
     const data = await response.json();
     return data;
   } catch (error) {
-      throw new Error(`Failed to update template: ${error}`);
+      throw new Error(`Failed to get folder structure: ${error}`);
   }
 };
 

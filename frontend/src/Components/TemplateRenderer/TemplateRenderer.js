@@ -19,12 +19,12 @@ export const placeholderStyle = {
     padding: '20px'
 }
 
-const TemplateRenderer = ({ template, placeholderText }) => {
+const TemplateRenderer = ({ template, placeholderText, trusted }) => {
 
   return (
     <Paper style={templateRenderStyle}>
       {template ? (
-        <HTMLSanitize html={template.content ? template.content : template}/>
+        <HTMLSanitize html={template.content ? template.content : template} trusted={trusted}/>
       ) : (
         <div style={placeholderStyle}>
           <p>{placeholderText}</p>

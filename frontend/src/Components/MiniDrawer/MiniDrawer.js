@@ -20,6 +20,7 @@ import BuildIcon from '@mui/icons-material/Build';
 import SaveIcon from '@mui/icons-material/Save';
 import SettingsIcon from '@mui/icons-material/Settings';
 import TaskIcon from '@mui/icons-material/Task';
+import UploadFileIcon from '@mui/icons-material/UploadFile';
 import { useNavigate } from 'react-router-dom';
 
   const drawerWidth = 240;
@@ -106,6 +107,12 @@ import { useNavigate } from 'react-router-dom';
       icon: SaveIcon,
       iconName: "collection",
       route: '/collection'
+    },
+    {
+      text: 'Upload Your HTML',
+      icon: UploadFileIcon,
+      iconName: "upload",
+      route: '/upload'
     },
     {
       text: 'Settings',

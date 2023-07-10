@@ -890,3 +890,412 @@ export default FolderTree;
           outline: 'none',
         }}
       >*/}
+
+      const FormData = require('form-data');
+const fs = require('fs');
+var path = require('path');
+var tmp_dir = require('os').tmpdir();
+const axios = require('axios')
+const formData = new FormData();
+exports.handler = async function(context, event, callback) {
+
+  const response = new Twilio.Response();
+  response.appendHeader('Access-Control-Allow-Origin', '*');
+  response.appendHeader('Access-Control-Allow-Methods', 'POST');
+  response.appendHeader('Access-Control-Allow-Headers', 'Content-Type');
+
+  const {imgBase64, imgFileName, isValidForSG} = event;
+
+  let newAsset = null;
+
+  let url = '';
+
+  const timeStamp = Date.now()
+
+  if(isValidForSG === 0) {
+    const twilioClient = context.getTwilioClient();
+    try {
+      const extension = imgFileName.split('.').pop().toLowerCase()
+      newAsset = await twilioClient.serverless.v1.services(context.SERVICE_SID)
+                    .assets
+                    .create({friendlyName: `${imgFileName}_${timeStamp}.${extension}`})
+      console.log(newAsset.sid)
+      url = `https://serverless-upload.twilio.com/v1/Services/${context.SERVICE_SID}/Assets/${newAsset.sid}/Versions`
+    }
+    catch (error) {
+      console.error(error)
+      return callback(error)
+    }
+    
+  }
+  else if(isValidForSG === 1) {
+    url = 'https://api.sendgrid.com/v3/images'
+  }
+
+  const imageBuffer = Buffer.from(imgBase64, 'base64');
+  
+  fs.writeFile(path.join(tmp_dir, imgFileName), imageBuffer, function(err) {
+      if (err) return callback(err);
+
+      fs.readdir(tmp_dir, async function(err, files) {
+          if (err) return callback(err);        
+          const formHeaders = formData.getHeaders();
+
+          console.log(files[0])
+          if (isValidForSG === 0) {
+            const extension = files[0].split('.').pop().toLowerCase()
+            console.log(extension)
+            formData.append('Path', `/${files[0]}_${timeStamp}.${extension}`);
+            formData.append('Visibility', 'public');
+            formData.append('Content', fs.createReadStream(tmp_dir + "/" + files[0]), {
+              contentType: (extension === "svg" ? 'image/svg+xml' : `image/${extension}`),
+            });
+
+            try{
+              const result = await axios.post(url, formData, {
+                auth: {
+                  username: context.ACCOUNT_SID,
+                  password: context.AUTH_TOKEN,
+                },
+                headers: formHeaders
+              })
+              let result_url = `https://${context.DOMAIN_NAME}${result.data.path}`
+              console.log(result_url)
+              response.setBody(JSON.stringify({url: result_url }))
+              return callback(null, response)
+            }
+            catch (error) {
+              console.error(error);
+              return callback(error)
+            }
+
+          }
+          else if (isValidForSG === 1) {
+            try{
+                const result = await axios.post(url, {upload: fs.createReadStream(tmp_dir + "/" + files[0])}, {
+                  headers: {
+                    ...formHeaders,
+                    "Authorization": `Bearer ${context.SG_API_KEY}`
+                  },
+
+                })
+                console.log(result.data)
+                response.setBody(JSON.stringify({url: result.data.url }))
+                return callback(null, response)
+            }
+            catch (error) {
+              console.error(error);
+              return callback(error)
+            }
+          }
+
+      });
+  });
+  
+};
+
+
+import React, {useState, useRef} from 'react';
+import SectionHeader from '../SectionHeader/SectionHeader'
+import TemplateRenderer from '../TemplateRenderer/TemplateRenderer';
+import { uploadImageBase64 } from '../../Utils/functions';
+import { Grid, Button, TextField, Paper, Typography, Stack, Switch, Tooltip, IconButton } from '@mui/material';
+import { HelpOutline, PanoramaVerticalSelect } from '@mui/icons-material';
+import JSZip from 'jszip';
+
+const sectionHeaderContent = {
+    title: "Upload your HTML",
+    subtitle: "Here you can upload a .zip file with your own html content and css / image folders so that it can be uploaded to Sendgrid"
+  }
+
+const fileUploadStyle = {
+    border: '4px dashed #aaa',
+    padding: '32px',
+    textAlign: 'center',
+    cursor: 'pointer',
+    marginTop: '20px'
+};
+  
+
+const ZipUploader = () => {
+
+    const [uploadedFile, setUploadedFile] = useState(null);
+    const [cssFolderName, setCssFolderName] = useState('');
+    const [imgFolderName, setImgFolderName] = useState('');
+    const [htmlFileName, setHtmlFileName] = useState('');
+    const [isDragOver, setIsDragOver] = useState(false);
+    const [trustHtmlSource, setTrustHtmlSource] = useState(false);
+    const [uploadLocalImages, setUploadLocalImages] = useState(false);
+    const [localPathToPublic, setLocalPathToPublic] = useState({})
+
+    const [processedHTML, setProcessedHTML] = useState("")
+
+    const canvasRef = useRef(null);
+
+    const handleDragOver = (event) => {
+        event.preventDefault();
+        setIsDragOver(true);
+      };
+    
+      const handleDragLeave = () => {
+        setIsDragOver(false);
+      };
+    
+      const handleDrop = (event) => {
+        const file = event.dataTransfer.files[0];
+        console.log(file)
+        event.preventDefault();
+        setIsDragOver(false);
+        setUploadedFile(file);
+      };
+  
+    const handleFileChange = (event) => {
+      const file = event.target.files[0];
+      setUploadedFile(file);
+    };
+
+    const getFileType = (bytes) => {
+      const uint = new Uint8Array(bytes);
+    
+      if (uint[0] === 0x3C && uint[1] === 0x3F && uint[2] === 0x78 && uint[3] === 0x6D && uint[4] === 0x6C) {
+        // SVG magic bytes: <?xml
+        return 'svg';
+      } else if (uint[0] === 0x89 && uint[1] === 0x50 && uint[2] === 0x4E && uint[3] === 0x47 && uint[4] === 0x0D && uint[5] === 0x0A && uint[6] === 0x1A && uint[7] === 0x0A) {
+        // PNG magic bytes: 0x89 0x50 0x4E 0x47 0x0D 0x0A 0x1A 0x0A
+        return 'image';
+      } else if (uint[0] === 0xFF && uint[1] === 0xD8 && uint[2] === 0xFF) {
+        // JPEG magic bytes: 0xFF 0xD8 0xFF
+        return 'image';
+      }
+    
+      return 'unknown';
+    };
+
+    const replaceImageUrls = (imageObj) => {
+        
+        let updatedHTML = processedHTML;
+
+        const cssUrlPattern = /url\(['"]?([^'"\)]+)['"]?\)/g;
+        let match;
+        //updatedHTML.replace(cssUrlPattern, )
+
+
+    }
+
+    const convertToPng = (imageFileBase64) => {
+      return new Promise((resolve, reject) => {
+        const svgImage = new Image();
+        svgImage.src = `data:image/svg+xml;base64,${imageFileBase64}`;
+        
+        svgImage.onload = () => {
+          const canvas = canvasRef.current;
+          const context = canvas.getContext('2d');
+  
+          canvas.width = svgImage.width;
+          canvas.height = svgImage.height;
+
+          context.clearRect(0, 0, canvas.width, canvas.height);
+          context.drawImage(svgImage, 0, 0);
+  
+          // Convert the canvas to PNG
+          const pngDataUrl = canvas.toDataURL('image/png');
+          const pngBase64 = pngDataUrl.split(',')[1];
+  
+          resolve(pngBase64);
+        };
+  
+        svgImage.onerror = () => {
+          reject(new Error('Failed to load SVG image.'));
+        };
+      });
+    };
+  
+    const processZipFile = async () => {
+      try {
+        const zip = new JSZip();
+        const zipFile = await zip.loadAsync(uploadedFile);
+        
+        //const cssFolder = zipFile.folder(cssFolderName || 'css');
+        const imgFolder = zipFile.folder(imgFolderName || 'img');
+        const htmlFile = zipFile.file(htmlFileName || 'index.html');
+
+        const cssFiles = Object.values(zipFile.files).filter((file) => file.name.endsWith('.css'));
+        let cssCode = '';
+
+        for (const cssFile of cssFiles) {
+          const code = await cssFile.async('text');
+          cssCode += code;
+        }
+
+        const cssContents = [];
+        cssFolder.forEach( async (relativePath, file) => {
+          const cssFile = await file.async('string');
+          cssContents.push(cssFile);
+        });
+
+        const htmlContents = await htmlFile.async('string');
+  
+        const parser = new DOMParser();
+        const htmlDoc = parser.parseFromString(htmlContents, 'text/html');
+        const headElement = htmlDoc.querySelector('head');
+        const styleTag = document.createElement('style');
+        styleTag.setAttribute('type', 'text/css');
+        styleTag.innerHTML = (await Promise.all(cssContents)).join('\n');
+        headElement.appendChild(styleTag);
+
+        const processedHTML = htmlDoc.documentElement.outerHTML;
+        setProcessedHTML(processedHTML);
+
+        const imgContents = [];
+        imgFolder.forEach( async (relativePath, file) => {
+          let imageFileBase64 = await file.async('base64');
+          imgContents.push(imageFileBase64)
+        })
+
+        const resolvedImgContents = await Promise.all(imgContents)
+        console.log(resolvedImgContents)
+        return;
+
+
+
+        
+
+        /*const localPathToPublic = {}
+        imgFolder.forEach( async (relativePath, file) => {
+          console.log(file)
+          let imageFileBase64 = await file.async('base64');
+          const fileData = await file.async('arraybuffer');
+          const uint8Array = new Uint8Array(fileData);
+          const fileType = getFileType(uint8Array);
+          const extension = file.name.split('.').pop().toLowerCase();
+          let fileName = file.name.split('/').pop();
+          let isValidForSG = 1;
+          if (fileType === 'image' && (extension === 'png' || extension === 'jpg' || extension === 'jpeg')) {
+            isValidForSG = 1;
+          } 
+          else if(extension === 'svg' || extension === 'gif' || extension === 'bmp') {
+            console.log('Other image type:', fileName);
+            imageFileBase64 = await convertToPng(imageFileBase64)
+            fileName = fileName.split('.')[0] + "." + "png"
+            console.log(fileName)
+          }
+          else {
+            console.log('Unknown type: ' + fileName)
+            return;
+          }
+          const data =  await uploadImageBase64(imageFileBase64, fileName, isValidForSG);
+          
+          localPathToPublic[relativePath] = data.url
+
+          //replaceImageUrls(obj)
+          console.table(localPathToPublic);
+
+          setLocalPathToPublic(localPathToPublic)
+
+        });*/
+
+        
+
+        
+      } catch (error) {
+        console.log('Error processing zip file:', error);
+      }
+    };
+  
+    return (
+          <Grid container direction="row" spacing={5}>
+            <div><canvas ref={canvasRef} style={{ display: 'none' }} /></div>
+            <Grid item xs={12}>
+                <SectionHeader title={sectionHeaderContent.title} subtitle={sectionHeaderContent.subtitle}/>
+            </Grid>
+            <Grid item xs={12}>
+            <Paper
+                style={{
+                    ...fileUploadStyle,
+                    borderColor: isDragOver ? 'green' : '',
+                }}
+                onDragOver={handleDragOver}
+                onDragLeave={handleDragLeave}
+                onDrop={handleDrop}
+                >
+                <label htmlFor="file-upload" style={{ cursor: 'pointer' }}>
+                    {uploadedFile? uploadedFile.name : "Click here to select file or drag and drop"}
+                    <input
+                    id="file-upload"
+                    type="file"
+                    accept=".zip"
+                    style={{ display: 'none' }}
+                    onChange={handleFileChange}
+                    />
+                </label>
+                </Paper>
+            </Grid>
+            <Grid item xs={3} sx={{marginTop: "20px"}}>
+            <Typography variant="h6" gutterBottom>
+                File and folders names (Optional)
+            </Typography>
+            <Typography variant="subtitle1" component="p" color="textSecondary">
+                We will use these names to find the correct folders (for css and image) and file (for the main html).<br/>
+                The default values we will look for are: css, img, index.html
+            </Typography>
+            
+            <Stack spacing={2} direction="column">
+            <TextField
+            label="CSS Folder Name"
+            variant="standard"
+            value={cssFolderName}
+            onChange={(e) => setCssFolderName(e.target.value)}
+          />
+          <TextField
+            label="IMG Folder Name"
+            variant="standard"
+            value={imgFolderName}
+            onChange={(e) => setImgFolderName(e.target.value)}
+          />
+          <TextField
+            label="HTML File Name"
+            variant="standard"
+            value={htmlFileName}
+            onChange={(e) => setHtmlFileName(e.target.value)}
+          />
+
+        <Stack direction="row" alignItems="center">
+          <Typography variant="subtitle1">Trust HTML Source</Typography>
+          <Switch
+            checked={trustHtmlSource}
+            onChange={(e) => setTrustHtmlSource(e.target.checked)}
+          />
+          <Tooltip title="If enabled, the HTML source is trusted and we will not perform HTML sanitization before displaying the HTML. Make sure you trust the source of the HTML">
+            <IconButton>
+              <HelpOutline />
+            </IconButton>
+          </Tooltip>
+        </Stack>
+        <Stack direction="row" alignItems="center">
+          <Typography variant="subtitle1">Upload Local Images to SendGrid</Typography>
+          <Switch
+            checked={uploadLocalImages}
+            onChange={(e) => setUploadLocalImages(e.target.checked)}
+          />
+          <Tooltip title="If enabled, we will upload all the local images of the relevant folder to the Sendgrid CDN and use that public URL to update the image URL so they are accessible by Sendgrid Editor. The processing time will be longer">
+            <IconButton>
+              <HelpOutline />
+            </IconButton>
+          </Tooltip>
+        </Stack>
+          
+            <Button variant="contained" onClick={() => processZipFile()}>Process Zip File</Button>
+
+            </Stack>
+            </Grid>
+            <Grid item={8}>
+                <TemplateRenderer template={processedHTML} placeholderText="Your processed HTML file will render here" trusted={trustHtmlSource}/>
+            </Grid>
+            
+          </Grid>
+
+    );
+
+}
+
+export default ZipUploader;

@@ -30,13 +30,15 @@ export const HANDLEBARS = {
   
   // API URLs
   export const API_URLS = {
-    PROTOCOL: 'https://',
-    BASE_URL: 'sendgrid-api-9573.twil.io/',
-    GET_SINGLE_TEMPLATE: 'dynamic-block-get-single-4e1f28a8333724c532f030c5ee29b312',
-    GET_ALL_TEMPLATES: 'dynamic-block-b6335ecab3375517003bc1c1ba7e63b96ca52136',
-    UPDATE_TEMPLATE: 'dynamic-block-edit-template-5e441bdfe03eb984877763becc00877d',
-    GET_SINGLE_TEMPLATE_VERSION: 'dynamic-block-get-version-caa8210c26afd3004b4b6c80022c48fa',
-    GET_FOLDER_STRUCTURE:'dynamic-block-get-structure-3b3c5ec1fd4ea3e4fb76a6c2a623f4b2'
+    PROTOCOL: 'http://',
+    //BASE_URL: 'sendgrid-api-9573.twil.io/',
+    BASE_URL: 'sendgrid-dynamic-blocks-1123-dev.twil.io/',
+    GET_SINGLE_TEMPLATE: 'get-single-template',
+    GET_ALL_TEMPLATES: 'get-templates',
+    UPDATE_TEMPLATE: 'update-template',
+    GET_SINGLE_TEMPLATE_VERSION: 'get-template-version',
+    GET_FOLDER_STRUCTURE:'get-folder-structure',
+    UPLOAD_IMAGE_BASE64: 'upload-image'
   };
 
   export const COMPONENTS = {
@@ -91,6 +93,15 @@ export const HANDLEBARS = {
       </table>`
       }
     },
+
+    /*<td style="padding:0px 0px 0px 0px;" align="center">
+            <img src="https://hatrabbits.com/wp-content/uploads/2017/01/random.jpg" width="600" style="max-width:100% !important; width:100%; height:auto !important;" alt="" data-proportionally-constrained="false" data-responsive="true">
+          </td>
+
+          <td style="padding:0px 0px 0px 0px;" align="center">
+            <img src="https://hatrabbits.com/wp-content/uploads/2017/01/random.jpg" width="100" style="" alt="" data-proportionally-constrained="false" data-responsive="false" height="100">
+          </td>*/
+
     IMAGE: {
       generateSGCode: (value, styles) => {
         return `<table class="wrapper" role="module" data-type="image" >

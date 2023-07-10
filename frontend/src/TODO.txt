@@ -9,6 +9,11 @@ Build block:
 - Allow import of existing? It will need to read the code and reproduce the building blocks
 - Fix errors when choosing some conditions that make it crash. perhaps exclude some conditions from top level like else if/else
 
+- Zip component:
+Add ability to upload created HTML to sendgrid
+Add ability to export created HTML
+Add "Loading file" or similar while html gets created
+
 Security:
 - JWT / Auth?
 
