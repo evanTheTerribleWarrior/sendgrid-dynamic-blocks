@@ -293,8 +293,11 @@ const BlockCreation = ({getCustomBlock}) => {
         html += `${indent}${getCodeBlockObject("code", html_condition_value)}`
 
       } else if (row.type === "component" && row.component) {
-        code += `${indent}${row.component.fields[0].value}\n`;
-        html += `${indent}${getCodeBlockObject(row.component.type, row.component.fields[0].value, row.component.styles)}\n`
+        let fields = row.component.fields;
+        let value = ''
+        if(fields) value = row.component.fields[0].value
+        code += `${indent}${value}\n`;
+        html += `${indent}${getCodeBlockObject(row.component.type, value, row.component.styles)}\n`
         return;
       }
       
