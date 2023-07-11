@@ -30,7 +30,7 @@ export const HANDLEBARS = {
   
   // API URLs
   export const API_URLS = {
-    PROTOCOL: 'http://',
+    PROTOCOL: 'https://',
     //BASE_URL: 'sendgrid-api-9573.twil.io/',
     BASE_URL: 'sendgrid-dynamic-blocks-1123-dev.twil.io/',
     GET_SINGLE_TEMPLATE: 'get-single-template',
@@ -47,20 +47,33 @@ export const HANDLEBARS = {
       type: "image",
       label: "Image", 
       fields: [{name: "imageUrl", type: "text", value: ""}], 
-      styles: {
-        altText: "", 
-        paddingLeft: "",
-        paddingRight: "",
-        paddingTop: "",
-        paddingBottom: "",
-        responsive: false,
-        width: "",
-        height: "",
-        responsiveWidthPercentage: "",
-        alignment: ""
-      }
+      styles: [
+        {name: "altText", type: "text", label: "Alt Text", value: ""},
+        {name: "paddingLeft", type: "number", label: "Padding Left", value: ""},
+        {name: "paddingRight", type: "number", label: "Padding Right", value: ""},
+        {name: "paddingTop", type: "number", label: "Padding Top", value: ""},
+        {name: "paddingBottom", type: "number", label: "Padding Bottom", value: ""},
+        {name: "isResponsive", type: "boolean", label: "Is Responsive?", value: ""},
+        {name: "width", type: "number", label: "Width", value: ""},
+        {name: "height", type: "number", label: "Height", value: ""},
+        {name: "responsiveWidthPercentage", type: "number", label: "Responsive Width %", value: ""},
+        {name: "alignment", type: "select", label: "Alignment", selectValues: ['center', 'left', 'right'], value: ""},
+      ]
     },
-    TEXT: { type: "text", label: "Text", fields: [{name: "text", type: "text", value: ""}] },
+    TEXT: { type: "text", label: "Text", fields: [{name: "text", type: "text", value: ""}],
+    styles: [
+      {name: "altText", type: "text", label: "Alt Text", value: ""},
+      {name: "paddingLeft", type: "number", label: "Padding Left", value: ""},
+      {name: "paddingRight", type: "number", label: "Padding Right", value: ""},
+      {name: "paddingTop", type: "number", label: "Padding Top", value: ""},
+      {name: "paddingBottom", type: "number", label: "Padding Bottom", value: ""},
+      {name: "isResponsive", type: "boolean", label: "Is Responsive?", value: ""},
+      {name: "width", type: "number", label: "Width", value: ""},
+      {name: "height", type: "number", label: "Height", value: ""},
+      {name: "responsiveWidthPercentage", type: "number", label: "Responsive Width %", value: ""},
+      {name: "alignment", type: "select", label: "Alignment", selectValues: ['center', 'left', 'right'], value: ""},
+    ]
+    },
     //IMAGE_TEXT: "ImageText",
     //CODE: { type: "code", label: "Code", fields: [{name: "code", type: "text", value: ""}] },
     //COLUMNS: "Columns",
@@ -73,10 +86,16 @@ export const HANDLEBARS = {
   // Code Blocks
   export const CODE_BLOCKS = {
     TEXT: {
-      generateSGCode: (value) => {
+      generateSGCode: (value, styles) => {
+        let stylesObj = {}
+        for (let i = 0; i < styles.length; i++) {
+          stylesObj[styles[i].name] = styles[i].value
+        }
+        console.log(JSON.stringify(stylesObj))
+        const {paddingTop, paddingRight, paddingLeft, paddingBottom, alignment} = stylesObj;
         return `<table class="module" role="module" data-type="text">
         <tr>
-          <td style="padding:0px 0px 0px 0px;" bgcolor="" role="module-content">
+          <td style="padding:${paddingTop || 0}px ${paddingRight|| 0}px ${paddingLeft|| 0}px ${paddingBottom|| 0}px;" bgcolor="" role="module-content">
           <p>${value}</p>
           </td>
         </tr>
@@ -105,9 +124,15 @@ export const HANDLEBARS = {
 
     IMAGE: {
       generateSGCode: (value, styles) => {
+        let stylesObj = {}
+        for (let i = 0; i < styles.length; i++) {
+          stylesObj[styles[i].name] = styles[i].value
+        }
+        console.log(JSON.stringify(stylesObj))
+        const {paddingTop, paddingRight, paddingLeft, paddingBottom, alignment} = stylesObj;
         return `<table class="wrapper" role="module" data-type="image" >
         <tr>
-          <td style="padding:0px 0px 0px 0px;" align='center'>
+          <td style="padding:${paddingTop || 0}px ${paddingRight|| 0}px ${paddingLeft|| 0}px ${paddingBottom|| 0}px;" align=${alignment}>
             <img src=${value} />
           </td>
         </tr>

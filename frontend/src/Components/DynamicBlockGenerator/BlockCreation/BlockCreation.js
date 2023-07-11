@@ -3,6 +3,7 @@ import { v4 as uuid } from 'uuid';
 import HandlebarsSelect from '../HandlebarsSelect/HandlebarsSelect';
 import ComponentsSelect from '../ComponentsSelect/ComponentsSelect';
 import ItemCreation from '../ItemCreation/ItemCreation'
+import StyleSetter from './StyleSetter/StyleSetter';
 import { getCloseHandlebar, getHandlebarsObject, getComponentsObject, getCodeBlockObject } from '../../../Utils/functions';
 import {
   TextField,
@@ -27,12 +28,6 @@ const BlockCreation = ({getCustomBlock}) => {
 
   /////////////////////////////////
   const [popoverOpen, setPopoverOpen] = useState(false);
-  const [altText, setAltText] = useState('');
-  const [padding, setPadding] = useState({ top: 0, right: 0, bottom: 0, left: 0 });
-  const [responsive, setResponsive] = useState(false);
-  const [width, setWidth] = useState('');
-  const [height, setHeight] = useState('');
-  const [alignment, setAlignment] = useState('');
   const [settingsAnchorEl, setSettingsAnchorEl] = useState(null);
 
   const handleOpenPopover = (event, row) => {
@@ -43,10 +38,6 @@ const BlockCreation = ({getCustomBlock}) => {
 
   const handleClosePopover = () => {
     setPopoverOpen(false);
-  };
-
-  const handleAlignmentChange = (event) => {
-    setAlignment(event.target.value);
   };
 
   ////////////////////////////////
@@ -242,20 +233,44 @@ const BlockCreation = ({getCustomBlock}) => {
     setAnchorEl(null);
   };
 
-  /* Function to allow user to change styles for a component */
-  const openSettings = (row) => {
+  const updateStylesRecursive = (rows, settingsRow, updatedStyles) => {
+    return rows.map((row) => {
+      if (row.id === settingsRow.id) {
+        console.log("Found row: " + JSON.stringify(row))
+        row.component.styles.map((style) => {
+          const updatedValue = updatedStyles[style.name];
+          if(updatedValue){
+            style.value = updatedValue
+            return;
+          }
+        })
+        return {
+          ...row
+        };
+      } else if (row.nestedRows.length > 0) {
+        return {
+          ...row,
+          nestedRows: updateStylesRecursive(row.nestedRows, settingsRow, updatedStyles),
+        };
+      }
+      return row;
+    });
+  }
 
+  const updateRowStyles = (row, styles) => {
+      setRows((prevRows) => updateStylesRecursive(prevRows, row, styles))
+
+  }
+
+  const handleUpdatedStyles = (updatedStyles) => {
+    /*
     const component = getComponentsObject(row.component.type, true)
     const data = {
       component: JSON.parse(JSON.stringify(component))
     }
-    setOpenSettings(true)
-    setSettingsRow(row)
+    */
+    setRows((prevRows) => updateStylesRecursive(prevRows, settingsRow, updatedStyles))
   }
-
-  const handleCloseSettings = () => {
-    setOpenSettings(false);
-  };
 
   /* Recursive function that generates the code/steps and HTML
   it is used by useEffect to present changes as they happen
@@ -279,7 +294,7 @@ const BlockCreation = ({getCustomBlock}) => {
 
       } else if (row.type === "component" && row.component) {
         code += `${indent}${row.component.fields[0].value}\n`;
-        html += `${indent}${getCodeBlockObject(row.component.type, row.component.fields[0].value)}\n`
+        html += `${indent}${getCodeBlockObject(row.component.type, row.component.fields[0].value, row.component.styles)}\n`
         return;
       }
       
@@ -335,6 +350,14 @@ const BlockCreation = ({getCustomBlock}) => {
     )
   }
 
+  const renderStyles = () => {
+    return (
+      <Grid container spacing={3}>
+        <StyleSetter styles={settingsRow.component.styles} onUpdatedStyles={(styles) => handleUpdatedStyles(styles)} />
+      </Grid>
+    )
+  }
+
   const renderComponentSettings = (row) => {
     return (<>{
       row.type === "component" && popoverOpen && (
@@ -348,34 +371,7 @@ const BlockCreation = ({getCustomBlock}) => {
           transformOrigin={{ vertical: 'top', horizontal: 'right' }}
         >
            <Box padding={2}>
-        <Typography variant="h6" gutterBottom>
-          Choose Styles
-        </Typography>
-
-        <Grid container spacing={2} alignItems="center">
-        <Grid item xs={12}>
-              <FormControl component="fieldset">
-                <RadioGroup value={alignment} onChange={handleAlignmentChange}>
-                  <FormControlLabel
-                    value="left"
-                    control={<Radio />}
-                    label="Left"
-                  />
-                  <FormControlLabel
-                    value="center"
-                    control={<Radio />}
-                    label="Center"
-                  />
-                  <FormControlLabel
-                    value="right"
-                    control={<Radio />}
-                    label="Right"
-                  />
-                </RadioGroup>
-              </FormControl>
-            </Grid>
-
-          </Grid>
+        {renderStyles(row)}
           </Box>
         </Popover>
 

@@ -167,10 +167,10 @@ export const getComponentsObject = (condition) => {
 
 // Helper function to get a specific code block object in the SG-specific format
 // It is used to build the dynamic block mainly
-export const getCodeBlockObject = (type,value) => {
+export const getCodeBlockObject = (type,value, styles) => {
   for (const [key] of Object.entries(CODE_BLOCKS)) {
       const found = key === type.toUpperCase() ? true: false;
-      if (found) return CODE_BLOCKS[key].generateSGCode(value)
+      if (found) return CODE_BLOCKS[key].generateSGCode(value, styles)
   }
 };
 
