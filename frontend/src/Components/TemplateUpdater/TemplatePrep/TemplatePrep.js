@@ -2,6 +2,7 @@ import React, { useEffect, useState, useRef } from 'react';
 import {Button, Grid, Checkbox, RadioGroup, FormControlLabel, Radio, FormControl, FormLabel, Paper} from '@mui/material';
 import { fetchSingleTemplateVersion, updateSingleTemplate } from '../../../Utils/functions';
 import TemplateRenderer from '../../TemplateRenderer/TemplateRenderer';
+import LoadingDialog from '../../LoadingDialog/LoadingDialog';
 
 const TemplatePrep = ({ selectedBlock, selectedTemplates, selectedVersions }) => {
 
@@ -12,6 +13,7 @@ const TemplatePrep = ({ selectedBlock, selectedTemplates, selectedVersions }) =>
   const [selectedRadioUpdateOption, setSelectedRadioUpdateOption] = useState('updateMultiple');
   const [checkBoxList, setCheckBoxList] = useState([])
   const [checkedTemplates, setCheckedTemplates] = useState([])
+  const [isLoading, setIsLoading] = useState(false);
 
   const parser = new DOMParser();
 
@@ -129,12 +131,13 @@ const TemplatePrep = ({ selectedBlock, selectedTemplates, selectedVersions }) =>
     
   }
   const handlePreview = async () => {
+    setIsLoading(true)
     if (checkedTemplates.length === 0) return;
     if (selectedRadioUpdateOption === "updateMultiple"){
       const version = await handleExampleTemplateFetch()
       setMergedHTML(domParserMerge(version.html_content))
     }
-    
+    setIsLoading(false)
   }
 
   const handleUpdateAllMerge = async (versionData) => {
@@ -160,7 +163,7 @@ const TemplatePrep = ({ selectedBlock, selectedTemplates, selectedVersions }) =>
 
   }
   const handleUpdateAll = () => {
-
+    
     const initialPromises = [];
 
     console.log(checkedTemplates)
@@ -181,6 +184,7 @@ const TemplatePrep = ({ selectedBlock, selectedTemplates, selectedVersions }) =>
       }
       initialPromises.push(promise) 
     })
+    
   }
 
   const placeholderStyle = {
@@ -272,7 +276,7 @@ const TemplatePrep = ({ selectedBlock, selectedTemplates, selectedVersions }) =>
       <TemplateRenderer template={mergedHTML} placeholderText="Your updated template will render here"/>
          
       </Grid>
-
+      <LoadingDialog open={isLoading} text="Updating your templates, please wait..." />
       
             </Grid>
       </div>

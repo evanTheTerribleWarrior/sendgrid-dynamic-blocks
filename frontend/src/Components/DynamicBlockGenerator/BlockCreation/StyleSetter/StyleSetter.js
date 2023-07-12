@@ -20,6 +20,7 @@ const StyleSetter = ({ styles, onUpdatedStyles }) => {
   };
 
   const handleApplyChanges = () => {
+    console.log(updatedStyles)
     onUpdatedStyles(updatedStyles)
   };
 
@@ -32,7 +33,7 @@ const StyleSetter = ({ styles, onUpdatedStyles }) => {
           <TextField
             label={label}
             variant="standard"
-            value={updatedStyles[name] || value }
+            value={value}
             onChange={(event) => handleInputChange(event, name)}
           />
         );
@@ -44,6 +45,7 @@ const StyleSetter = ({ styles, onUpdatedStyles }) => {
             type="number"
             value={updatedStyles[name] || value}
             onChange={(event) => handleInputChange(event, name)}
+            autoComplete="off"
           />
         );
       case 'boolean':
@@ -52,7 +54,7 @@ const StyleSetter = ({ styles, onUpdatedStyles }) => {
             <Typography variant="subtitle1">{label}</Typography>  
           <Switch
             color="primary"
-            checked={updatedStyles[name] || false}
+            checked={updatedStyles[name] || value}
             onChange={(event) => handleInputChange(event, name)}
           />
         </>);

@@ -1,10 +1,13 @@
 import React, {useState, useRef} from 'react';
-import SectionHeader from '../SectionHeader/SectionHeader'
-import TemplateRenderer from '../TemplateRenderer/TemplateRenderer';
-import { uploadImageBase64, createNewTemplate } from '../../Utils/functions';
 import { Grid, Button, TextField, Paper, Typography, Stack, Switch, Tooltip, IconButton } from '@mui/material';
 import { HelpOutline } from '@mui/icons-material';
 import JSZip from 'jszip';
+import SectionHeader from '../SectionHeader/SectionHeader'
+import TemplateRenderer from '../TemplateRenderer/TemplateRenderer';
+import LoadingDialog from '../LoadingDialog/LoadingDialog';
+import { uploadImageBase64, createNewTemplate } from '../../Utils/functions';
+
+
 
 const sectionHeaderContent = {
     title: "Upload your HTML",
@@ -32,6 +35,7 @@ const ZipUploader = () => {
     const [imagesArray, setImagesArray] = useState([])
 
     const [processedHTML, setProcessedHTML] = useState(null)
+    const [isLoading, setIsLoading] = useState(false)
 
     const canvasRef = useRef(null);
 
@@ -219,6 +223,7 @@ const ZipUploader = () => {
     };
 
     const processZipFile = async () => {
+      setIsLoading(true)
       try {
         const zip = new JSZip();
         const zipFile = await zip.loadAsync(uploadedFile);   
@@ -241,6 +246,7 @@ const ZipUploader = () => {
       } catch (error) {
         console.log('Error processing zip file:', error);
       }
+      setIsLoading(false)
     };
 
     const clearFile = () => {
@@ -336,7 +342,7 @@ const ZipUploader = () => {
             
         <Button variant="contained" disabled={!processedHTML} onClick={() => uploadHTMLToSendgrid()}>Create New Template</Button>
         <Button variant="contained" disabled={!processedHTML} onClick={() => exportHTML()}>Export HTML File</Button>
-
+       {uploadLocalImages ? (<LoadingDialog open={isLoading} text="Constructing your HTML, this will take a moment..." />) : (<></>)}
         </Stack>
             </Grid>
             <Grid item={8}>
