@@ -41,7 +41,7 @@ zsh setup-remote.sh
 ```
 
 ### Option 2: Build local
--  Go to `variables.js`
+-  Go to `frontend/src/Utils/variables.js`
 - Search for `BASE_URL`
 - Replace the following values so they look like this
 ```shell
