@@ -20,7 +20,7 @@ Build re-usable component blocks, and update multiple Sendgrid templates at once
 2. Install the [serverless toolkit](https://www.twilio.com/docs/labs/serverless-toolkit/getting-started)
 3. Create a [Sendgrid API Key](https://docs.sendgrid.com/ui/account-and-settings/api-keys). You don't need to give it full permissions. `Design Library` `Mail Send` and `Template Engine` should be enough
 
-## Setup - Remote
+## Setup
 - Clone the repository and `cd` into it:
 ```shell
 git clone https://github.com/evanTheTerribleWarrior/sendgrid-dynamic-blocks.git
@@ -33,13 +33,14 @@ cd sendgrid-dynamic-blocks
 cp .env.example .env
 ```
 
+### Option 1: Build remote (Twilio account)
 - Run the `setup-remote.sh` script (if you use other shell, use the equivalent command):
 ```shell
 zsh setup-remote.sh
 # View your app at https://[my-runtime-url].twil.io/index.html
 ```
 
-## Setup - Local
+### Option 2: Build local
 -  Go to `variables.js`
 - Search for `BASE_URL`
 - Replace the following values so they look like this
