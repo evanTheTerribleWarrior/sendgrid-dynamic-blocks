@@ -47,15 +47,18 @@ const StyleSetter = ({ styles, onUpdatedStyles }) => {
           />
         );
       case 'boolean':
-        return (
+
+        return (<>
+            <Typography variant="subtitle1">{label}</Typography>  
           <Switch
             color="primary"
             checked={updatedStyles[name] || false}
             onChange={(event) => handleInputChange(event, name)}
           />
-        );
+        </>);
       case 'select':
-        return (
+        return (<>
+        <Typography variant="subtitle1">{label}</Typography>  
           <Select
             label={label}
             value={updatedStyles[name] || value}
@@ -67,7 +70,7 @@ const StyleSetter = ({ styles, onUpdatedStyles }) => {
 
             }
           </Select>
-        );
+          </>);
       default:
         return null;
     }
@@ -77,7 +80,6 @@ const StyleSetter = ({ styles, onUpdatedStyles }) => {
         <>
         {styles.map((style) => (
             <Grid item xs="auto" key={style.name}>
-            <Typography variant="subtitle1">{style.label}</Typography>
             {renderComponent(style)}
           </Grid>
         ))}

@@ -18,26 +18,40 @@ Build re-usable component blocks, and update multiple Sendgrid templates at once
 ## Pre-requisites
 1. Install the [Twilio CLI](https://www.twilio.com/docs/twilio-cli/quickstart#install-twilio-cli)
 2. Install the [serverless toolkit](https://www.twilio.com/docs/labs/serverless-toolkit/getting-started)
+3. Create a [Sendgrid API Key](https://docs.sendgrid.com/ui/account-and-settings/api-keys). You don't need to give it full permissions. `Design Library` `Mail Send` and `Template Engine` should be enough
 
-## Setup
-
-3. Clone the repository and `cd` into it:
+## Setup - Remote
+- Clone the repository and `cd` into it:
 ```shell
 git clone https://github.com/evanTheTerribleWarrior/sendgrid-dynamic-blocks.git
 
 cd sendgrid-dynamic-blocks
 ```
 
-4. Create .env file and set the USERNAME, PASSWORD, JWT_SECRET. Ensure they are not easy to guess:
+- Create .env file and set the SG_API_KEY env variable with the SG Key you created:
 ```shell
 cp .env.example .env
 ```
 
-5. Using Twilio CLI, deploy code to your Twilio account:
+- Run the `setup-remote.sh` script (if you use other shell, use the equivalent command):
 ```shell
-twilio serverless:deploy
+zsh setup-remote.sh
 # View your app at https://[my-runtime-url].twil.io/index.html
 ```
+
+## Setup - Local
+-  Go to `variables.js`
+- Search for `BASE_URL`
+- Replace the following values so they look like this
+```shell
+PROTOCOL: 'http://',
+BASE_URL: 'localhost:3002/',
+``` 
+- Run the `setup-local.sh` script (if you use other shell, use the equivalent command):
+```shell
+zsh setup-local.sh
+```
+Note: The script will send processes to the background. If you prefer to use them individually you can create multiple tabs in your terminal / split panes / use `screen` or any other way, and just run the commands one by one instead of the script (without the &)
 
 ## Example
 

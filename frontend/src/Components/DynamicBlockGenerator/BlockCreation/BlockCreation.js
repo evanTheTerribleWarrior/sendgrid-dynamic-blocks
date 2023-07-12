@@ -11,7 +11,7 @@ import {
   Paper,
   Popover,
   MenuItem,
-  IconButton, Modal, Button, Typography, Box, FormControl, Radio, RadioGroup,FormControlLabel
+  IconButton, Container, Button, Typography, Box, FormControl, Radio, RadioGroup,FormControlLabel
 } from '@mui/material';
 import CloseIcon from "@mui/icons-material/Close";
 import AddIcon from '@mui/icons-material/Add';
@@ -355,9 +355,11 @@ const BlockCreation = ({getCustomBlock}) => {
 
   const renderStyles = () => {
     return (
+      <Container>
       <Grid container spacing={3}>
         <StyleSetter styles={settingsRow.component.styles} onUpdatedStyles={(styles) => handleUpdatedStyles(styles)} />
       </Grid>
+      </Container>
     )
   }
 

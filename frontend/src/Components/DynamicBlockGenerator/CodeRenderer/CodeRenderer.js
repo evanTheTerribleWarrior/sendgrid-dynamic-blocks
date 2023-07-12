@@ -67,7 +67,7 @@ const CodeRenderer = ({onGenerateDynamicBlock}) => {
           {codeView ? (
               <Grid item > 
               {generatedHtml ? (
-                <SyntaxHighlighter language="html" style={darcula} customStyle={{borderRadius: "5px",marginTop: '10px', overflow: 'auto'}}>
+                <SyntaxHighlighter language="html" style={darcula} customStyle={{borderRadius: "5px",marginTop: '10px', overflow: 'auto', width: '40vw'}}>
                   {generatedHtml}
                 </SyntaxHighlighter>
             

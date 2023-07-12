@@ -4,9 +4,8 @@ TEST ALL SCENARIOS TO AVOID ERRORS
 - Have an "Expand all" button
 
 Build block:
-- Add Settings to allow edit styles
+- Fix when deleting text fields in Settings, leaves one character. also boolean does not work correctly
 - Check html santisization for syntax highligther
-- Allow import of existing? It will need to read the code and reproduce the building blocks
 - Fix errors when choosing some conditions that make it crash. perhaps exclude some conditions from top level like else if/else
 
 - Zip component:
@@ -17,11 +16,6 @@ Security:
 
 Update Templates
 - Fetch paged templates
-- UpdateMultiple: check if HTML is empty and throw error (same in UpdateSingle)
 - While updating give a Loading
-- Before updating all, give final confirmation modal especially if they have selected to not create new version.
-- When adding footer under Social, seems to not render in the Editor for some reason
-- Check that all mandatory info is provided for example at least one template selected, otherwise do not proceed (or point it out?)
-
 
 - web vitals to connect with segment/analytics?
