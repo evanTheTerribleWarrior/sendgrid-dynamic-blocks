@@ -10,6 +10,7 @@ exports.handler = (context, event, callback) => {
   response.appendHeader('Access-Control-Allow-Origin', '*');
   response.appendHeader('Access-Control-Allow-Methods', 'POST');
   response.appendHeader('Access-Control-Allow-Headers', 'Content-Type');
+  response.appendHeader('Content-Type', 'application/json');
 
   if (username !== context.USERNAME || password !== context.PASSWORD) {
     response

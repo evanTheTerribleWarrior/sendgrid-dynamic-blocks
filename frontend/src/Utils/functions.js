@@ -132,6 +132,7 @@ export async function authenticateUser (credentials) {
         }
     });
     const data = await response.json();
+    console.log(JSON.stringify(data))
     return data;
   } catch (error) {
       throw new Error(`Failed to get token: ${error}`);

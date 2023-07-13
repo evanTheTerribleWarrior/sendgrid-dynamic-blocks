@@ -11,11 +11,12 @@ import ZipUploader from './Components/ZipUploader/ZipUploader';
 import Auth from './Components/Auth/Auth';
 import Login from './Components/Auth/Login/Login';
 
+import { HashRouter } from "react-router-dom";
+
 const App = () => {
 
   return(
     <Provider store={store}> 
-      <Router>
         <Layout>
           <Routes>      
             <Route exact path="/build" element={<Auth><DynamicBlockGenerator/></Auth>} />
@@ -28,7 +29,6 @@ const App = () => {
             <Route exact path="/index.html" element={<Login />} />
           </Routes>
         </Layout>
-      </Router>
     </Provider>
   );
 };
