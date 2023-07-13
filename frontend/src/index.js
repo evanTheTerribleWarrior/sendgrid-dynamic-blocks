@@ -8,11 +8,12 @@ window.onbeforeunload = () => { return "" };
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
-  <HashRouter>
+  
   <React.StrictMode>
-    <App />
+    <HashRouter>
+      <App />
+    </HashRouter>
   </React.StrictMode>
-  </HashRouter>
 );
 
 // If you want to start measuring performance in your app, pass a function
