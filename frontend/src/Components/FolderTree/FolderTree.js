@@ -7,7 +7,7 @@ import { v4 as uuid } from 'uuid';
 import {Menu, MenuItem, Dialog, DialogActions, DialogTitle, 
   DialogContent, Button, Grid, Typography, Paper, Divider, 
   IconButton, Tooltip} from '@mui/material'
-import { updateFolderStructure } from '../../Redux/reducers';
+import { updateFolderStructure } from '../../Redux/folderStructureSlice';
 import { MinusSquare, PlusSquare, CloseSquare, StyledTreeItem } from './FolderTreeStyles';
 import ImportTemplate from './ImportTemplate/ImportTemplate'
 

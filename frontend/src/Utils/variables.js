@@ -38,7 +38,8 @@ export const HANDLEBARS = {
     GET_SINGLE_TEMPLATE_VERSION: 'get-template-version',
     GET_FOLDER_STRUCTURE:'get-folder-structure',
     UPLOAD_IMAGE_BASE64: 'upload-image',
-    CREATE_NEW_TEMPLATE: 'create-new-template'
+    CREATE_NEW_TEMPLATE: 'create-new-template',
+    AUTHENTICATE: 'jwt'
   };
 
   export const COMPONENTS = {
@@ -128,7 +129,7 @@ export const HANDLEBARS = {
         return `<table class="wrapper" role="module" data-type="image" >
         <tr>
           <td style="padding:${attributes.paddingTop || 0}px ${attributes.paddingRight|| 0}px ${attributes.paddingLeft|| 0}px ${attributes.paddingBottom|| 0}px;" align="${attributes.alignment}">
-            <img src=${value} />
+            <img src="${value}" />
           </td>
         </tr>
       </table>`

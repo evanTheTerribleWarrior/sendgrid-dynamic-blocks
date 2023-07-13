@@ -1,21 +1,19 @@
 SavedCollection:
 TEST ALL SCENARIOS TO AVOID ERRORS
 - Move a file/folder - SOMEHOW CANCELS THE STATE
-- Have an "Expand all" button
 
 Build block:
 - Fix when deleting text fields in Settings, leaves one character. also boolean does not work correctly
-- Check html santisization for syntax highligther
 - Fix errors when choosing some conditions that make it crash. perhaps exclude some conditions from top level like else if/else
 
-- Zip component:
-Add "Loading file" or similar while html gets created
+Zip component:
+- When uploading images, utilise better promises or even exponential backoff?
 
 Security:
 - JWT / Auth?
 
 Update Templates
 - Fetch paged templates
-- While updating give a Loading
 
+Future:
 - web vitals to connect with segment/analytics?

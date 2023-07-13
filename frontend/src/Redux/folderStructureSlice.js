@@ -19,6 +19,6 @@ const folderStructureSample =
       },
     },
   });
-  
+
   export const { updateFolderStructure } = folderSlice.actions;
   export default folderSlice.reducer;

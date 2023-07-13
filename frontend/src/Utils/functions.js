@@ -121,6 +121,23 @@ export async function uploadImageBase64 (imageFileName, imageFileBase64) {
   }
 };
 
+export async function authenticateUser (credentials) {
+  try {
+    const url = API_URLS.PROTOCOL + API_URLS.BASE_URL + API_URLS.AUTHENTICATE    
+    const response = await fetch(url, {
+        method: 'POST',
+        body: JSON.stringify(credentials),
+        headers: {
+          'Content-Type': 'application/json'
+        }
+    });
+    const data = await response.json();
+    return data;
+  } catch (error) {
+      throw new Error(`Failed to get token: ${error}`);
+  }
+}
+
 export async function getFolderStructure () {
   try {
     const url = API_URLS.PROTOCOL + API_URLS.BASE_URL + API_URLS.GET_FOLDER_STRUCTURE    

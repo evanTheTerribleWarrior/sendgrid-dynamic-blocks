@@ -13,12 +13,13 @@ Build re-usable component blocks, and update multiple Sendgrid templates at once
  * Upload your zip file with the HTML/CSS/IMG structure and automatically create a template out of it
  * Local storage to persist your collections on the browser
  * Twilio Functions middleware to call the Sendgrid APIs and therefore avoid exposing SG API Keys within the app
+ * Authentication via JWT tokens
 
 
 ## Pre-requisites
 1. Install the [Twilio CLI](https://www.twilio.com/docs/twilio-cli/quickstart#install-twilio-cli)
 2. Install the [serverless toolkit](https://www.twilio.com/docs/labs/serverless-toolkit/getting-started)
-3. Create a [Sendgrid API Key](https://docs.sendgrid.com/ui/account-and-settings/api-keys). You don't need to give it full permissions. `Design Library` `Mail Send` and `Template Engine` should be enough
+3. Create a [Sendgrid API Key](https://docs.sendgrid.com/ui/account-and-settings/api-keys). You don't need to give it full permissions. `Design Library` and `Template Engine` should be enough
 
 ## Setup
 - Clone the repository and `cd` into it:
@@ -28,7 +29,7 @@ git clone https://github.com/evanTheTerribleWarrior/sendgrid-dynamic-blocks.git
 cd sendgrid-dynamic-blocks
 ```
 
-- Create .env file and set the SG_API_KEY env variable with the SG Key you created:
+- Create .env file and set the SG_API_KEY env variable with the SG Key you created. Also add USERNAME, PASSWORD, JWT_SECRET that are used for authentication. Make them hard to guess if you deploy this!
 ```shell
 cp .env.example .env
 ```

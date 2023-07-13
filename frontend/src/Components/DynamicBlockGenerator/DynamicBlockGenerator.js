@@ -4,7 +4,7 @@ import { v4 as uuid } from 'uuid';
 import { Box, Button, Grid, TextField, Modal, Typography, Popover } from '@mui/material';
 import CodeRenderer from './CodeRenderer/CodeRenderer'; 
 import FolderTree from '../FolderTree/FolderTree';
-import { updateFolderStructure } from '../../Redux/reducers';
+import { updateFolderStructure } from '../../Redux/folderStructureSlice';
 import SectionHeader from '../SectionHeader/SectionHeader'
 
 const sectionHeaderContent = {

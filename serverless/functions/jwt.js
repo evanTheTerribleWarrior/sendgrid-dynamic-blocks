@@ -2,14 +2,18 @@ const jwt = require('jsonwebtoken');
 
 exports.handler = (context, event, callback) => {
 
+  console.log(JSON.stringify(event))
+
   const { username, password } = event;
 
   const response = new Twilio.Response();
-  response.appendHeader('Content-Type', 'application/json');
+  response.appendHeader('Access-Control-Allow-Origin', '*');
+  response.appendHeader('Access-Control-Allow-Methods', 'POST');
+  response.appendHeader('Access-Control-Allow-Headers', 'Content-Type');
 
   if (username !== context.USERNAME || password !== context.PASSWORD) {
     response
-      .setBody('Username or password is incorrect')
+      .setBody({success: false, message: 'Invalid Credentials'})
       .setStatusCode(401);
 
     return callback(null, response);
@@ -24,7 +28,9 @@ exports.handler = (context, event, callback) => {
     },
     context.JWT_SECRET,
     { expiresIn: '1d' }
-  );
+  )
+
+  console.log(token)
 
   response.setBody({success: true, token: token});
 

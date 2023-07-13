@@ -1,6 +1,6 @@
 export const loadState = () => {
     try {
-      const serializedState = localStorage.getItem('state');
+      const serializedState = localStorage.getItem('sendgrid_blocks_state');
       if (serializedState === null) {
         return undefined;
       }
@@ -13,7 +13,7 @@ export const loadState = () => {
   export const saveState = (state) => {
     try {
       const serializedState = JSON.stringify(state);
-      localStorage.setItem('state', serializedState);
+      localStorage.setItem('sendgrid_blocks_state', serializedState);
     } catch (err) {
       // Ignore write errors.
     }

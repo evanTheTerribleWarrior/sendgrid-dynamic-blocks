@@ -1,4 +1,6 @@
 import React, {useState} from 'react';
+import { useDispatch, useSelector } from 'react-redux';
+import { logout } from '../../Redux/authSlice';
 import { styled, useTheme } from '@mui/material/styles';
 import Box from '@mui/material/Box';
 import MuiDrawer from '@mui/material/Drawer';
@@ -21,6 +23,7 @@ import SaveIcon from '@mui/icons-material/Save';
 import SettingsIcon from '@mui/icons-material/Settings';
 import UpdateSharpIcon from '@mui/icons-material/UpdateSharp';
 import CloudUploadIcon from '@mui/icons-material/CloudUpload';
+import LogoutIcon from '@mui/icons-material/Logout';
 import { useNavigate } from 'react-router-dom';
 
   const drawerWidth = 240;
@@ -119,11 +122,19 @@ import { useNavigate } from 'react-router-dom';
       icon: SettingsIcon,
       iconName: "settings",
       route: '/settings'
+    },
+    {
+      text: 'Logout',
+      icon: LogoutIcon,
+      iconName: "logout",
+      route: '/login'
     }
   ]
 
 
   const  MiniDrawer = () => {
+    const dispatch = useDispatch();
+    const jwtToken = useSelector((state) => state.auth.jwtToken);
     const navigate = useNavigate();
     const theme = useTheme();
     const [open, setOpen] = React.useState(false);
@@ -139,6 +150,9 @@ import { useNavigate } from 'react-router-dom';
 
     const handleNavigationClick = (item) => {
       setActiveIcon(item.iconName)
+      if(item.iconName === "logout"){
+        dispatch(logout(jwtToken))
+      }
       navigate(item.route);
     }
 
