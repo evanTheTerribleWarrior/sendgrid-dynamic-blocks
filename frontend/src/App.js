@@ -25,6 +25,7 @@ const App = () => {
             <Route exact path="/settings" element={<Auth><Settings /></Auth>} />
             <Route exact path="/login" element={<Login />} />
             <Route exact path="/" element={<Login />} />
+            <Route exact path="/index.html" element={<Login />} />
           </Routes>
         </Layout>
       </Router>
