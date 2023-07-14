@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
-import { Card, CardMedia, CardContent, Typography, Grid, Checkbox, Select, MenuItem, FormControl, InputLabel, CircularProgress } from '@mui/material';
+import { Card, CardMedia, CardContent, Typography, Grid, Checkbox, 
+  Select, MenuItem, FormControl, InputLabel, CircularProgress, Button } from '@mui/material';
 import { fetchAllTemplates } from '../../../Utils/functions';
 
 const DynamicTemplateList = ({ onSelectTemplates, onSelectVersions }) => {
@@ -7,24 +8,42 @@ const DynamicTemplateList = ({ onSelectTemplates, onSelectVersions }) => {
   const [selectedTemplates, setSelectedTemplates] = useState([]);
   const [selectedVersionsArray, setSelectedVersionsArray] = useState({});
   const [selectedTemplatesAndVersions, setSelectedTemplatesAndVersions] = useState([])
+  const [nextPageToken, setNextPageToken] = useState(null);
+  const [initialLoaded, setInitialLoaded] = useState(false);
 
   const fetchTemplates = async () => {
     try {
-      const data = await fetchAllTemplates();
-      setTemplates(data);
+      const data = await fetchAllTemplates(nextPageToken);
+      console.log(JSON.stringify(data))
+      data.page_token ? setNextPageToken(data.page_token) : setNextPageToken(null)
+      setTemplates((prevTemplates) => {
+        const uniqueTemplates = [...prevTemplates, ...data.templates_array];
+        const uniqueTemplatesById = Array.from(
+          new Map(uniqueTemplates.map((template) => [template.id, template]))
+        ).map((entry) => entry[1]);
+
+        return uniqueTemplatesById;
+      });
     } catch (error) {
       console.error('Error fetching templates:', error);
     }
   };
 
   useEffect(() => {
-    fetchTemplates();
+    if(!initialLoaded){
+      fetchTemplates();
+    }
+      
   }, []);
 
   useEffect(() => {
     onSelectTemplates(selectedTemplates);
     onSelectVersions(selectedTemplatesAndVersions)
   }, [selectedTemplates, selectedTemplatesAndVersions, onSelectTemplates, onSelectVersions]);
+
+  const handleLoadMoreTemplates = () => {
+    fetchTemplates();
+  };
 
   const handleTemplateSelect = (_template) => (event) =>  {
     const selectedTemplate = templates.find((template) => template.id === _template.id);
@@ -129,6 +148,9 @@ const DynamicTemplateList = ({ onSelectTemplates, onSelectVersions }) => {
           </div>
           </Grid>
         )))}
+        {nextPageToken && (
+          <Button variant="outlined" onClick={handleLoadMoreTemplates}>Load More Templates</Button>
+        )}
       </Grid>
     </div>
   );

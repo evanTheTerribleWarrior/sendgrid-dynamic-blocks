@@ -3,14 +3,17 @@ import { API_URLS, CODE_BLOCKS, COMPONENTS, HANDLEBARS } from "./variables";
 // Get all the templates from a specific account.
 // It points to a Twilio Function/server endpoint that will use the SG Key to pull the templates
 // SG Key is not used here as it would be a security gap
-export async function fetchAllTemplates () {
+export async function fetchAllTemplates (page_token) {
     try {
       const url = API_URLS.PROTOCOL + API_URLS.BASE_URL + API_URLS.GET_ALL_TEMPLATES    
       const response = await fetch(url, {
-          method: 'POST'
+          method: 'POST',
+          body: JSON.stringify({"page_token": page_token}),
+          headers: {
+            'Content-Type': 'application/json'
+          }
       });
       const data = await response.json();
-      console.log(data)
       return data;
     } catch (error) {
         throw new Error(`Failed to fetch templates: ${error}`);

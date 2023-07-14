@@ -10,7 +10,8 @@ exports.handler = async function(context, event, callback) {
 
   const queryParams = {
     "generations": "dynamic",
-    "page_size": 18
+    "page_size": 3,
+    "page_token": event.page_token ? event.page_token : null
   };
 
   const request = {
@@ -21,8 +22,23 @@ exports.handler = async function(context, event, callback) {
 
   try{
     const results_array = await client.request(request)
+    console.log(results_array[0].body)
     const templates_array = results_array[0].body.result.map(obj => ({ id: obj.id, name: obj.name, thumbnail_url: obj.versions[0].thumbnail_url, versions_array: obj.versions }));
-    response.setBody(JSON.stringify(templates_array) );
+    
+    const res = {
+      "templates_array" : templates_array
+    }
+
+    if (results_array[0].body._metadata.hasOwnProperty('next')){
+      const params = new URLSearchParams(results_array[0].body._metadata.next);
+      let page_token = "";
+      for (const [key,value] of params) {
+        if (key.includes("page_token")) page_token = value;
+      }
+      res.page_token = page_token;
+    }
+
+    response.setBody(JSON.stringify(res) );
     return callback(null, response)
   }
   catch (error) {

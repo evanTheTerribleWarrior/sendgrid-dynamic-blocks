@@ -12,8 +12,8 @@ Zip component:
 Security:
 - JWT / Auth?
 
-Update Templates
-- Fetch paged templates
+Update Templates:
+
 
 Future:
 - web vitals to connect with segment/analytics?
