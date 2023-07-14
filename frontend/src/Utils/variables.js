@@ -30,8 +30,8 @@ export const HANDLEBARS = {
   
   // API URLs
   export const API_URLS = {
-    PROTOCOL: '',
-    BASE_URL: '',
+    PROTOCOL: 'http://',
+    BASE_URL: 'localhost:3002/',
     GET_SINGLE_TEMPLATE: 'get-single-template',
     GET_ALL_TEMPLATES: 'get-templates',
     UPDATE_TEMPLATE: 'update-template',

@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Popover, Typography, TextField, Switch, Select, MenuItem, Grid, Stack } from '@mui/material';
+import { Typography, TextField, Switch, Select, MenuItem, Grid } from '@mui/material';
 
 const StyleSetter = ({ styles, onUpdatedStyles }) => {
   const [updatedStyles, setUpdatedStyles] = useState({});

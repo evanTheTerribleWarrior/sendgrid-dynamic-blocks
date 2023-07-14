@@ -32,7 +32,6 @@ const ZipUploader = () => {
     const [isDragOver, setIsDragOver] = useState(false);
     const [trustHtmlSource, setTrustHtmlSource] = useState(false);
     const [uploadLocalImages, setUploadLocalImages] = useState(false);
-    const [imagesArray, setImagesArray] = useState([])
 
     const [processedHTML, setProcessedHTML] = useState(null)
     const [isLoading, setIsLoading] = useState(false)

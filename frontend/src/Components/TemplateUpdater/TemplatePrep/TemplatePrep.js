@@ -1,5 +1,5 @@
-import React, { useEffect, useState, useRef } from 'react';
-import {Button, Grid, Checkbox, RadioGroup, FormControlLabel, Radio, FormControl, FormLabel, Paper} from '@mui/material';
+import React, { useEffect, useState } from 'react';
+import {Button, Grid, Checkbox, RadioGroup, FormControlLabel, Radio, FormControl, FormLabel } from '@mui/material';
 import { fetchSingleTemplateVersion, updateSingleTemplate } from '../../../Utils/functions';
 import TemplateRenderer from '../../TemplateRenderer/TemplateRenderer';
 import LoadingDialog from '../../LoadingDialog/LoadingDialog';
@@ -18,38 +18,38 @@ const TemplatePrep = ({ selectedBlock, selectedTemplates, selectedVersions }) =>
   const parser = new DOMParser();
 
   useEffect(() => {
-    createCheckboxList();
-  }, []);
+    const createCheckboxList = () => {
 
-  const createCheckboxList = () => {
+      const result = selectedVersions.flatMap(({ template_id, versions_array }) =>
+          versions_array
+          .filter((versionId) => {
+          const version = selectedTemplates
+            .flatMap((template) => template.versions_array)
+            .find((version) => version.id === versionId);
+          return version !== undefined;
+          })
+          .map((versionId) => {
+          const template = selectedTemplates.find((template) =>
+            template.versions_array.some((version) => version.id === versionId)
+          );
+          const version = template.versions_array.find((version) => version.id === versionId);
+  
+        return {
+          template_id,
+          template_name: template.name,
+          version_id: versionId,
+          version_name: version.name,
+        };
+      })
+      );
+  
+      setCheckBoxList(result)
+  
+    } 
+    createCheckboxList()
+  }, [selectedTemplates, selectedVersions]);
 
-    const result = selectedVersions.flatMap(({ template_id, versions_array }) =>
-        versions_array
-        .filter((versionId) => {
-        const version = selectedTemplates
-          .flatMap((template) => template.versions_array)
-          .find((version) => version.id === versionId);
-        return version !== undefined;
-        })
-        .map((versionId) => {
-        const template = selectedTemplates.find((template) =>
-          template.versions_array.some((version) => version.id === versionId)
-        );
-        const version = template.versions_array.find((version) => version.id === versionId);
-
-      return {
-        template_id,
-        template_name: template.name,
-        version_id: versionId,
-        version_name: version.name,
-      };
-    })
-);
-
-    setCheckBoxList(result)
-
-  }
-
+  
   const handleCreateVersionChange = (event) => {
     setCreateVersionChecked(event.target.checked)
   }

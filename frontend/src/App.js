@@ -1,5 +1,5 @@
 import React from 'react';
-import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import { Routes, Route } from 'react-router-dom';
 import { Provider } from 'react-redux';
 import store from './Redux/store';
 import DynamicBlockGenerator from './Components/DynamicBlockGenerator/DynamicBlockGenerator';
@@ -10,8 +10,6 @@ import Settings from './Components/Settings/Settings';
 import ZipUploader from './Components/ZipUploader/ZipUploader';
 import Auth from './Components/Auth/Auth';
 import Login from './Components/Auth/Login/Login';
-
-import { HashRouter } from "react-router-dom";
 
 const App = () => {
 

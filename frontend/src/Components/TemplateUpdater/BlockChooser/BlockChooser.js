@@ -1,5 +1,5 @@
 import React, {useState} from 'react';
-import {Grid, Box, Paper, Container} from '@mui/material';
+import {Grid, Container} from '@mui/material';
 import FolderTree from '../../FolderTree/FolderTree';
 import TemplateRenderer from '../../TemplateRenderer/TemplateRenderer';
 
@@ -14,26 +14,6 @@ const BlockChooser = ({onFileSelected}) => {
         }
         
     }
-
-    const placeholderStyle = {
-        width: '50vw',
-        height: '60vh',
-        border: '1px solid #ddd',
-        overflow: 'auto',
-        display: 'flex',
-        justifyContent: 'center',
-        alignItems: 'center',
-      };
-    
-      const templateRenderStyle = {
-        width: '50vw',
-        height: '60vh',
-        border: '1px solid #ddd',
-        display: 'flex',
-        overflow: 'auto',
-        justifyContent: 'center',
-        alignItems: 'center',
-      };
 
     return (
         <Container>

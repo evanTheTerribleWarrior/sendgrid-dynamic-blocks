@@ -11,7 +11,7 @@ import {
   Paper,
   Popover,
   MenuItem,
-  IconButton, Container, Button, Typography, Box, FormControl, Radio, RadioGroup,FormControlLabel
+  IconButton, Container, Box
 } from '@mui/material';
 import CloseIcon from "@mui/icons-material/Close";
 import AddIcon from '@mui/icons-material/Add';
@@ -22,8 +22,6 @@ const BlockCreation = ({getCustomBlock}) => {
   const [rowIdClicked, setRowClicked] = useState('');
   const [generatedHtml, setGeneratedHtml] = useState('');
   const [anchorEl, setAnchorEl] = useState(null);
-
-  const [shouldOpenSettings, setOpenSettings] = useState(false);
   const [settingsRow, setSettingsRow] = useState("")
 
   /////////////////////////////////

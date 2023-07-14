@@ -1,5 +1,5 @@
-import React, {useContext, useState} from 'react';
-import {CardContent, Grid, Card, Paper, Box, Button} from '@mui/material'
+import React, {useState} from 'react';
+import {Grid} from '@mui/material'
 import FolderTree from '../FolderTree/FolderTree';
 import SectionHeader from '../SectionHeader/SectionHeader';
 import TemplateRenderer from '../TemplateRenderer/TemplateRenderer';

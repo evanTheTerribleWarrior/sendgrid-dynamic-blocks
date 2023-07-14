@@ -1,5 +1,5 @@
 import React, {useState} from 'react'
-import {Tabs, Tab, Button, Grid} from '@mui/material'
+import {Tabs, Tab, Grid} from '@mui/material'
 import DynamicTemplateList from './DynamicTemplateList/DynamicTemplateList';
 import TemplatePrep from './TemplatePrep/TemplatePrep';
 import BlockChooser from './BlockChooser/BlockChooser';
@@ -18,26 +18,10 @@ const TemplateUpdater = () => {
     const [selectedTemplates, setSelectedTemplates] = useState([])
     const [selectedVersions, setSelectedVersions] = useState([])
     const [selectedBlock, setSelectedBlock] = useState("")
-
-    const TAB_SIZE = 4;
-    
+ 
     const handleTabChange = (event, newTab) => {
         setActiveTab(newTab);
     };  
-
-    const handleNextStep = () => {
-        setCurrentStep((prevStep) => {
-            if (prevStep < TAB_SIZE -1)  return (prevStep + 1)
-            return (prevStep)
-        });
-    };
-
-    const handlePreviousStep = () => {
-        setCurrentStep((prevStep) => {
-            if (prevStep > 0)  return (prevStep - 1)
-            return (prevStep)
-        });
-    };
 
     const handleSelectedBlock = (block) => {
         setSelectedBlock(block)

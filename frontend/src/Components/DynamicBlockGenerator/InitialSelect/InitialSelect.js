@@ -1,7 +1,6 @@
 import React, { useState } from 'react';
-import { Select, MenuItem, FormControl, InputLabel, IconButton, Menu } from '@mui/material';
+import { MenuItem, IconButton, Menu } from '@mui/material';
 import AddIcon from '@mui/icons-material/Add';
-import ArrowDropDownIcon from '@mui/icons-material/ArrowDropDown';
 
 const InitialSelect = ({ onAdd }) => {
   const [selection, setSelection] = useState('');
