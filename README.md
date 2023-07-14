@@ -19,7 +19,7 @@ Build re-usable component blocks, and update multiple Sendgrid templates at once
 ## Pre-requisites
 1. Install the [Twilio CLI](https://www.twilio.com/docs/twilio-cli/quickstart#install-twilio-cli)
 2. Install the [serverless toolkit](https://www.twilio.com/docs/labs/serverless-toolkit/getting-started)
-3. Create a [Sendgrid API Key](https://docs.sendgrid.com/ui/account-and-settings/api-keys). You don't need to give it full permissions. `Design Library` and `Template Engine` should be enough
+3. Create a [Sendgrid API Key](https://docs.sendgrid.com/ui/account-and-settings/api-keys). You don't need to give it full permissions. `Template Engine` should be enough
 
 ## Setup
 - Clone the repository and `cd` into it:
