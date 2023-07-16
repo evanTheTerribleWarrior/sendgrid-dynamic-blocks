@@ -1,4 +1,11 @@
 import { API_URLS, CODE_BLOCKS, COMPONENTS, HANDLEBARS } from "./variables";
+import store from "../Redux/store";
+
+const getAuthHeader = (jwtToken) => {
+  const authHeader = `Bearer ${jwtToken}`
+  return authHeader
+}
+
 
 // Get all the templates from a specific account.
 // It points to a Twilio Function/server endpoint that will use the SG Key to pull the templates
@@ -10,7 +17,8 @@ export async function fetchAllTemplates (page_token) {
           method: 'POST',
           body: JSON.stringify({"page_token": page_token}),
           headers: {
-            'Content-Type': 'application/json'
+            'Content-Type': 'application/json',
+            'Authorization': getAuthHeader(store.getState().jwtToken.jwtToken)
           }
       });
       const data = await response.json();
@@ -30,7 +38,8 @@ export async function fetchSingleTemplate (template_id) {
           method: 'POST',
           body: JSON.stringify({"template_id": template_id}),
           headers: {
-            'Content-Type': 'application/json'
+            'Content-Type': 'application/json',
+            'Authorization': getAuthHeader(store.getState().jwtToken.jwtToken)
           }
       });
       const data = await response.json();
@@ -48,7 +57,8 @@ export async function fetchSingleTemplateVersion (template_version_obj) {
         method: 'POST',
         body: JSON.stringify({"template_version_obj": template_version_obj}),
         headers: {
-          'Content-Type': 'application/json'
+          'Content-Type': 'application/json',
+          'Authorization': getAuthHeader(store.getState().jwtToken.jwtToken)
         }
     });
     const data = await response.json();
@@ -74,7 +84,8 @@ export async function updateSingleTemplate (template_data, create_version_checke
               "create_version_checked": create_version_checked
             }),
           headers: {
-            'Content-Type': 'application/json'
+            'Content-Type': 'application/json',
+            'Authorization': getAuthHeader(store.getState().jwtToken.jwtToken)
           }
       });
       const data = await response.json();
@@ -93,7 +104,8 @@ export async function createNewTemplate (data) {
             "data": data
           }),
         headers: {
-          'Content-Type': 'application/json'
+          'Content-Type': 'application/json',
+          'Authorization': getAuthHeader(store.getState().jwtToken.jwtToken)
         }
     });
     const res = await response.json();
@@ -113,7 +125,8 @@ export async function uploadImageBase64 (imageFileName, imageFileBase64) {
           "imgFileName": imageFileName
         }),
       headers: {
-        'Content-Type': 'application/json'
+        'Content-Type': 'application/json',
+        'Authorization': getAuthHeader(store.getState().jwtToken.jwtToken)
       }
     });
     const data = await response.json();
@@ -157,9 +170,14 @@ export async function getSegmentWriteKey () {
   try {
     const url = API_URLS.PROTOCOL + API_URLS.BASE_URL + API_URLS.GET_SEGMENT_WRITE_KEY    
     const response = await fetch(url, {
-        method: 'POST'
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': getAuthHeader(store.getState().jwtToken.jwtToken)
+        }
     });
     const data = await response.json();
+    console.log(data)
     return data.key;
   } catch (error) {
       throw new Error(`Failed to get segment key: ${error}`);

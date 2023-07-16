@@ -9,11 +9,10 @@ Zip component:
 
 Security:
 - Control JWT from backend?
-- Expiration on JWT? test it
+- Expiration on JWT. Also when logout, previous JWT should not work
 
 Update Templates:
 - How to exclude templates not valid for drag and drop editor
 - test funky behaviour of updating templates to ensure everythinng works as it should.
 
 Future:
-- web vitals to connect with segment/analytics?

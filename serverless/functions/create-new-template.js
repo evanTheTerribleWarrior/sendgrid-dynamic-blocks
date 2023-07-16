@@ -1,13 +1,17 @@
+/* Creates a new Dynamic Template. It is used when the user imports a .zip and has the option
+to create a new template as a result of the final HTML composition*/
+
 const client = require('@sendgrid/client');
 
 exports.handler = async function(context, event, callback) {
   
 client.setApiKey(context.SG_API_KEY);
 
-const response = new Twilio.Response();
-response.appendHeader('Access-Control-Allow-Origin', '*');
-response.appendHeader('Access-Control-Allow-Methods', 'POST');
-response.appendHeader('Access-Control-Allow-Headers', 'Content-Type');
+const checkAuthPath = Runtime.getFunctions()['check-auth'].path;
+const checkAuth = require(checkAuthPath)
+let check = checkAuth.checkAuth(event.request.headers.authorization, context.JWT_SECRET);
+if(!check.allowed)return callback(null,check.response);
+const response = check.response
 
 const {name, html} = event.data;
 
@@ -24,7 +28,6 @@ const request = {
 
 try{
     const result = await client.request(request)
-    console.log(JSON.stringify(result[0].body))
     const template_id = result[0].body.id;
     if(template_id){
         const version_data = {
@@ -41,9 +44,8 @@ try{
             method: 'POST',
             body: version_data
         }
-        const version_result = await client.request(version_request)
-        console.log(JSON.stringify(version_result))
-        response.setBody(JSON.stringify({success: true}));
+        await client.request(version_request)
+        response.setBody({success: true});
         return callback(null, response)
     }
   }

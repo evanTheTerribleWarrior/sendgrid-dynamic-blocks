@@ -3,10 +3,11 @@ const client = require('@sendgrid/client');
 exports.handler = async function(context, event, callback) {
   client.setApiKey(context.SG_API_KEY);
 
-  const response = new Twilio.Response();
-  response.appendHeader('Access-Control-Allow-Origin', '*');
-  response.appendHeader('Access-Control-Allow-Methods', 'GET, POST');
-  response.appendHeader('Access-Control-Allow-Headers', 'Content-Type');
+  const checkAuthPath = Runtime.getFunctions()['check-auth'].path;
+  const checkAuth = require(checkAuthPath)
+  let check = checkAuth.checkAuth(event.request.headers.authorization, context.JWT_SECRET);
+  if(!check.allowed)return callback(null,check.response);
+  const response = check.response
 
   const queryParams = {
     "generations": "dynamic",
@@ -37,7 +38,7 @@ exports.handler = async function(context, event, callback) {
       res.page_token = page_token;
     }
 
-    response.setBody(JSON.stringify(res) );
+    response.setBody(res);
     return callback(null, response)
   }
   catch (error) {

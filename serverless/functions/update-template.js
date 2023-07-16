@@ -4,13 +4,11 @@ exports.handler = async function(context, event, callback) {
   
 client.setApiKey(context.SG_API_KEY);
 
-const response = new Twilio.Response();
-response.appendHeader('Access-Control-Allow-Origin', '*');
-response.appendHeader('Access-Control-Allow-Methods', 'POST');
-response.appendHeader('Access-Control-Allow-Headers', 'Content-Type');
-
-console.log(JSON.stringify(event.template_data))
-console.log(event.create_version_checked)
+const checkAuthPath = Runtime.getFunctions()['check-auth'].path;
+const checkAuth = require(checkAuthPath)
+let check = checkAuth.checkAuth(event.request.headers.authorization, context.JWT_SECRET);
+if(!check.allowed)return callback(null,check.response);
+const response = check.response
 
 const template_id = event.template_data.template_id;
 const version_id = event.template_data.version_id;
@@ -35,8 +33,7 @@ const request = {
 
 try{
     const result = await client.request(request)
-    console.log(JSON.stringify(result))
-    response.setBody(JSON.stringify(result) );
+    response.setBody(result);
     return callback(null, response)
   }
   catch (error) {
