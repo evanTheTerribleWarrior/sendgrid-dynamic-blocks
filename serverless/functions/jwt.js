@@ -7,8 +7,7 @@ exports.handler = (context, event, callback) => {
   const { username, password } = event;
 
   const response = new Twilio.Response();
-  response.appendHeader('Access-Control-Allow-Origin', '*');
-  response.appendHeader('Access-Control-Allow-Methods', 'POST');
+  response.appendHeader('Access-Control-Allow-Methods', 'POST, OPTIONS');
   response.appendHeader('Access-Control-Allow-Headers', 'Content-Type');
   response.appendHeader('Content-Type', 'application/json');
 
@@ -28,12 +27,12 @@ exports.handler = (context, event, callback) => {
       perms: ['read'],
     },
     context.JWT_SECRET,
-    { expiresIn: '1d' }
+    { expiresIn: '1h' }
   )
 
-  console.log(token)
-
-  response.setBody({success: true, token: token});
-
+  response.setCookie('sendgrid_blocks_jwt', token, ['HttpOnly',  'Max-Age=86400', 'Path=/', 'SameSite=strict'])
+  //response.setBody({success: true, token: token});
+  response.setBody({success: true});
+  console.log(response)
   return callback(null, response);
 };

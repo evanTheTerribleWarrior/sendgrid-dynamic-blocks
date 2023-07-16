@@ -3,12 +3,12 @@ import { useSelector } from 'react-redux';
 import { Navigate } from "react-router-dom";
 
 const Auth = ({ children }) => {
-  const jwtToken = useSelector((state) => state.jwtToken.jwtToken);
-  
+  //const jwtToken = useSelector((state) => state.jwtToken.jwtToken);
+  const isAuthenticated = useSelector((state) => state.isAuthenticated.isAuthenticated)
   return (
     <>
         {
-            jwtToken ? (
+            isAuthenticated ? (
                 <div>
                     {children}
                 </div>

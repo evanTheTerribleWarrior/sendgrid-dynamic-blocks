@@ -1,8 +1,8 @@
 SavedCollection:
 
 Build block:
-- Fix when deleting text fields in Settings, leaves one character. also boolean does not work correctly
 - Fix errors when choosing some conditions that make it crash. perhaps exclude some conditions from top level like else if/else
+- New line in text to show as new line
 
 Zip component:
 - When uploading images, utilise better promises or even exponential backoff?
@@ -10,6 +10,7 @@ Zip component:
 Security:
 - Control JWT from backend?
 - Expiration on JWT. Also when logout, previous JWT should not work
+- Update to use HTTP only cookie instead of local storage for jwt token
 
 Update Templates:
 - How to exclude templates not valid for drag and drop editor

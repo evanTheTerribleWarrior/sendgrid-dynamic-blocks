@@ -1,0 +1,2 @@
+"use strict";(self.webpackChunkdynamic_blocks_app=self.webpackChunkdynamic_blocks_app||[]).push([[150],{8410:function(n,e,t){t.r(e),t.d(e,{loadLegacyVideoPlugins:function(){return c}});var i=t(29388);function c(n){return(0,i.mG)(this,void 0,void 0,(function(){var e;return(0,i.Jh)(this,(function(i){switch(i.label){case 0:return[4,t.e(74).then(t.t.bind(t,39074,23))];case 1:return e=i.sent(),n._plugins=e,[2]}}))}))}}}]);
+//# sourceMappingURL=legacyVideos.0030efd8.chunk.js.map

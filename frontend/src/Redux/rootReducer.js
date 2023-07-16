@@ -4,7 +4,8 @@ import authReducer from './slices/authSlice'
 import settingsReducer from './slices/settingsSlice';
 
 const rootReducer = combineReducers({
-  jwtToken: authReducer,
+  //jwtToken: authReducer,
+  isAuthenticated: authReducer,
   folderStructure: folderReducer,
   segmentWebVitals: settingsReducer
 });
