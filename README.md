@@ -14,22 +14,24 @@ Build re-usable component blocks, and update multiple Sendgrid templates at once
  * Local storage to persist your collections on the browser
  * Twilio Functions middleware to call the Sendgrid APIs and therefore avoid exposing SG API Keys within the app
  * Authentication via JWT tokens
+ * (Optional) Segment CDP integration to send Web Vitals - or add your own metrics!
 
 
 ## Pre-requisites
 1. Install the [Twilio CLI](https://www.twilio.com/docs/twilio-cli/quickstart#install-twilio-cli)
 2. Install the [serverless toolkit](https://www.twilio.com/docs/labs/serverless-toolkit/getting-started)
 3. Create a [Sendgrid API Key](https://docs.sendgrid.com/ui/account-and-settings/api-keys). You don't need to give it full permissions. `Template Engine` should be enough
+4. (Optional) Create a [Segment CDP Source](https://segment.com/docs/connections/sources/catalog/libraries/website/javascript/quickstart) If you want to send data like Web Vitals to Segment CDP, create a Javascript Source - we will use the Write Key below
 
 ## Setup
 - Clone the repository and `cd` into it:
 ```shell
 git clone https://github.com/evanTheTerribleWarrior/sendgrid-dynamic-blocks.git
-
 cd sendgrid-dynamic-blocks
 ```
 
 - Create .env file and set the SG_API_KEY env variable with the SG Key you created. Also add USERNAME, PASSWORD, JWT_SECRET that are used for authentication. Make them hard to guess if you deploy this!
+Optionally, if you want to send Web Vitals to Segment CDP, add your Segment JS Write Key
 ```shell
 cp .env.example .env
 ```

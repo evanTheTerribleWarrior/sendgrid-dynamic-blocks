@@ -1,6 +1,4 @@
 SavedCollection:
-TEST ALL SCENARIOS TO AVOID ERRORS
-- Move a file/folder - SOMEHOW CANCELS THE STATE
 
 Build block:
 - Fix when deleting text fields in Settings, leaves one character. also boolean does not work correctly
@@ -10,10 +8,12 @@ Zip component:
 - When uploading images, utilise better promises or even exponential backoff?
 
 Security:
-- JWT / Auth?
+- Control JWT from backend?
+- Expiration on JWT? test it
 
 Update Templates:
-
+- How to exclude templates not valid for drag and drop editor
+- test funky behaviour of updating templates to ensure everythinng works as it should.
 
 Future:
 - web vitals to connect with segment/analytics?

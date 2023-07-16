@@ -1299,3 +1299,7 @@ const ZipUploader = () => {
 }
 
 export default ZipUploader;
+
+
+generatedHtml ? (<Paper sx={{ p: 2, border: '1px solid #ccc', marginTop: '10px',  overflow: 'auto'  }}><Box><HTMLSanitize html={generatedHtml}/></Box></Paper>)
+                  : <Paper elevation={2} sx={{ marginTop: '10px'}}><Grid item ><Typography variant="h6" align="center" sx={{ p: 3, color: 'grey' }}>No code yet</Typography></Grid></Paper>

@@ -64,8 +64,6 @@ const TemplatePrep = ({ selectedBlock, selectedTemplates, selectedVersions }) =>
   }
 
   const handleManageCheckboxList = (template) => {
-
-    console.log("Passed" + template)
   
     if (selectedRadioUpdateOption === "updateOne"){
       setCheckedTemplates([template])
@@ -159,16 +157,12 @@ const TemplatePrep = ({ selectedBlock, selectedTemplates, selectedVersions }) =>
 
   }
 
-  const handleCheckBeforeUpdate = () => {
 
-  }
-  const handleUpdateAll = () => {
-    
+  const handleUpdateAll = async () => {
+    setIsLoading(true)
     const initialPromises = [];
 
-    console.log(checkedTemplates)
-
-    checkedTemplates.forEach( async (template_version_item) => {
+    for ( const template_version_item of checkedTemplates) {
       const { template_id, version_id } = template_version_item;
       let promise = "";
       const template_version_obj = {
@@ -183,29 +177,10 @@ const TemplatePrep = ({ selectedBlock, selectedTemplates, selectedVersions }) =>
         console.error(`handleUpdateAll on UpdateMultiple.js failed: ${error}`)
       }
       initialPromises.push(promise) 
-    })
-    
+    }
+    setIsLoading(false)
   }
 
-  const placeholderStyle = {
-    width: '50vw',
-    height: '60vh',
-    border: '1px solid #ddd',
-    overflow: 'auto',
-    display: 'flex',
-    justifyContent: 'center',
-    alignItems: 'center',
-  };
-
-  const templateRenderStyle = {
-    width: '60vw',
-    height: '60vh',
-    border: '1px solid #ddd',
-    //display: 'flex',
-    overflow: 'auto',
-    justifyContent: 'center',
-    alignItems: 'center',
-  };
 
   return (
     <div style={{marginTop: "20px"}}>
@@ -221,8 +196,10 @@ const TemplatePrep = ({ selectedBlock, selectedTemplates, selectedVersions }) =>
             </RadioGroup>
           </FormControl>
 
+          
           <FormControl component="fieldset" sx={{marginTop: "20px"}}>
             <FormLabel component="legend">Template -&gt; Version List</FormLabel>
+            <div style={{ overflow: 'auto' }}>
             {checkBoxList.map((template) => {
               return (<FormControlLabel
                 key={`${template.template_id}-${template.version_id}`}
@@ -230,13 +207,14 @@ const TemplatePrep = ({ selectedBlock, selectedTemplates, selectedVersions }) =>
                   <Checkbox
                     checked={checkedTemplates.some((selected) => selected.template_id === template.template_id && selected.version_id === template.version_id)}
                     onChange={() => handleManageCheckboxList(template)}
-                    //value={template}
                   />
                 }
                 label={`${template.template_name} -> ${template.version_name}`}
               />)
             })}
+            </div>
           </FormControl>
+          
 
           <FormControl disabled={selectedRadioUpdateOption === "updateOne"} component="fieldset" sx={{marginTop: "20px"}}>
             <FormLabel component="legend">Block Position</FormLabel>

@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { useDispatch } from 'react-redux';
 import { useNavigate } from "react-router-dom";
-import { loginSuccess } from '../../../Redux/authSlice';
+import { loginSuccess } from '../../../Redux/slices/authSlice';
 import { authenticateUser } from '../../../Utils/functions';
 import { Typography, TextField, Button, Container } from '@mui/material';
 

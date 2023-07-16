@@ -7,7 +7,7 @@ import { v4 as uuid } from 'uuid';
 import {Menu, MenuItem, Dialog, DialogActions, DialogTitle, 
   DialogContent, Button, Grid, Typography, Paper, Divider, 
   IconButton, Tooltip} from '@mui/material'
-import { updateFolderStructure } from '../../Redux/folderStructureSlice';
+import { updateFolderStructure } from '../../Redux/slices/folderStructureSlice';
 import { MinusSquare, PlusSquare, CloseSquare, StyledTreeItem } from './FolderTreeStyles';
 import ImportTemplate from './ImportTemplate/ImportTemplate'
 
@@ -114,8 +114,8 @@ const FolderTree = ({ onItemSelected, onItemDeleted, showFiles, allowUpdates }) 
     setRenamingItemName(event.target.value);
   };
 
-  const handleInputKeyPress = (event) => {
-    if (event.key === 'Enter') {
+  const handleInputKeyDown = (event) => {
+    if (event.code === 'Enter') {
       dispatch(updateFolderStructure(handleRenameItemRecursive(folderStructure.folderStructure, renamingItemName)));
       setRenamingItemId(null);
       setRenamingItemName('');
@@ -180,29 +180,6 @@ const FolderTree = ({ onItemSelected, onItemDeleted, showFiles, allowUpdates }) 
     handleMenuClose()
   }
 
-  /*const handlePlaceMovedItem = () => {
-    //dispatch(updateFolderStructure(handlePlaceMovedItemRecursive(folderStructure.folderStructure, movedItem)));
-    handlePlaceMovedItemRecursive(folderStructure.folderStructure, movedItem)
-    setMovedItem(null);
-    handleMenuClose()
-  }
-
-  const handlePlaceMovedItemRecursive = (folders, itemToMove) => {
-
-    console.log(`Item to move: ${JSON.stringify(itemToMove)}`)
-
-    if (itemToMove.type === 'file') {
-      console.log("is file")
-      //handleAddRecursive(folders, itemToMove);
-      handleDeleteItemRecursive(folders, itemToMove.id);
-      console.log(JSON.stringify(folders))
-      
-    }
-    else if (itemToMove.type === 'folder') {
-      console.log("is folder")
-    }
-
-  }*/
 
   const handleExportFolderStructure = () => {
     const jsonData = JSON.stringify(folderStructure.folderStructure, null, 2);
@@ -274,7 +251,7 @@ const FolderTree = ({ onItemSelected, onItemDeleted, showFiles, allowUpdates }) 
               type="text"
               value={renamingItemName}
               onChange={handleInputChange}
-              onKeyPress={(event) => handleInputKeyPress(event, node.id)}
+              onKeyDown={(event) => handleInputKeyDown(event)}
               onBlur={() => {
                 setRenamingItemId(null);
                 setRenamingItemName('');
@@ -284,7 +261,6 @@ const FolderTree = ({ onItemSelected, onItemDeleted, showFiles, allowUpdates }) 
             <>{node.name}</>
           )
         }
-        //endIcon={(node) => setItemIcon(node)}
         onContextMenu={(event) => handleContextMenu(event, node, node.type === "folder" ? true : false)} 
         onClick={(event) => handleOnItemClick(event, node)}
         >
@@ -324,11 +300,9 @@ const FolderTree = ({ onItemSelected, onItemDeleted, showFiles, allowUpdates }) 
             <div>
             <MenuItem onClick={handleAddFolder}>Add Folder</MenuItem>
             <MenuItem onClick={handleRenameItem}>Rename Folder</MenuItem>
-            {/*<MenuItem onClick={handleMoveItem}>Move Folder</MenuItem>*/}
             <MenuItem onClick={handleDeleteItem}>Delete Folder</MenuItem>
             {importedFile  ? (<Divider />) : (<></>)}
             {importedFile ? <MenuItem onClick={handleAddImported}>Add {importedFile.name}</MenuItem> : <></> }
-            {/*{movedItem && selectedItem.type==="folder" ? <MenuItem onClick={handlePlaceMovedItem}>Place {movedItem.name} here</MenuItem> : <></> }*/}
             </div>
           )
           :
@@ -336,7 +310,6 @@ const FolderTree = ({ onItemSelected, onItemDeleted, showFiles, allowUpdates }) 
             <div>
               <MenuItem onClick={handleRenameItem}>Rename File</MenuItem>
               <MenuItem onClick={handleDeleteItem}>Delete File</MenuItem>
-              {/*<MenuItem onClick={handleMoveItem}>Move File</MenuItem>*/}
               <MenuItem onClick={handleDownloadItem}>Download File</MenuItem>
             </div>
           )
@@ -382,12 +355,6 @@ const FolderTree = ({ onItemSelected, onItemDeleted, showFiles, allowUpdates }) 
         <AddActionItemOnUI action="import"/>
       ) : <></> 
     }
-    {/*{
-      movedItem ?
-      (
-        <AddActionItemOnUI action="move"/>
-      ) : <></>
-    }*/}
     </Grid>) 
     
     : 

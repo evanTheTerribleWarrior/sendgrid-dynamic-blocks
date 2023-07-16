@@ -10,7 +10,7 @@ exports.handler = async function(context, event, callback) {
 
   const queryParams = {
     "generations": "dynamic",
-    "page_size": 3,
+    "page_size": 10,
     "page_token": event.page_token ? event.page_token : null
   };
 
@@ -22,7 +22,6 @@ exports.handler = async function(context, event, callback) {
 
   try{
     const results_array = await client.request(request)
-    console.log(results_array[0].body)
     const templates_array = results_array[0].body.result.map(obj => ({ id: obj.id, name: obj.name, thumbnail_url: obj.versions[0].thumbnail_url, versions_array: obj.versions }));
     
     const res = {

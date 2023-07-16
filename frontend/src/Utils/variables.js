@@ -1,4 +1,4 @@
-import { constructTextStyles, extractStylesAttributes } from "./style-helpers";
+import { constructTextStyles, extractStylesAttributes, constructImageStyles } from "./style-helpers";
 
 // Handlebars
 export const HANDLEBARS = {
@@ -39,7 +39,8 @@ export const HANDLEBARS = {
     GET_FOLDER_STRUCTURE:'get-folder-structure',
     UPLOAD_IMAGE_BASE64: 'upload-image',
     CREATE_NEW_TEMPLATE: 'create-new-template',
-    AUTHENTICATE: 'jwt'
+    AUTHENTICATE: 'jwt',
+    GET_SEGMENT_WRITE_KEY: 'get-segment-write-key'
   };
 
   export const COMPONENTS = {
@@ -53,7 +54,7 @@ export const HANDLEBARS = {
         {name: "paddingRight", type: "number", label: "Padding Right", value: ""},
         {name: "paddingTop", type: "number", label: "Padding Top", value: ""},
         {name: "paddingBottom", type: "number", label: "Padding Bottom", value: ""},
-        {name: "isResponsive", type: "boolean", label: "Is Responsive?", value: ""},
+        {name: "isResponsive", type: "boolean", label: "Is Responsive?", selectValues: ['Yes', 'No'], value: ""},
         {name: "width", type: "number", label: "Width", value: ""},
         {name: "height", type: "number", label: "Height", value: ""},
         {name: "responsiveWidthPercentage", type: "number", label: "Responsive Width %", value: ""},
@@ -70,8 +71,9 @@ export const HANDLEBARS = {
       {name: "textColor", type: "text", label: "Text Color", value: ""},
       {name: "textHighlightColor", type: "text", label: "Text Highlight Color", value: ""},
       {name: "lineHeight", type: "number", label: "Line Height", value: ""},
-      {name: "bold", type: "boolean", label: "Bold", value: ""},
-      {name: "italics", type: "boolean", label: "Italics", value: ""},
+      {name: "bold", type: "boolean", label: "Bold", selectValues: ['Yes', 'No'], value: ""},
+      {name: "italics", type: "boolean", label: "Italics", selectValues: ['Yes', 'No'], value: ""},
+      {name: "underline", type: "boolean", label: "Underline", selectValues: ['Yes', 'No'], value: ""},
       {name: "alignment", type: "select", label: "Alignment", selectValues: ['center', 'left', 'right'], value: ""},
       {name: "heading", type: "select", label: "Heading", selectValues: ['Heading 1', 'Heading 2', 'Heading 3', 'Heading 4', 'Heading 5', 'Heading 6'], value: ""},
     ]
@@ -101,12 +103,12 @@ export const HANDLEBARS = {
       generateSGCode: (value, styles) => {
         let attributes = extractStylesAttributes(styles)
         const textFirsPart = `<table class="module" role="module" data-type="text" border="0" cellpadding="0" cellspacing="0" width="100%" style="table-layout: fixed;">
+        <tbody>
         <tr>
-          <td style="padding:${attributes.paddingTop || 0}px ${attributes.paddingRight|| 0}px ${attributes.paddingLeft|| 0}px ${attributes.paddingBottom|| 0}px; line-height:${attributes.lineHeight || 22}px text-align:inherit; background-color:${attributes.bgcolor};" height="100%" valign="top" bgcolor="${attributes.bgcolor}" role="module-content">`
+          <td style="padding:${attributes.paddingTop || 0}px ${attributes.paddingRight|| 0}px ${attributes.paddingBottom|| 0}px ${attributes.paddingLeft|| 0}px; line-height:${attributes.lineHeight || 22}px text-align:inherit; background-color:${attributes.bgcolor};" height="100%" valign="top" bgcolor="${attributes.bgcolor}" role="module-content">`
         
-        const textMainPart = constructTextStyles(value, attributes)
-          
-        const textClosingPart = `</td></tr></table>`
+        const textMainPart = constructTextStyles(value, attributes)      
+        const textClosingPart = `</td></tr></tbody></table>`
         
         return textFirsPart + textMainPart + textClosingPart;
       }
@@ -126,21 +128,27 @@ export const HANDLEBARS = {
     IMAGE: {
       generateSGCode: (value, styles) => {
         let attributes = extractStylesAttributes(styles)
-        return `<table class="wrapper" role="module" data-type="image" >
+        const imageFirstPart = `<table class="wrapper" role="module" data-type="image" border="0" cellpadding="0" cellspacing="0" width="100%" style="table-layout: fixed;">
+        <tbody>
         <tr>
-          <td style="padding:${attributes.paddingTop || 0}px ${attributes.paddingRight|| 0}px ${attributes.paddingLeft|| 0}px ${attributes.paddingBottom|| 0}px;" align="${attributes.alignment}">
-            <img src="${value}" />
-          </td>
+          <td style="padding:${attributes.paddingTop || 0}px ${attributes.paddingRight|| 0}px ${attributes.paddingBottom|| 0}px ${attributes.paddingLeft|| 0}px;" align="${attributes.alignment}">`
+        
+        const imageMainPart = constructImageStyles(value, attributes);
+        const imageClosingPart = `</td>
         </tr>
+      </tbody>
       </table>`
+
+        return imageFirstPart + imageMainPart + imageClosingPart;         
       }
     },
     DIVIDER: {
       generateSGCode: (value, styles) => {
         let attributes = extractStylesAttributes(styles)
         return `<table class="module" role="module" data-type="divider" width="100%" border="0" cellpadding="0" cellspacing="0">
+        <tbody>
         <tr>
-          <td style="padding:${attributes.paddingTop || 0}px ${attributes.paddingRight|| 0}px ${attributes.paddingLeft|| 0}px ${attributes.paddingBottom|| 0}px;" bgcolor="${attributes.bgcolor}" height="100%" valign="top">
+          <td style="padding:${attributes.paddingTop || 0}px ${attributes.paddingRight|| 0}px ${attributes.paddingBottom|| 0}px ${attributes.paddingLeft|| 0}px;" bgcolor="${attributes.bgcolor}" height="100%" valign="top">
             <table height="${attributes.height}px" width="100%" border="0" cellpadding="0" cellspacing="0" align="center" style="line-height:${attributes.height}px; font-size:${attributes.height}px;">
               <tr>
                 <td bgcolor="${attributes.linecolor}" style="padding:0px 0px 10px 0px;"></td>
@@ -148,6 +156,7 @@ export const HANDLEBARS = {
             </table>
           </td>
         </tr>
+        </tbody>
       </table>`
       }
     },
@@ -155,10 +164,12 @@ export const HANDLEBARS = {
       generateSGCode: (value, styles) => {
         let attributes = extractStylesAttributes(styles)
         return `<table class="module" role="module" data-type="spacer" border="0" cellpadding="0" cellspacing="0" width="100%" style="table-layout: fixed;">
+        <tbody>
         <tr>
           <td style="padding:0px 0px ${attributes.paddingTop}px 0px;" role="module-content" bgcolor="${attributes.bgcolor}">
           </td>
         </tr>
+        </tbody>
       </table>`
       }
     },

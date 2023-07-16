@@ -1,6 +1,6 @@
 import React, {useState} from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { logout } from '../../Redux/authSlice';
+import { logout } from '../../Redux/slices/authSlice';
 import { styled, useTheme } from '@mui/material/styles';
 import Box from '@mui/material/Box';
 import MuiDrawer from '@mui/material/Drawer';
@@ -134,7 +134,7 @@ import { useNavigate } from 'react-router-dom';
 
   const  MiniDrawer = () => {
     const dispatch = useDispatch();
-    const jwtToken = useSelector((state) => state.auth.jwtToken);
+    const jwtToken = useSelector((state) => state.jwtToken);
     const navigate = useNavigate();
     const theme = useTheme();
     const [open, setOpen] = React.useState(false);

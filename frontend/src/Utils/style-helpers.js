@@ -7,19 +7,46 @@ export const extractStylesAttributes = (styles) => {
     return attributes;
   }
 
+export const constructImageStyles = (imageURL, attributes) => {
+
+  const responsiveWidthPercentage = attributes.responsiveWidthPercentage
+  let mainStyle = `display:block; color:#000000; text-decoration:none; font-family:Helvetica, arial, sans-serif; font-size:16px;`
+  if(attributes.isResponsive === "Yes") {
+    const responsiveStyle = `max-width:${responsiveWidthPercentage}% !important; width:${responsiveWidthPercentage}%; height:auto !important;`
+    mainStyle += " " + responsiveStyle
+  }
+
+  let finalImageElement = `<img src="${imageURL}" style="${mainStyle}" data-responsive="${attributes.isResponsive === "Yes" ? true : false}" `
+  if(!attributes.isResponsive){
+    finalImageElement += `width="${attributes.width}" height="${attributes.height}"`
+  }
+  finalImageElement += ` />`
+
+  return finalImageElement
+}
+
  export const constructTextStyles = (text, attributes) => {
     let styledText = text;
 
-  if (attributes.bold) {
+  if (attributes.bold === "Yes") {
     styledText = `<strong>${styledText}</strong>`;
   }
-
-  if (attributes.italics) {
-    styledText = `<em>${styledText}</em>`;
+  else {
+    styledText = styledText.replace(/<strong>(.*?)<\/strong>/g, '$1');
   }
 
-  if (attributes.underline) {
+  if (attributes.italics === "Yes") {
+    styledText = `<em>${styledText}</em>`;
+  }
+  else {
+    styledText = styledText.replace(/<em>(.*?)<\/em>/g, '$1');
+  }
+
+  if (attributes.underline === "Yes") {
     styledText = `<u>${styledText}</u>`;
+  }
+  else {
+    styledText = styledText.replace(/<u>(.*?)<\/u>/g, '$1');
   }
 
   if (attributes.bulletPoints) {

@@ -234,17 +234,16 @@ const BlockCreation = ({getCustomBlock}) => {
   const updateStylesRecursive = (rows, settingsRow, updatedStyles) => {
     return rows.map((row) => {
       if (row.id === settingsRow.id) {
-        console.log("Found row: " + JSON.stringify(row))
-        row.component.styles.map((style) => {
-          const updatedValue = updatedStyles[style.name];
-          if(updatedValue){
-            style.value = updatedValue
-            return;
+        const updatedComponent = { ...row.component };
+        updatedComponent.styles = updatedComponent.styles.map((style) => {
+          const updatedValue = updatedStyles[style.name]
+          if(updatedValue) {
+            return { ...style, value: updatedValue };
           }
-        })
-        return {
-          ...row
-        };
+          return style;
+        });
+        return { ...row, component: updatedComponent };
+
       } else if (row.nestedRows.length > 0) {
         return {
           ...row,
@@ -255,18 +254,9 @@ const BlockCreation = ({getCustomBlock}) => {
     });
   }
 
-  const updateRowStyles = (row, styles) => {
-      setRows((prevRows) => updateStylesRecursive(prevRows, row, styles))
 
-  }
 
   const handleUpdatedStyles = (updatedStyles) => {
-    /*
-    const component = getComponentsObject(row.component.type, true)
-    const data = {
-      component: JSON.parse(JSON.stringify(component))
-    }
-    */
     setRows((prevRows) => updateStylesRecursive(prevRows, settingsRow, updatedStyles))
   }
 
@@ -330,7 +320,7 @@ const BlockCreation = ({getCustomBlock}) => {
         (row.type === "component" && row.component && row.component.fields && row.component.fields[0].type === "text") && (
           <>
           <Grid item xs={3}>
-              <TextField fullWidth label={row.component.label} value={row.component.fields[0].value} onChange={(event) => handleComponentRowContentChange(event, row.id ,0)} />
+              <TextField multiline fullWidth label={row.component.label} value={row.component.fields[0].value} onChange={(event) => handleComponentRowContentChange(event, row.id ,0)} />
           </Grid>
           </>
         )
@@ -370,11 +360,24 @@ const BlockCreation = ({getCustomBlock}) => {
           open={Boolean(settingsAnchorEl)}
           anchorEl={settingsAnchorEl}
           onClose={() => setSettingsAnchorEl(null)}
-          anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}
-          transformOrigin={{ vertical: 'top', horizontal: 'right' }}
+          //anchorOrigin={{ vertical: 'top', horizontal: 'center' }}
+          transformOrigin={{ vertical: 'top', horizontal: 'center' }}
+          PaperProps={{
+            style: {
+              padding: '8px',
+              backgroundColor: '#F5F5F5',
+              boxShadow: '0px 2px 6px rgba(0, 0, 0, 0.1)',
+              borderRadius: '4px',
+              border: '1px solid #CCCCCC',
+              maxWidth: '700px',
+              maxHeight: '400px',
+              overflow: 'auto',
+              marginTop: '-200px'
+            },
+          }}
         >
            <Box padding={2}>
-        {renderStyles(row)}
+        {renderStyles()}
           </Box>
         </Popover>
 

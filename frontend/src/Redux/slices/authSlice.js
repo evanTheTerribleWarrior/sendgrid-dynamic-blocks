@@ -10,11 +10,9 @@ import {createSlice} from '@reduxjs/toolkit'
     reducers: {
       loginSuccess: (state, action) => {
         state.jwtToken = action.payload;
-        localStorage.setItem('jwtToken', action.payload);
       },
       logout: (state) => {
         state.jwtToken = null;
-        localStorage.removeItem('jwtToken');
       },
     },
   });

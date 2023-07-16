@@ -1,27 +1,20 @@
 import { configureStore } from '@reduxjs/toolkit';
 import thunkMiddleware from 'redux-thunk';
-import folderReducer from './folderStructureSlice';
-import authReducer from './authSlice'
-
+import rootReducer from './rootReducer';
 import throttle from 'lodash/throttle';
-import { loadState, saveState } from '../Utils/localStorage';
+import { loadState, saveState } from './localStorage';
 
 const persistedState = loadState();
 
 const store = configureStore({
-  reducer: {
-    folderStructure: folderReducer,
-    auth: authReducer
-  },
+  reducer: rootReducer,
   middleware: [thunkMiddleware],
   preloadedState: persistedState
 });
 
 store.subscribe(throttle(() => {
-  saveState({
-    folderStructure: store.getState().folderStructure,
-    jwtToken: store.getState().jwtToken
-  });
+  const state = store.getState();
+  saveState(state);
 }, 1000));
 
 

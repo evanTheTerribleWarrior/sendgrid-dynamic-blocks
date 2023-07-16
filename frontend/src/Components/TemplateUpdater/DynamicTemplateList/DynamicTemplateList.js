@@ -85,17 +85,19 @@ const DynamicTemplateList = ({ onSelectTemplates, onSelectVersions }) => {
 
   return (
     <div>
-      <Grid container spacing={2} justifyContent="center" alignItems="center" height="100vh">
+      <Grid container direction="column" alignItems="center" spacing={2}>
         { templates.length === 0 ? 
           (
-            <Grid item textAlign="center">
+            <Grid item textAlign="center" sx={{mt: 10}}>
             <CircularProgress />
             <Typography variant="body1">Getting your templates. Please wait...</Typography>
             </Grid>
           ) 
           : 
           (
-            templates.map((template, index) => (
+            <Grid container item spacing={2} sx={{mt: 2}}>
+              {
+              templates.map((template, index) => (
             <Grid item xs={12} sm={6} md={4} key={template.id}>
             <Card 
             key={template.id}
@@ -119,16 +121,13 @@ const DynamicTemplateList = ({ onSelectTemplates, onSelectVersions }) => {
                 <FormControl fullWidth>
                   <InputLabel>Select Version</InputLabel>
                   <Select 
-                    value={selectedVersionsArray[template.id] || []}
+                    value={selectedVersionsArray[template.id]|| []}
                     multiple disabled={!selectedTemplates.some((selected) => selected.id === template.id)} 
-                    renderValue={(selected) => selected.join(', ')}
+                    renderValue={(selected) => selected.length + " selected"}
                     onChange={(event) =>
                         handleVersionSelect(event.target.value, template)
                     }
                     >
-                      {/*<MenuItem key="all-versions" value="all-versions">
-                        All Versions
-                    </MenuItem>*/}
                     {template.versions_array.map((version) => (
                       <MenuItem key={version.id} value={version.id}>
                         {version.name}
@@ -147,11 +146,14 @@ const DynamicTemplateList = ({ onSelectTemplates, onSelectVersions }) => {
             <span>Click to select</span>
           </div>
           </Grid>
-        )))}
+        ))}</Grid>)}
+        <Grid item>
         {nextPageToken && (
-          <Button variant="outlined" onClick={handleLoadMoreTemplates}>Load More Templates</Button>
+            <Button variant="outlined" onClick={handleLoadMoreTemplates}>Load More Templates</Button>
         )}
+        </Grid>
       </Grid>
+      
     </div>
   );
 };

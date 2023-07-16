@@ -1,12 +1,12 @@
 import React, { useState, useEffect } from 'react';
-import { Typography, TextField, Switch, Select, MenuItem, Grid } from '@mui/material';
+import { Typography, TextField, Switch, Select, MenuItem, Grid, FormControl, InputLabel } from '@mui/material';
 
 const StyleSetter = ({ styles, onUpdatedStyles }) => {
   const [updatedStyles, setUpdatedStyles] = useState({});
 
   useEffect(()=> {
     handleApplyChanges()
-  },[updatedStyles, setUpdatedStyles])
+  },[updatedStyles])
 
   const handleInputChange = (event, name) => {
     const { value, checked } = event.target;
@@ -20,7 +20,6 @@ const StyleSetter = ({ styles, onUpdatedStyles }) => {
   };
 
   const handleApplyChanges = () => {
-    console.log(updatedStyles)
     onUpdatedStyles(updatedStyles)
   };
 
@@ -28,15 +27,17 @@ const StyleSetter = ({ styles, onUpdatedStyles }) => {
     const { name, type, label, value } = style;
 
     switch (type) {
+
       case 'text':
         return (
           <TextField
             label={label}
             variant="standard"
-            value={value}
+            value={updatedStyles[name] || value}
             onChange={(event) => handleInputChange(event, name)}
           />
         );
+
       case 'number':
         return (
           <TextField
@@ -46,33 +47,42 @@ const StyleSetter = ({ styles, onUpdatedStyles }) => {
             value={updatedStyles[name] || value}
             onChange={(event) => handleInputChange(event, name)}
             autoComplete="off"
+            inputProps={{
+              min: 0,
+            }}
           />
         );
-      case 'boolean':
 
-        return (<>
+      case 'boolean':
+        /*return (<>
             <Typography variant="subtitle1">{label}</Typography>  
           <Switch
             color="primary"
-            checked={updatedStyles[name] || value}
+            checked={updatedStyles[name]}
             onChange={(event) => handleInputChange(event, name)}
-          />
-        </>);
+            
+        />
+        </>);*/
+
       case 'select':
         return (<>
         <Typography variant="subtitle1">{label}</Typography>  
+        <FormControl fullWidth>
+          <InputLabel>Select Option</InputLabel>
           <Select
             label={label}
             value={updatedStyles[name] || value}
             onChange={(event) => handleInputChange(event, name)}
           >
             {style.selectValues.map((value)=> (
-                <MenuItem value={value}>{value}</MenuItem>
+                <MenuItem key={value} value={value}>{value}</MenuItem>
             ))
 
             }
           </Select>
+        </FormControl>
           </>);
+
       default:
         return null;
     }

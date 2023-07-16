@@ -117,7 +117,6 @@ export async function uploadImageBase64 (imageFileName, imageFileBase64) {
       }
     });
     const data = await response.json();
-    console.log("received url: " + data.url)
     return data;
   } catch (error) {
       throw new Error(`Failed to upload image: ${error}`);
@@ -135,7 +134,6 @@ export async function authenticateUser (credentials) {
         }
     });
     const data = await response.json();
-    console.log(JSON.stringify(data))
     return data;
   } catch (error) {
       throw new Error(`Failed to get token: ${error}`);
@@ -152,6 +150,19 @@ export async function getFolderStructure () {
     return data;
   } catch (error) {
       throw new Error(`Failed to get folder structure: ${error}`);
+  }
+};
+
+export async function getSegmentWriteKey () {
+  try {
+    const url = API_URLS.PROTOCOL + API_URLS.BASE_URL + API_URLS.GET_SEGMENT_WRITE_KEY    
+    const response = await fetch(url, {
+        method: 'POST'
+    });
+    const data = await response.json();
+    return data.key;
+  } catch (error) {
+      throw new Error(`Failed to get segment key: ${error}`);
   }
 };
 
