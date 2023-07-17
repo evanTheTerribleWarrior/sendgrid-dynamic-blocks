@@ -3,14 +3,16 @@ SavedCollection:
 Build block:
 - Fix errors when choosing some conditions that make it crash. perhaps exclude some conditions from top level like else if/else
 - New line in text to show as new line
+- Use local storage while building template and then clean it?
+- clear button?
+- Ability to move components up or down in the hierarchy?
 
 Zip component:
 - When uploading images, utilise better promises or even exponential backoff?
 
 Security:
-- Control JWT from backend?
 - Expiration on JWT. Also when logout, previous JWT should not work
-- Update to use HTTP only cookie instead of local storage for jwt token
+- httpOnly cookie in place. what about secondary token for navigation?
 
 Update Templates:
 - How to exclude templates not valid for drag and drop editor

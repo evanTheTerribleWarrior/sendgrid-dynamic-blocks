@@ -122,7 +122,27 @@ export const HANDLEBARS = {
     styles: [
       {name: "paddingTop", type: "number", label: "Padding Top", value: ""},
       {name: "bgcolor", type: "text", label: "Background Color", value: ""}
-    ]}
+    ]},
+    SOCIAL: {
+      type: "social",
+      label: "Social",
+      styles: [
+        {name: "paddingLeft", type: "number", label: "Padding Left", value: ""},
+        {name: "paddingRight", type: "number", label: "Padding Right", value: ""},
+        {name: "paddingTop", type: "number", label: "Padding Top", value: ""},
+        {name: "paddingBottom", type: "number", label: "Padding Bottom", value: ""},
+        {name: "facebookURL", type: "text", label: "Facebook URL", value: ""},
+        {name: "twitterURL", type: "text", label: "Twitter URL", value: ""},
+        {name: "instagramURL", type: "text", label: "Instagram URL", value: ""},
+        {name: "pinterestURL", type: "text", label: "Pinterest URL", value: ""},
+        {name: "linkedinURL", type: "text", label: "LinkedIn URL", value: ""},
+        {name: "bgcolor", type: "text", label: "Background Color", value: ""},
+        {name: "iconColor", type: "text", label: "Icon Color", value: ""},
+        {name: "iconSize", type: "number", label: "Icon Size", value: ""},
+        {name: "borderRadius", type: "number", label: "Border Radius", value: ""},
+        {name: "alignment", type: "select", label: "Alignment", selectValues: ['center', 'left', 'right'], value: ""},
+      ]
+    }
     
   }
 
@@ -204,22 +224,47 @@ export const HANDLEBARS = {
       }
     },
     SOCIAL: {
-      generateSGCode: (value) => {
-        return `  <table class="module" role="module" data-type="social">
+      generateSGCode: (value, styles) => {
+        let attributes = extractStylesAttributes(styles)
+        return `<table class="module" role="module" data-type="social" align="center" border="0" cellpadding="0" cellspacing="0" width="100%" style="table-layout: fixed;">
         <tbody>
           <tr>
-          <td [styles go here] data-align=['left', 'right', or 'center']>
-            <table>
-            <tbody>
-              <tr>
-              [MODULE CONTENT]
-              </tr>
-            </tbody>
-            </table>
-          </td>
+            <td valign="top" style="padding:${attributes.paddingTop || 0}px ${attributes.paddingRight|| 0}px ${attributes.paddingBottom|| 0}px ${attributes.paddingLeft|| 0}px; font-size:6px; line-height:10px; background-color:${attributes.bgcolor};" align="${attributes.alignment}">
+              <table align="${attributes.alignment}">
+                <tbody>
+                  <tr align="${attributes.alignment}">
+                    <td style="padding: 0px 5px;display:inline-block;" class="social-icon-column">
+                      <a class="has-url" role="social-icon-link" href="${attributes.facebookURL}" target="_blank" alt="Facebook" title="Facebook" style="display:inline-block; background-color:${attributes.iconColor}; height:${attributes.iconSize}px; width:${attributes.iconSize}px; border-radius:${attributes.borderRadius}px; -webkit-border-radius:${attributes.borderRadius}px; -moz-border-radius:${attributes.borderRadius}px;">
+                        <img role="social-icon" alt="Facebook" title="Facebook" src="https://mc.sendgrid.com/assets/social/white/facebook.png" style="height:${attributes.iconSize}px; width:${attributes.iconSize}px;" height="${attributes.iconSize}" width="${attributes.iconSize}">
+                      </a>
+                    </td>
+                    <td style="padding: 0px 5px;display:inline-block;" class="social-icon-column">
+                      <a class="has-url" role="social-icon-link" href="${attributes.twitterURL}" target="_blank" alt="Facebook" title="Facebook" style="display:inline-block; background-color:${attributes.iconColor}; height:${attributes.iconSize}px; width:${attributes.iconSize}px; border-radius:${attributes.borderRadius}px; -webkit-border-radius:${attributes.borderRadius}px; -moz-border-radius:${attributes.borderRadius}px;">
+                        <img role="social-icon" alt="Twitter" title="Twitter" src="https://mc.sendgrid.com/assets/social/white/twitter.png" style="height:${attributes.iconSize}px; width:${attributes.iconSize}px;" height="${attributes.iconSize}" width="${attributes.iconSize}">
+                      </a>
+                    </td>
+                    <td style="padding: 0px 5px;display:inline-block;" class="social-icon-column">
+                      <a class="has-url" role="social-icon-link" href="${attributes.instagramURL}" target="_blank" alt="Facebook" title="Facebook" style="display:inline-block; background-color:${attributes.iconColor}; height:${attributes.iconSize}px; width:${attributes.iconSize}px; border-radius:${attributes.borderRadius}px; -webkit-border-radius:${attributes.borderRadius}px; -moz-border-radius:${attributes.borderRadius}px;">
+                        <img role="social-icon" alt="Instagram" title="Instagram" src="https://mc.sendgrid.com/assets/social/white/instagram.png" style="height:${attributes.iconSize}px; width:${attributes.iconSize}px;" height="${attributes.iconSize}" width="${attributes.iconSize}">
+                      </a>
+                    </td>
+                    <td style="padding: 0px 5px;display:inline-block;" class="social-icon-column">
+                      <a class="has-url" role="social-icon-link" href="${attributes.pinterestURL}" target="_blank" alt="Facebook" title="Facebook" style="display:inline-block; background-color:${attributes.iconColor}; height:${attributes.iconSize}px; width:${attributes.iconSize}px; border-radius:${attributes.borderRadius}px; -webkit-border-radius:${attributes.borderRadius}px; -moz-border-radius:${attributes.borderRadius}px;">
+                        <img role="social-icon" alt="Pinterest" title="Pinterest" src="https://mc.sendgrid.com/assets/social/white/pinterest.png" style="height:${attributes.iconSize}px; width:${attributes.iconSize}px;" height="${attributes.iconSize}" width="${attributes.iconSize}">
+                      </a>
+                    </td>
+                    <td style="padding: 0px 5px;display:inline-block;" class="social-icon-column">
+                      <a class="has-url" role="social-icon-link" href="${attributes.linkedinURL}" target="_blank" alt="Facebook" title="Facebook" style="display:inline-block; background-color:${attributes.iconColor}; height:${attributes.iconSize}px; width:${attributes.iconSize}px; border-radius:${attributes.borderRadius}px; -webkit-border-radius:${attributes.borderRadius}px; -moz-border-radius:${attributes.borderRadius}px;">
+                        <img role="social-icon" alt="LinkedIn" title="LinkedIn" src="https://mc.sendgrid.com/assets/social/white/linkedin.png" style="height:${attributes.iconSize}px; width:${attributes.iconSize}px;" height="${attributes.iconSize}" width="${attributes.iconSize}">
+                      </a>
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </td>
           </tr>
         </tbody>
-      </table>`
+        </table>`
       }
     },
     BUTTON: {
