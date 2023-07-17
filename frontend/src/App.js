@@ -16,12 +16,16 @@ const App = () => {
   return(
     <Provider store={store}> 
         <Layout>
-          <Routes>      
-            <Route exact path="/build" element={<Auth><DynamicBlockGenerator/></Auth>} />
-            <Route exact path="/update" element={<Auth><TemplateUpdater/></Auth>} />
-            <Route exact path="/collection" element={<Auth><SavedCollection /></Auth>} />
-            <Route exact path="/upload" element={<Auth><ZipUploader /></Auth>} />
-            <Route exact path="/settings" element={<Auth><Settings /></Auth>} />
+          
+          <Routes> 
+            
+              <Route exact path="/build" element={<Auth><DynamicBlockGenerator/></Auth>} />
+              <Route exact path="/update" element={<Auth><TemplateUpdater/></Auth>} />
+              <Route exact path="/collection" element={<Auth><SavedCollection /></Auth>} />
+              <Route exact path="/upload" element={<Auth><ZipUploader /></Auth>} />
+              <Route exact path="/settings" element={<Auth><Settings /></Auth>} />
+            
+            
             <Route exact path="/login" element={<Login />} />
             <Route exact path="/" element={<Login />} />
             <Route exact path="/index.html" element={<Login />} />

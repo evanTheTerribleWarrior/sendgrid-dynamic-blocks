@@ -40,6 +40,8 @@ export const HANDLEBARS = {
     UPLOAD_IMAGE_BASE64: 'upload-image',
     CREATE_NEW_TEMPLATE: 'create-new-template',
     AUTHENTICATE: 'jwt',
+    CHECK_USER_AUTHENTICATED: 'check-user-authenticated',
+    REMOVE_TOKEN: 'remove-token',
     GET_SEGMENT_WRITE_KEY: 'get-segment-write-key'
   };
 

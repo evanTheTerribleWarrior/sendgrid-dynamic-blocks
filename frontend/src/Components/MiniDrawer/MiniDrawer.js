@@ -1,6 +1,7 @@
 import React, {useState} from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { logout } from '../../Redux/slices/authSlice';
+import { removeJWT } from '../../Utils/functions';
 import { styled, useTheme } from '@mui/material/styles';
 import Box from '@mui/material/Box';
 import MuiDrawer from '@mui/material/Drawer';
@@ -134,7 +135,7 @@ import { useNavigate } from 'react-router-dom';
 
   const  MiniDrawer = () => {
     const dispatch = useDispatch();
-    const jwtToken = useSelector((state) => state.jwtToken);
+    const isAuthenticated = useSelector((state) => state.isAuthenticated);
     const navigate = useNavigate();
     const theme = useTheme();
     const [open, setOpen] = React.useState(false);
@@ -148,10 +149,12 @@ import { useNavigate } from 'react-router-dom';
       setOpen(false);
     };
 
-    const handleNavigationClick = (item) => {
+    const handleNavigationClick = async (item) => {
       setActiveIcon(item.iconName)
       if(item.iconName === "logout"){
-        dispatch(logout(jwtToken))
+        dispatch(logout(isAuthenticated))
+        const res = await removeJWT();
+        console.log(res)
       }
       navigate(item.route);
     }

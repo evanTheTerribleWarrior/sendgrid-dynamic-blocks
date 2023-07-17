@@ -20,7 +20,6 @@ const Login = () => {
       }
     )
     if(data.success){
-      //dispatch(loginSuccess(data.token))
       dispatch(loginSuccess(true))
       setAuthFailMessage(null)
       navigate("/build", { replace: true })

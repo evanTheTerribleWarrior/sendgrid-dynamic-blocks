@@ -13,7 +13,7 @@ Build re-usable component blocks, and update multiple Sendgrid templates at once
  * Upload your zip file with the HTML/CSS/IMG structure and automatically create a template out of it
  * Local storage to persist your collections on the browser
  * Twilio Functions middleware to call the Sendgrid APIs and therefore avoid exposing SG API Keys within the app
- * Authentication via JWT tokens
+ * Authentication via JWT tokens and httpOnly cookies
  * (Optional) Segment CDP integration to send Web Vitals - or add your own metrics!
 
 
@@ -43,19 +43,22 @@ zsh setup-remote.sh
 # View your app at https://[my-runtime-url].twil.io/index.html
 ```
 
-### Option 2: Build local
--  Go to `frontend/src/Utils/variables.js`
-- Search for `BASE_URL`
-- Replace the following values so they look like this
+### Option 2: Build local - same ports for backend and frontend
+- Run the `setup-local-same-port.sh` script (if you use other shell, use the equivalent command):
 ```shell
-PROTOCOL: 'http://',
-BASE_URL: 'localhost:3002/',
-``` 
-- Run the `setup-local.sh` script (if you use other shell, use the equivalent command):
-```shell
-zsh setup-local.sh
+zsh setup-local-same-port.sh
+# View your app at http://localhost:3002/index.html (or set the port you want)
 ```
-Note: The script will send processes to the background. If you prefer to use them individually you can create multiple tabs in your terminal / split panes / use `screen` or any other way, and just run the commands one by one instead of the script (without the &)
+
+### Option 3: Run local - different ports for backend and frontend (easier for changing/testing code)
+- Run the `setup-local-diff-port.sh` script (if you use other shell, use the equivalent command):
+```shell
+zsh setup-local-diff-port.sh
+```
+This will effectively use `npm run start` to start the frontend on the standard 3000 port and have it runninng in the background.
+But in `package.json` we added `proxy: http://localhost:3002/` so that all requests are proxied to the same
+port as the functions backend. This is important to be able to use the SameSite cookie that we set for the
+JWT token
 
 ## Example
 

@@ -159,6 +159,42 @@ export async function authenticateUser (credentials) {
   }
 }
 
+export async function checkAuthentication () {
+  try {
+    const url = API_URLS.PROTOCOL + API_URLS.BASE_URL + API_URLS.CHECK_USER_AUTHENTICATED    
+    const response = await fetch(url, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        credentials: 'same-origin'
+    });
+    const data = await response.json();
+    return data;
+  } catch (error) {
+      throw new Error(`Failed to check authentication: ${error}`);
+  }
+}
+
+export async function removeJWT () {
+  try {
+    const url = API_URLS.PROTOCOL + API_URLS.BASE_URL + API_URLS.REMOVE_TOKEN    
+    const response = await fetch(url, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        credentials: 'same-origin'
+    });
+    const data = await response.json();
+    return data;
+  } catch (error) {
+      throw new Error(`Failed to remove cookie: ${error}`);
+  }
+}
+
+
+
 export async function getFolderStructure () {
   try {
     const url = API_URLS.PROTOCOL + API_URLS.BASE_URL + API_URLS.GET_FOLDER_STRUCTURE    

@@ -9,7 +9,7 @@ import { AnalyticsBrowser } from '@segment/analytics-next';
 import { HashRouter } from "react-router-dom";
 window.onbeforeunload = () => { return "" };
 
-const key = await getSegmentWriteKey()
+const key = ""//await getSegmentWriteKey()
 export const analytics = AnalyticsBrowser.load({ writeKey: key })
 const root = ReactDOM.createRoot(document.getElementById('root'));
 
