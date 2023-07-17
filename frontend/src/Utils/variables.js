@@ -1,4 +1,5 @@
 import { constructTextStyles, extractStylesAttributes, constructImageStyles } from "./style-helpers";
+import fontFamilies from "./font-families";
 
 // Handlebars
 export const HANDLEBARS = {
@@ -49,7 +50,7 @@ export const HANDLEBARS = {
     IMAGE: { 
       type: "image",
       label: "Image", 
-      fields: [{name: "imageUrl", type: "text", value: ""}], 
+      fields: [{name: "imageUrl", type: "text", label: "Image URL", value: ""}], 
       styles: [
         {name: "altText", type: "text", label: "Alt Text", value: ""},
         {name: "paddingLeft", type: "number", label: "Padding Left", value: ""},
@@ -63,7 +64,7 @@ export const HANDLEBARS = {
         {name: "alignment", type: "select", label: "Alignment", selectValues: ['center', 'left', 'right'], value: ""},
       ]
     },
-    TEXT: { type: "text", label: "Text", fields: [{name: "text", type: "text", value: ""}],
+    TEXT: { type: "text", label: "Text", fields: [{name: "text", type: "text", label: "Text", value: ""}],
     styles: [
       {name: "paddingLeft", type: "number", label: "Padding Left", value: ""},
       {name: "paddingRight", type: "number", label: "Padding Right", value: ""},
@@ -79,6 +80,33 @@ export const HANDLEBARS = {
       {name: "alignment", type: "select", label: "Alignment", selectValues: ['center', 'left', 'right'], value: ""},
       {name: "heading", type: "select", label: "Heading", selectValues: ['Heading 1', 'Heading 2', 'Heading 3', 'Heading 4', 'Heading 5', 'Heading 6'], value: ""},
     ]
+    },
+    BUTTON: { 
+      type: "button",
+      label: "Button", 
+      fields: [{name: "buttonText", type: "text", label: "Button Text", value: ""}, {name: "buttonURL", type: "text", label: "Button URL", value: ""}], 
+      styles: [
+        {name: "paddingLeft", type: "number", label: "Padding Left", value: ""},
+        {name: "paddingRight", type: "number", label: "Padding Right", value: ""},
+        {name: "paddingTop", type: "number", label: "Padding Top", value: ""},
+        {name: "paddingBottom", type: "number", label: "Padding Bottom", value: ""},
+        {name: "width", type: "number", label: "Width", value: ""},
+        {name: "height", type: "number", label: "Height", value: ""},
+        {name: "bgcolor", type: "text", label: "Background Color", value: ""},
+        {name: "fontSize", type: "number", label: "Font Size", value: ""},
+        {name: "fontWeight", type: "select", label: "Font Weight", selectValues: ['300', '400', '700', 'normal', 'bold'], value: ""},
+        {name: "fontFamily", type: "select", label: "Font Family", selectValues: fontFamilies, value: ""},
+        {name: "letterSpacing", type: "number", label: "Letter Spacing", value: ""},
+        {name: "alignment", type: "select", label: "Alignment", selectValues: ['center', 'left', 'right'], value: ""},
+        {name: "borderColor", type: "text", label: "Border Color", value: ""},
+        {name: "borderWidth", type: "number", label: "Border Width", value: ""},
+        {name: "borderRadius", type: "number", label: "Border Radius", value: ""},
+        {name: "moduleBgColor", type: "text", label: "Module Color", value: ""},
+        {name: "modulePaddingLeft", type: "number", label: "Module Padding Left", value: ""},
+        {name: "modulePaddingRight", type: "number", label: "Module Padding Right", value: ""},
+        {name: "modulePaddingTop", type: "number", label: "Module Padding Top", value: ""},
+        {name: "modulePaddingBottom", type: "number", label: "Module Padding Bottom", value: ""},
+      ]
     },
     DIVIDER: { type: "divider", label: "Divider", 
     styles: [
@@ -102,14 +130,14 @@ export const HANDLEBARS = {
   // Code Blocks
   export const CODE_BLOCKS = {
     TEXT: {
-      generateSGCode: (value, styles) => {
+      generateSGCode: (fields, styles) => {
         let attributes = extractStylesAttributes(styles)
         const textFirsPart = `<table class="module" role="module" data-type="text" border="0" cellpadding="0" cellspacing="0" width="100%" style="table-layout: fixed;">
         <tbody>
         <tr>
           <td style="padding:${attributes.paddingTop || 0}px ${attributes.paddingRight|| 0}px ${attributes.paddingBottom|| 0}px ${attributes.paddingLeft|| 0}px; line-height:${attributes.lineHeight || 22}px text-align:inherit; background-color:${attributes.bgcolor};" height="100%" valign="top" bgcolor="${attributes.bgcolor}" role="module-content">`
         
-        const textMainPart = constructTextStyles(value, attributes)      
+        const textMainPart = constructTextStyles(fields[0].value, attributes)      
         const textClosingPart = `</td></tr></tbody></table>`
         
         return textFirsPart + textMainPart + textClosingPart;
@@ -128,14 +156,14 @@ export const HANDLEBARS = {
     },
 
     IMAGE: {
-      generateSGCode: (value, styles) => {
+      generateSGCode: (fields, styles) => {
         let attributes = extractStylesAttributes(styles)
         const imageFirstPart = `<table class="wrapper" role="module" data-type="image" border="0" cellpadding="0" cellspacing="0" width="100%" style="table-layout: fixed;">
         <tbody>
         <tr>
           <td style="padding:${attributes.paddingTop || 0}px ${attributes.paddingRight|| 0}px ${attributes.paddingBottom|| 0}px ${attributes.paddingLeft|| 0}px;" align="${attributes.alignment}">`
         
-        const imageMainPart = constructImageStyles(value, attributes);
+        const imageMainPart = constructImageStyles(fields[0].value, attributes);
         const imageClosingPart = `</td>
         </tr>
       </tbody>
@@ -195,19 +223,24 @@ export const HANDLEBARS = {
       }
     },
     BUTTON: {
-      generateSGCode: (value) => {
-        return `  <table class="module" role="module" data-type="button">
+      generateSGCode: (fields, styles) => {
+        let attributes = extractStylesAttributes(styles)
+        return `  <table class="module" role="module" data-type="button" border="0" cellpadding="0" cellspacing="0" width="100%" style="table-layout: fixed;">
+        <tbody>
         <tr>
-          <td [styles go here] bgcolor=[some color] align=['left' or 'right']>
-            <table class="wrapper-mobile">
-              <tr>
-                <td [styles go here too] bgcolor=[some color]>
-                  [MODULE CONTENT]
-                </td>
-              </tr>
+          <td align="${attributes.alignment || "center"}" bgcolor="${attributes.moduleBgColor}" class="outer-td" style="padding:${attributes.modulePaddingTop || 0}px ${attributes.modulePaddingRight|| 0}px ${attributes.modulePaddingBottom|| 0}px ${attributes.modulePaddingLeft|| 0}px; background-color:${attributes.moduleBgColor}">
+            <table class="wrapper-mobile" border="0" cellpadding="0" cellspacing="0" style="text-align:center;">
+              <tbody>
+                <tr>
+                  <td align="${attributes.alignment || "center"}" bgcolor="${attributes.bgcolor || "#333333"}" class="inner-td" style="border-radius:${attributes.borderRadius || 6}px;  text-align:${attributes.alignment || "center"}; background-color:inherit;font-size=${attributes.fontSize || 14}px">
+                    <a href="${fields[1].value}" style="background-color:${attributes.bgcolor || "#333333"}; border:${attributes.borderWidth || 1}px; border-width:${attributes.borderWidth || 1 }px; border-radius:${attributes.borderRadius || 6}px; color:${attributes.fontColor || "#FFFFFF"}; display:inline-block; font-size:${attributes.fontSize || 14}px; font-weight:${attributes.fontWeight || "normal"}; font-family:${attributes.fontFamily}; letter-spacing:${attributes.letterSpacing || 0}px; line-height:${attributes.lineHeight}px; padding:${attributes.paddingTop || 12}px ${attributes.paddingRight|| 18}px ${attributes.paddingBottom|| 12}px ${attributes.paddingLeft|| 18}px; text-align:center; text-decoration:none; border-style:solid; width:${attributes.width}px;" target="_blank">${fields[0].value}</a>
+                  </td>
+                </tr>
+              </tbody>
             </table>
           </td>
         </tr>
+        </tbody>
       </table>`
       }
     },

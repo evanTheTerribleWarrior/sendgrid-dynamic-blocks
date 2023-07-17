@@ -1,10 +1,4 @@
 import { API_URLS, CODE_BLOCKS, COMPONENTS, HANDLEBARS } from "./variables";
-import store from "../Redux/store";
-
-const getAuthHeader = (jwtToken) => {
-  const authHeader = `Bearer ${jwtToken}`
-  return authHeader
-}
 
 
 // Get all the templates from a specific account.
@@ -17,8 +11,7 @@ export async function fetchAllTemplates (page_token) {
           method: 'POST',
           body: JSON.stringify({"page_token": page_token}),
           headers: {
-            'Content-Type': 'application/json',
-            //'Authorization': getAuthHeader(store.getState().jwtToken.jwtToken)
+            'Content-Type': 'application/json'          
           },
           credentials: 'same-origin'
       });
@@ -39,8 +32,7 @@ export async function fetchSingleTemplate (template_id) {
           method: 'POST',
           body: JSON.stringify({"template_id": template_id}),
           headers: {
-            'Content-Type': 'application/json',
-            //'Authorization': getAuthHeader(store.getState().jwtToken.jwtToken)
+            'Content-Type': 'application/json'
           },
           credentials: 'same-origin'
       });
@@ -59,8 +51,7 @@ export async function fetchSingleTemplateVersion (template_version_obj) {
         method: 'POST',
         body: JSON.stringify({"template_version_obj": template_version_obj}),
         headers: {
-          'Content-Type': 'application/json',
-          //'Authorization': getAuthHeader(store.getState().jwtToken.jwtToken)
+          'Content-Type': 'application/json'
         },
         credentials: 'same-origin'
     });
@@ -87,8 +78,7 @@ export async function updateSingleTemplate (template_data, create_version_checke
               "create_version_checked": create_version_checked
             }),
           headers: {
-            'Content-Type': 'application/json',
-            //'Authorization': getAuthHeader(store.getState().jwtToken.jwtToken)
+            'Content-Type': 'application/json'
           },
           credentials: 'same-origin'
       });
@@ -108,8 +98,7 @@ export async function createNewTemplate (data) {
             "data": data
           }),
         headers: {
-          'Content-Type': 'application/json',
-          //'Authorization': getAuthHeader(store.getState().jwtToken.jwtToken)
+          'Content-Type': 'application/json'
         },
         credentials: 'same-origin'
     });
@@ -130,8 +119,7 @@ export async function uploadImageBase64 (imageFileName, imageFileBase64) {
           "imgFileName": imageFileName
         }),
       headers: {
-        'Content-Type': 'application/json',
-        //'Authorization': getAuthHeader(store.getState().jwtToken.jwtToken)
+        'Content-Type': 'application/json'
       },
       credentials: 'same-origin'
     });
@@ -259,25 +247,9 @@ export const getComponentsObject = (condition) => {
 
 // Helper function to get a specific code block object in the SG-specific format
 // It is used to build the dynamic block mainly
-export const getCodeBlockObject = (type,value, styles) => {
+export const getCodeBlockObject = (type,fields, styles) => {
   for (const [key] of Object.entries(CODE_BLOCKS)) {
       const found = key === type.toUpperCase() ? true: false;
-      if (found) return CODE_BLOCKS[key].generateSGCode(value, styles)
+      if (found) return CODE_BLOCKS[key].generateSGCode(fields, styles)
   }
 };
-
-export const getLocalStorageSizeInKB = () => {
-  let totalSize = 0;
-  for (let key in localStorage) {
-    if (localStorage.hasOwnProperty(key)) {
-      totalSize += localStorage[key].length;
-    }
-  }
-  return totalSize / 1024;
-}
-
-export const getAppStateSizeInKB = (store) => {
-  const state = store.getState();
-  const stateString = JSON.stringify(state);
-  return stateString.length / 1024;
-}

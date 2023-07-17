@@ -157,7 +157,6 @@ const BlockCreation = ({getCustomBlock}) => {
   */
   const addRow = (type, parentId, isNested) => {
 
-    console.log(parentId)
     const newRow = {
       id: uuid(),
       parentId: parentId,
@@ -204,7 +203,6 @@ const BlockCreation = ({getCustomBlock}) => {
   };
 
   const removeRow = (rowId) => {
-    console.log(`Removing row: ${rowId}`)
     const updatedRows = removeRowRecursive(rowId, rows);
     setRows(updatedRows);
   };
@@ -281,11 +279,9 @@ const BlockCreation = ({getCustomBlock}) => {
         html += `${indent}${getCodeBlockObject("code", html_condition_value)}`
 
       } else if (row.type === "component" && row.component) {
-        let fields = row.component.fields;
-        let value = ''
-        if(fields) value = row.component.fields[0].value
-        code += `${indent}${value}\n`;
-        html += `${indent}${getCodeBlockObject(row.component.type, value, row.component.styles)}\n`
+        let fields = row.component.fields ? row.component.fields: null;
+        code += `${indent}<${row.component.label}>${fields? fields[0].value : ""}<${row.component.label}>\n`;
+        html += `${indent}${getCodeBlockObject(row.component.type, fields ? fields: "", row.component.styles)}\n`
         return;
       }
       
@@ -317,12 +313,18 @@ const BlockCreation = ({getCustomBlock}) => {
         <ComponentsSelect onChange={(event) => handleComponentRowChange(event, row.id)}/>
       </Grid>
       {
-        (row.type === "component" && row.component && row.component.fields && row.component.fields[0].type === "text") && (
-          <>
-          <Grid item xs={3}>
-              <TextField multiline fullWidth label={row.component.label} value={row.component.fields[0].value} onChange={(event) => handleComponentRowContentChange(event, row.id ,0)} />
-          </Grid>
-          </>
+        (row.type === "component" && row.component && row.component.fields && 
+          row.component.fields.map((field, index)=> {
+            if(field.type === "text") {
+              return (
+                <Grid item xs={3} key={index}>
+                  <TextField multiline fullWidth label={field.label} value={field.value} onChange={(event) => handleComponentRowContentChange(event, row.id , index)} />
+                </Grid>
+              )
+            }
+            return null;
+          }
+        )
         )
       }
 
