@@ -20,6 +20,7 @@ const DynamicBlockGenerator = () => {
     const fileNameRef = useRef('');
     const [selectedFolder, setSelectedFolder] = useState(null);
     const [fileName, setFileName] = useState('');
+    const [savedRowsStructure, setSavedRowsStructure] = useState(null);
 
     useEffect(() => {
       selectedFolderRef.current = selectedFolder;
@@ -38,7 +39,7 @@ const DynamicBlockGenerator = () => {
         if (folder.id === selectedFolder.id) {
           return {
             ...folder,
-            children: [...folder.children, { id: uuid(), type: 'file', name: fileName + ".html", content: generatedBlock }],
+            children: [...folder.children, { id: uuid(), type: 'file', name: fileName + ".html", content: generatedBlock, savedRowsStructure: savedRowsStructure }],
           };
         }
         else if (folder.children) {
@@ -85,6 +86,10 @@ const DynamicBlockGenerator = () => {
     
     const handleGeneratedDynamicBlock = (dynamicBlock) => {
       setGeneratedBlock(dynamicBlock)
+    }
+
+    const handleGetRowsStructure = (savedRows) => {
+      setSavedRowsStructure(savedRows)
     }
 
     const DialogRenderer = () => {
@@ -142,7 +147,7 @@ const DynamicBlockGenerator = () => {
         </Grid>
       
         <Grid item xs={12}>
-          <CodeRenderer onGenerateDynamicBlock={handleGeneratedDynamicBlock} />
+          <CodeRenderer onGenerateDynamicBlock={handleGeneratedDynamicBlock} getRowsStructure={handleGetRowsStructure} />
         </Grid>
         <Button
           variant="contained"

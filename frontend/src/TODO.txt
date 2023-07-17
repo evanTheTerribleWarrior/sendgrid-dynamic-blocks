@@ -3,9 +3,10 @@ SavedCollection:
 Build block:
 - Fix errors when choosing some conditions that make it crash. perhaps exclude some conditions from top level like else if/else
 - New line in text to show as new line
-- Use local storage while building template and then clean it?
+- Use local storage while building template and then clean it? ---> SAVING THE ROWS OF EACH, SORTED
 - clear button?
 - Ability to move components up or down in the hierarchy?
+- Ability to edit the block ---> ADDED IMPORT CAPABILITY, TEST IT MORE
 
 Zip component:
 - When uploading images, utilise better promises or even exponential backoff?

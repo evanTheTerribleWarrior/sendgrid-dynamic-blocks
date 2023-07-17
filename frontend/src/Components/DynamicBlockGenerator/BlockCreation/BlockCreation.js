@@ -4,6 +4,7 @@ import HandlebarsSelect from '../HandlebarsSelect/HandlebarsSelect';
 import ComponentsSelect from '../ComponentsSelect/ComponentsSelect';
 import ItemCreation from '../ItemCreation/ItemCreation'
 import StyleSetter from './StyleSetter/StyleSetter';
+import BlockImport from './BlockImport/BlockImport'
 import { getCloseHandlebar, getHandlebarsObject, getComponentsObject, getCodeBlockObject } from '../../../Utils/functions';
 import {
   TextField,
@@ -17,7 +18,7 @@ import CloseIcon from "@mui/icons-material/Close";
 import AddIcon from '@mui/icons-material/Add';
 import SettingsIcon from '@mui/icons-material/Settings';
 
-const BlockCreation = ({getCustomBlock}) => {
+const BlockCreation = ({getCustomBlock, getRowsStructure}) => {
   const [rows, setRows] = useState([]);
   const [rowIdClicked, setRowClicked] = useState('');
   const [generatedHtml, setGeneratedHtml] = useState('');
@@ -135,7 +136,7 @@ const BlockCreation = ({getCustomBlock}) => {
           const row = rows[i];
           if (row.id === rowId) {
             // Assuming fields array always has at least one object
-            row.component.fields[fieldIndex].value = event.target.value;
+            row.component.fields[fieldIndex].value = event.target.value //+ (event.key === "Enter" ? '\n' : '');
             return;
           }
           if (row.nestedRows && row.nestedRows.length) {
@@ -252,10 +253,13 @@ const BlockCreation = ({getCustomBlock}) => {
     });
   }
 
-
-
   const handleUpdatedStyles = (updatedStyles) => {
     setRows((prevRows) => updateStylesRecursive(prevRows, settingsRow, updatedStyles))
+  }
+
+  const handleImportedBlock = (importedBlock) => {
+    setRows(importedBlock.savedRowsStructure)
+    //generateCode(importedBlock.savedRowsStructure)
   }
 
   /* Recursive function that generates the code/steps and HTML
@@ -301,7 +305,7 @@ const BlockCreation = ({getCustomBlock}) => {
     });
     setGeneratedHtml(html);
     getCustomBlock(html, code);
-    console.table(rows)
+    getRowsStructure(rows);
     return code;
   };
 
@@ -362,7 +366,6 @@ const BlockCreation = ({getCustomBlock}) => {
           open={Boolean(settingsAnchorEl)}
           anchorEl={settingsAnchorEl}
           onClose={() => setSettingsAnchorEl(null)}
-          //anchorOrigin={{ vertical: 'top', horizontal: 'center' }}
           transformOrigin={{ vertical: 'top', horizontal: 'center' }}
           PaperProps={{
             style: {
@@ -480,6 +483,7 @@ const BlockCreation = ({getCustomBlock}) => {
   return (
     <>
         <ItemCreation onAddNewRow={(type) => addRow(type, -1, false)}/>
+        <BlockImport onBlockImported={handleImportedBlock} />
         <Paper sx={{ p: 4, display: 'flex', flexDirection: 'column' , position: 'relative', border: '1px solid #ccc', marginTop: '10px'}}>
         
         <Grid container direction="column" spacing={2}>

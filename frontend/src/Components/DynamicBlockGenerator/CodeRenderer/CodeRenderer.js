@@ -14,7 +14,7 @@ import { darcula } from 'react-syntax-highlighter/dist/esm/styles/prism';
 import { Container } from '@mui/system';
 
 
-const CodeRenderer = ({onGenerateDynamicBlock}) => {
+const CodeRenderer = ({onGenerateDynamicBlock, getRowsStructure}) => {
   const [generatedCode, setGeneratedCode] = useState('');
   const [generatedHtml, setGeneratedHtml] = useState('');
   const [codeView, setCodeView] = useState(false);
@@ -25,6 +25,10 @@ const CodeRenderer = ({onGenerateDynamicBlock}) => {
     onGenerateDynamicBlock(html)
   }
 
+  const handleGetRowStructure = (rows) => {
+    getRowsStructure(rows)
+  }
+
   const handleViewSwitch = () => {
     setCodeView((prevCodeView) => !prevCodeView);
   };
@@ -32,7 +36,7 @@ const CodeRenderer = ({onGenerateDynamicBlock}) => {
   return (
     <div>
       <Container>
-      <BlockCreation getCustomBlock={handleGeneratedDynamicBlock}  />
+      <BlockCreation getCustomBlock={handleGeneratedDynamicBlock} getRowsStructure={handleGetRowStructure}  />
       </Container>
       
       <Grid container direction="row" spacing={10} >

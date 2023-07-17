@@ -26,7 +26,7 @@ export const constructImageStyles = (imageURL, attributes) => {
 }
 
  export const constructTextStyles = (text, attributes) => {
-    let styledText = text;
+    let styledText = text.replace(/\n/g, '<br />');
 
   if (attributes.bold === "Yes") {
     styledText = `<strong>${styledText}</strong>`;
