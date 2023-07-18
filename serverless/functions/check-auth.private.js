@@ -4,7 +4,7 @@ Also we check if the Auth Header is valid and return appropriate response (401 i
 const jwt = require('jsonwebtoken');
 exports.checkAuth = (cookies, secret) => {
   if (!cookies.sendgrid_blocks_jwt) return setResponse(false, setTwilioResponseHeaders())
-
+  
   try{
     jwt.verify(cookies.sendgrid_blocks_jwt, secret);
   } catch (error) {

@@ -482,8 +482,12 @@ const BlockCreation = ({getCustomBlock, getRowsStructure}) => {
 
   return (
     <>
-        <ItemCreation onAddNewRow={(type) => addRow(type, -1, false)}/>
-        <BlockImport onBlockImported={handleImportedBlock} />
+        <Grid container direction="row" spacing={2}>
+        <Grid item xs={12}>
+          <ItemCreation onAddNewRow={(type) => addRow(type, -1, false)} onhandleImportedBlock={handleImportedBlock}/>
+        </Grid>
+        </Grid>
+        
         <Paper sx={{ p: 4, display: 'flex', flexDirection: 'column' , position: 'relative', border: '1px solid #ccc', marginTop: '10px'}}>
         
         <Grid container direction="column" spacing={2}>

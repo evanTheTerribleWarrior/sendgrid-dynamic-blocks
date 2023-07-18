@@ -31,7 +31,6 @@ exports.handler = (context, event, callback) => {
   )
 
   response.setCookie('sendgrid_blocks_jwt', token, ['HttpOnly',  'Max-Age=86400', 'Path=/', 'SameSite=strict'])
-  //response.setBody({success: true, token: token});
   response.setBody({success: true});
   console.log(response)
   return callback(null, response);

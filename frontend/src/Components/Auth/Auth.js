@@ -12,7 +12,6 @@ const Auth = ({ children }) => {
     useEffect(() => {
         async function check() {
             const checkAuthenticated = await checkAuthentication();
-            console.log(checkAuthenticated)
             if (checkAuthenticated.isAuthenticated) setIsAuthenticated(true)
             else setIsAuthenticated(false)
             return
