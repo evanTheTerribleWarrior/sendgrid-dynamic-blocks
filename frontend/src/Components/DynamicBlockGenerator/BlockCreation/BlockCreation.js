@@ -2,9 +2,8 @@ import React, { useState, useEffect } from 'react';
 import { v4 as uuid } from 'uuid';
 import HandlebarsSelect from '../HandlebarsSelect/HandlebarsSelect';
 import ComponentsSelect from '../ComponentsSelect/ComponentsSelect';
-import ItemCreation from '../ItemCreation/ItemCreation'
+import BuildOptions from './BuildOptions/BuildOptions'
 import StyleSetter from './StyleSetter/StyleSetter';
-import BlockImport from './BlockImport/BlockImport'
 import { getCloseHandlebar, getHandlebarsObject, getComponentsObject, getCodeBlockObject } from '../../../Utils/functions';
 import {
   TextField,
@@ -262,6 +261,10 @@ const BlockCreation = ({getCustomBlock, getRowsStructure}) => {
     //generateCode(importedBlock.savedRowsStructure)
   }
 
+  const handleClearBlock = () => {
+    setRows([])
+  }
+
   /* Recursive function that generates the code/steps and HTML
   it is used by useEffect to present changes as they happen
   It uses helper functions to get the right code blocks and also the "close" part
@@ -322,7 +325,7 @@ const BlockCreation = ({getCustomBlock, getRowsStructure}) => {
             if(field.type === "text") {
               return (
                 <Grid item xs={3} key={index}>
-                  <TextField multiline fullWidth label={field.label} value={field.value} onChange={(event) => handleComponentRowContentChange(event, row.id , index)} />
+                  <TextField multiline sx={{overflow: 'auto'}} rows={1} fullWidth label={field.label} value={field.value} onChange={(event) => handleComponentRowContentChange(event, row.id , index)} />
                 </Grid>
               )
             }
@@ -484,7 +487,7 @@ const BlockCreation = ({getCustomBlock, getRowsStructure}) => {
     <>
         <Grid container direction="row" spacing={2}>
         <Grid item xs={12}>
-          <ItemCreation onAddNewRow={(type) => addRow(type, -1, false)} onhandleImportedBlock={handleImportedBlock}/>
+          <BuildOptions onAddNewRow={(type) => addRow(type, -1, false)} onhandleImportedBlock={handleImportedBlock} onhandleClearBlock={handleClearBlock}/>
         </Grid>
         </Grid>
         

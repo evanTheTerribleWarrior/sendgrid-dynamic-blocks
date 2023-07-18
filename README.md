@@ -2,7 +2,7 @@
 
 Build re-usable component blocks, and update multiple Sendgrid templates at once!
 
-![Application screenshot](https://github.com/evanTheTerribleWarrior/sendgrid-dynamic-blocks/assets/54394422/f3223401-f391-4a0d-928c-d86a679980d5)
+![Application screenshot](https://github.com/evanTheTerribleWarrior/sendgrid-dynamic-blocks/assets/54394422/884a4edf-47a0-4b62-956e-1da633f72ea6)
 
 ## Key features
  * Create blocks based on Sendgrid drag-and-drop compatible code and components
