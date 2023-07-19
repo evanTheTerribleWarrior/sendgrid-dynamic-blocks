@@ -5,8 +5,6 @@ SavedCollection:
 
 Build block:
 - Fix errors when choosing some conditions that make it crash. perhaps exclude some conditions from top level like else if/else
-- clear button?
-- Ability to edit the block ---> ADDED IMPORT CAPABILITY, TEST IT MORE (the selections are lost in the dropdown)
 
 Zip component:
 
@@ -17,10 +15,11 @@ Security:
 - csrf?
 
 Update Templates:
-- How to exclude templates not valid for drag and drop editor
-- test funky behaviour of updating templates to ensure everythinng works as it should.
-- Make update single template
+- Weird UI behaviour when a template has bigger elements, the elements move on the right
 
 Future
+- How to exclude templates not valid for drag and drop editor
 - When uploading images, utilise better promises or even exponential backoff?
 - Ability to move components up or down in the hierarchy?
+- When importing block, dropdowns are reset currently
+- 2FA?

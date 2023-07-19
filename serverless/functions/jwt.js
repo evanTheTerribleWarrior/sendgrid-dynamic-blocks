@@ -27,7 +27,7 @@ exports.handler = (context, event, callback) => {
       perms: ['read'],
     },
     context.JWT_SECRET,
-    { expiresIn: '1h' }
+    { expiresIn: '5h' }
   )
 
   response.setCookie('sendgrid_blocks_jwt', token, ['HttpOnly',  'Max-Age=86400', 'Path=/', 'SameSite=strict'])

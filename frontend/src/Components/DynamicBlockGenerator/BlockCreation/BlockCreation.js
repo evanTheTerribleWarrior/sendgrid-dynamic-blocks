@@ -325,7 +325,7 @@ const BlockCreation = ({getCustomBlock, getRowsStructure}) => {
             if(field.type === "text") {
               return (
                 <Grid item xs={3} key={index}>
-                  <TextField multiline sx={{overflow: 'auto'}} rows={1} fullWidth label={field.label} value={field.value} onChange={(event) => handleComponentRowContentChange(event, row.id , index)} />
+                  <TextField multiline sx={{overflow: 'auto'}} rows={1} variant="standard" fullWidth label={field.label} value={field.value} onChange={(event) => handleComponentRowContentChange(event, row.id , index)} />
                 </Grid>
               )
             }
@@ -407,17 +407,17 @@ const BlockCreation = ({getCustomBlock, getRowsStructure}) => {
     {row.hasVariables === 1 && (
       <>
       <Grid item xs={3}>
-          <TextField fullWidth label="Variable1" value={row.variable1} onChange={(event) => handleVariableChange(event, row.id, 1)} />
+          <TextField variant="standard" fullWidth label="Variable1" value={row.variable1} onChange={(event) => handleVariableChange(event, row.id, 1)} />
       </Grid>
       </>
     )}
     {row.hasVariables === 2 && (
       <>
       <Grid item xs={3}>
-          <TextField fullWidth label="Variable1" value={row.variable1} onChange={(event) => handleVariableChange(event, row.id, 1)} />
+          <TextField variant="standard" fullWidth label="Variable1" value={row.variable1} onChange={(event) => handleVariableChange(event, row.id, 1)} />
       </Grid>
       <Grid item xs={3}>
-          <TextField fullWidth label="Variable2" value={row.variable2} onChange={(event) => handleVariableChange(event, row.id, 2)} />
+          <TextField variant="standard" fullWidth label="Variable2" value={row.variable2} onChange={(event) => handleVariableChange(event, row.id, 2)} />
       </Grid>
       </>
     )}

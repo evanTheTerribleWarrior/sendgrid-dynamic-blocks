@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import {Button, Grid, Checkbox, RadioGroup, FormControlLabel, Radio, FormControl, FormLabel } from '@mui/material';
+import {Button, Grid, Checkbox, RadioGroup, FormControlLabel, Radio, FormControl, FormLabel, Select, MenuItem } from '@mui/material';
 import { fetchSingleTemplateVersion, updateSingleTemplate } from '../../../Utils/functions';
 import TemplateRenderer from '../../TemplateRenderer/TemplateRenderer';
 import LoadingDialog from '../../LoadingDialog/LoadingDialog';
@@ -63,10 +63,18 @@ const TemplatePrep = ({ selectedBlock, selectedTemplates, selectedVersions }) =>
     setSelectedRadioOption(event.target.value)
   }
 
-  const handleManageCheckboxList = (template) => {
+  const handleManageCheckboxList = async (template) => {
   
     if (selectedRadioUpdateOption === "updateOne"){
       setCheckedTemplates([template])
+      const template_version_obj = {
+        template_id: template.template_id,
+        version_id: template.version_id
+      }
+      const data = await fetchSingleTemplateVersion(template_version_obj);
+      console.log(data)
+      setSelectedTemplateVersion(data);
+      domParserMergeSingle(data.html_content)
     }
     else{
       const updatedTemplates = [...checkedTemplates];
@@ -128,12 +136,108 @@ const TemplatePrep = ({ selectedBlock, selectedTemplates, selectedVersions }) =>
 
     
   }
+
+  /*
+  ******************************
+  * Update One Functions - Start
+  ******************************
+  */
+
+  const [htmlWithOptions, setHtmlWithOptions] = useState(null)
+  const [updateSingleSiblings, setUpdateSingleSiblings] = useState([])
+  const [selectedSibling, setSelectedSibling] = useState(null)
+
+  const handleSelectSibling = (event) => {
+    setSelectedSibling(event.target.value)
+    console.log(event.target.value)
+  }
+
+  const domParserMergeSingle = (versionHtmlContent) => {
+
+    const doc = parser.parseFromString(versionHtmlContent ? versionHtmlContent : selectedTemplateVersion.html_content, 'text/html');
+    const preheaderTable = doc.querySelector('table[data-type="preheader"]');
+    const siblings = [];
+    let currentNode = preheaderTable.nextElementSibling;
+      
+    while (currentNode) {
+      siblings.push(currentNode);
+      currentNode = currentNode.nextElementSibling;
+    }
+
+    const updatedHtml = siblings.reduce((acc, sibling, siblingIndex) => {
+      const button = `<p class="insert-option" ">Position ${siblingIndex}</p>`; 
+      return acc + button + sibling.outerHTML;
+    }, '');
+
+    console.log("UPDATED HTML: " + updatedHtml)
+
+    setHtmlWithOptions(updatedHtml)
+    setUpdateSingleSiblings(siblings)
+    return;
+    
+  }
+
+  const domParserMergeSingleFinalise = (siblings) => {
+
+    const updatedHtml = siblings.reduce((acc, sibling, siblingIndex) => {
+      if(siblingIndex === selectedSibling) {
+        return acc + selectedBlock.content + sibling.outerHTML
+      }
+      else return acc + sibling.outerHTML;
+    }, '');
+
+    console.log(updatedHtml)
+    return updatedHtml;
+  }
+
+  const handleUpdateSingle = async () => {
+    setIsLoading(true)
+
+    let existing_html = selectedTemplateVersion.html_content
+    const doc = parser.parseFromString(existing_html, 'text/html');
+    const preheaderTable = doc.querySelector('table[data-type="preheader"]');
+    if (preheaderTable) {
+      while (preheaderTable.nextSibling) {
+        preheaderTable.nextSibling.remove();
+      }
+      preheaderTable.insertAdjacentHTML('afterend', mergedHTML);
+    }
+    
+    const data = {
+      version_id: selectedTemplateVersion.id,
+      template_id: selectedTemplateVersion.template_id,
+      name: selectedTemplateVersion.name,
+      html_content: doc.documentElement.outerHTML,
+      subject: selectedTemplateVersion.subject
+    }
+    try {
+      const result = await updateSingleTemplate(data, createVersionChecked)
+      setIsLoading(false)
+    }
+    catch (error) {
+      console.error(`handleUpdateSingle error at TemplatePrep.js: ${error}`)
+      setIsLoading(false)
+    }
+
+  }
+
+  /*
+  ******************************
+  * Update One Functions - End
+  ******************************
+  */
+
+
+
   const handlePreview = async () => {
     setIsLoading(true)
     if (checkedTemplates.length === 0) return;
     if (selectedRadioUpdateOption === "updateMultiple"){
       const version = await handleExampleTemplateFetch()
       setMergedHTML(domParserMerge(version.html_content))
+    }
+    else if (selectedRadioUpdateOption === "updateOne") {
+      setMergedHTML(domParserMergeSingleFinalise(updateSingleSiblings))
     }
     setIsLoading(false)
   }
@@ -216,13 +320,38 @@ const TemplatePrep = ({ selectedBlock, selectedTemplates, selectedVersions }) =>
           </FormControl>
           
 
-          <FormControl disabled={selectedRadioUpdateOption === "updateOne"} component="fieldset" sx={{marginTop: "20px"}}>
-            <FormLabel component="legend">Block Position</FormLabel>
-            <RadioGroup name="options" value={selectedRadioOption} onChange={handlePositionChange}>
-              <FormControlLabel value="header" control={<Radio />} label="Set as Header" />
-              <FormControlLabel value="footer" control={<Radio />} label="Set as Footer" />
-            </RadioGroup>
-          </FormControl>
+          {
+            selectedRadioUpdateOption === "updateOne" ? (
+              <FormControl component="fieldset" sx={{marginTop: "20px"}}>
+                <FormLabel component="legend">Select Block Position</FormLabel>
+                <Select
+                  value={selectedSibling}
+                  onChange={handleSelectSibling}
+                  displayEmpty
+                  sx={{ minWidth: 200 }}
+                  inputProps={{ 'aria-label': 'Select Sibling' }}
+                >
+                  <MenuItem value="" disabled>
+                    Select Position
+                  </MenuItem>
+                  {updateSingleSiblings.map((sibling, index) => (
+                    <MenuItem key={index} value={index}>
+                      Position {index}
+                    </MenuItem>
+                  ))}
+                </Select>
+              </FormControl>
+            ) : (
+              <FormControl component="fieldset" sx={{marginTop: "20px"}}>
+              <FormLabel component="legend">Block Position</FormLabel>
+              <RadioGroup name="options" value={selectedRadioOption} onChange={handlePositionChange}>
+                <FormControlLabel value="header" control={<Radio />} label="Set as Header" />
+                <FormControlLabel value="footer" control={<Radio />} label="Set as Footer" />
+              </RadioGroup>
+            </FormControl>
+            )
+          }
+
 
           <FormControl component="fieldset" sx={{marginTop: "20px"}}>
             <FormLabel component="legend">Create Version</FormLabel>
@@ -242,17 +371,48 @@ const TemplatePrep = ({ selectedBlock, selectedTemplates, selectedVersions }) =>
             <Button variant="outlined" sx={{marginTop: "20px"}} onClick={() => handlePreview()}>
              Preview
             </Button>
-            <Button variant="contained" sx={{marginTop: "20px"}} onClick={() => handleUpdateAll()}>
-              Update all
-            </Button>
+            {
+              selectedRadioUpdateOption === "updateOne" ? (
+                <Button variant="contained" disabled={mergedHTML ? false : true} sx={{marginTop: "20px"}} onClick={() => handleUpdateSingle()}>
+                  Update single
+                </Button>
+              ): (
+                <Button variant="contained" sx={{marginTop: "20px"}} onClick={() => handleUpdateAll()}>
+                  Update all
+                </Button>
+              )
+            }
+            
           </FormControl>
             
           </Grid>
       </Grid>
 
       <Grid item xs={4}>
-      <TemplateRenderer template={mergedHTML} placeholderText="Your updated template will render here"/>
-         
+        {
+          selectedRadioUpdateOption === "updateOne" ? (<>
+            <TemplateRenderer template={mergedHTML ? mergedHTML : htmlWithOptions} placeholderText="Your updated template will render here"/>
+            <style>
+        {`
+          .insert-option {
+            display: block;
+            width: 100%;
+            margin-top: 8px;
+            padding: 6px;
+            border: 1px dotted #000;
+            border-radius: 4px;
+            outline: none;
+            text-align: center;
+            background-color: #fff;
+            height: 40px;
+          }
+        `}
+      </style>
+      </>) :
+          (
+            <TemplateRenderer template={mergedHTML} placeholderText="Your updated template will render here"/>
+          )
+        }
       </Grid>
       <LoadingDialog open={isLoading} text="Updating your templates, please wait..." />
       
