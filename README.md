@@ -2,7 +2,7 @@
 
 Build re-usable component blocks, and update multiple Sendgrid templates at once!
 
-![Application screenshot](https://github.com/evanTheTerribleWarrior/sendgrid-dynamic-blocks/assets/54394422/884a4edf-47a0-4b62-956e-1da633f72ea6)
+![Application screenshot](https://github.com/evanTheTerribleWarrior/sendgrid-dynamic-blocks/assets/54394422/efec0910-a5b3-4ab1-ac0e-4d1a1f5e1775)
 
 ## Key features
  * Create blocks based on Sendgrid drag-and-drop compatible code and components
@@ -60,19 +60,8 @@ But in `package.json` we added `proxy: http://localhost:3002/` so that all reque
 port as the functions backend. This is important to be able to use the SameSite cookie that we set for the
 JWT token
 
-## Example
-
-1. 
-
-2. 
-
-3. 
-
-4. 
-
-5. 
-
-## Test It!
+## Blog Post
+The below blog post shows the app and the different sections in place:
 
 
 ## Considerations
@@ -80,15 +69,22 @@ JWT token
 - This is not an official Twilio Sendgrid repository.
 - As this is a personal work, updates will be published at non-standard intervals. You are of course free to take the code and shape as you wish
 
-## TODO
-- Overall: Cleanup unused code (e.g in variables.js)
+## Limitations
+- Currently, there is no signup / setting multiple users with a proper database. The logic is to start fast and simple only via your Twilio Account. A proper user login/signup management will need an external backend
+- Because of the above, data is saved locally on the browser. Users can export their work and import it easily. But a backend integration would also require separation of each user's work to avoid conflicts
+
+## TODO - Future
+- Overall: Cleanup unused/redundant code 
 - Overall: Review fail conditions / fail gracefully
+- Overall: Comments!
 - Update templates: How to exclude templates not valid for drag and drop editor
 - Zip upload: When uploading images, utilise better promises or even exponential backoff?
 - Block creation: Ability to move components up or down in the hierarchy?
 - Block creation: When importing block, dropdowns are reset currently
+- Block creation: validate the created block structure
 - Settings: 2FA?
 - Settings: More segment integration
 - Security: Secondary token for navigation?
 - Security: CSRF?
+- Security: Zip check and rejection?
 

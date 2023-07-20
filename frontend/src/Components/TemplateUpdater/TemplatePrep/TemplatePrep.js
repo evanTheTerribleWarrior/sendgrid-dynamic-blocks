@@ -293,7 +293,7 @@ const TemplatePrep = ({ selectedBlock, selectedTemplates, selectedVersions }) =>
   return (
     <div style={{marginTop: "20px"}}>
     <Grid container spacing={2}>
-      <Grid item >
+      <Grid item xs={3} >
         
         <Grid container direction="column">
           <FormControl component="fieldset">
