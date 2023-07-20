@@ -21,6 +21,7 @@ const DynamicBlockGenerator = () => {
     const [selectedFolder, setSelectedFolder] = useState(null);
     const [fileName, setFileName] = useState('');
     const [savedRowsStructure, setSavedRowsStructure] = useState(null);
+    const [saveIncomplete, setSaveIncomplete] = useState(false)
 
     useEffect(() => {
       selectedFolderRef.current = selectedFolder;
@@ -55,12 +56,18 @@ const DynamicBlockGenerator = () => {
 
     const handleSaveDynamicBlock = () => {
 
-      const selectedFolder = selectedFolderRef.current;
-      const fileName = fileNameRef.current;
-      dispatch(updateFolderStructure(findFolderToSaveRecursive(folderStructure.folderStructure, selectedFolder, fileName)));
-      selectedFolderRef.current = null;
-      fileNameRef.current = '';
-      handleSaveModalClose()
+      if(selectedFolderRef.current && fileNameRef.current){
+        const selectedFolder = selectedFolderRef.current;
+        const fileName = fileNameRef.current;
+        dispatch(updateFolderStructure(findFolderToSaveRecursive(folderStructure.folderStructure, selectedFolder, fileName)));
+        selectedFolderRef.current = null;
+        fileNameRef.current = '';
+        handleSaveModalClose()
+      }
+      else {
+        setSaveIncomplete(true)
+      }
+      
     }
 
     const handleOnFolderSelected = (folder) => {
@@ -135,6 +142,13 @@ const DynamicBlockGenerator = () => {
             Save
           </Button>
         </Box>
+        {
+          saveIncomplete && (
+            <Typography variant="body1" color="error">
+              You need to choose a folder and filename before saving
+            </Typography>
+          )
+        }
       </Box>
     </Modal>
     )
