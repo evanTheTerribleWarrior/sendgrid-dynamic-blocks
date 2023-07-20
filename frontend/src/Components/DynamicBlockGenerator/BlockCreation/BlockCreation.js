@@ -273,39 +273,40 @@ const BlockCreation = ({getCustomBlock, getRowsStructure}) => {
   const generateCode = (rows) => {
     let code = "";
     let html = "";
+
     const generateRowCodeAndHtml = (row, level) => {
       const indent = "  ".repeat(level);
-      
+
+
       if (row.type === "condition" && row.condition) {
+
         code += `${indent}${row.condition}`;
         if(row.variable1) code += ` ${row.variable1}`
         if(row.variable2) code += ` ${row.variable2}`
         code += '}}\n'
 
         const html_condition_value = row.condition + (row.variable1 ? ` ${row.variable1}`: "") + (row.variable2 ? ` ${row.variable2}`: "") + '}}'
-        html += `${indent}${getCodeBlockObject("code", html_condition_value)}`
+        html += `${getCodeBlockObject("code", html_condition_value)}`
 
       } else if (row.type === "component" && row.component) {
         let fields = row.component.fields ? row.component.fields: null;
         code += `${indent}<${row.component.label}>${fields? fields[0].value : ""}<${row.component.label}>\n`;
-        html += `${indent}${getCodeBlockObject(row.component.type, fields ? fields: "", row.component.styles)}\n`
+        html += `${getCodeBlockObject(row.component.type, fields ? fields: "", row.component.styles)}\n`
         return;
       }
-      
+
       if (row.nestedRows && row.nestedRows.length > 0) {
         row.nestedRows.forEach((nestedRow) => {
           generateRowCodeAndHtml(nestedRow, level + 1);
         });
       }
-      
-      const close_condition = getCloseHandlebar(row.condition);
-      code += `${indent}${close_condition}\n`;
-      html += `${indent}${getCodeBlockObject("code", close_condition)}\n`;
+
     };
     
     rows.forEach((row) => {
       generateRowCodeAndHtml(row, 0);
     });
+
     setGeneratedHtml(html);
     getCustomBlock(html, code);
     getRowsStructure(rows);

@@ -165,8 +165,8 @@ const TemplatePrep = ({ selectedBlock, selectedTemplates, selectedVersions }) =>
     }
 
     const updatedHtml = siblings.reduce((acc, sibling, siblingIndex) => {
-      const button = `<p class="insert-option" ">Position ${siblingIndex}</p>`; 
-      return acc + button + sibling.outerHTML;
+      const insertedBlock = `<p class="insert-option" ">Position ${siblingIndex}</p>`; 
+      return acc + insertedBlock + sibling.outerHTML;
     }, '');
 
     console.log("UPDATED HTML: " + updatedHtml)
@@ -219,6 +219,10 @@ const TemplatePrep = ({ selectedBlock, selectedTemplates, selectedVersions }) =>
       setIsLoading(false)
     }
 
+  }
+
+  const handleClear = () => {
+    setMergedHTML(htmlWithOptions)
   }
 
   /*
@@ -288,8 +292,8 @@ const TemplatePrep = ({ selectedBlock, selectedTemplates, selectedVersions }) =>
 
   return (
     <div style={{marginTop: "20px"}}>
-    <Grid container spacing={5}>
-      <Grid item xs={4}>
+    <Grid container spacing={2}>
+      <Grid item >
         
         <Grid container direction="column">
           <FormControl component="fieldset">
@@ -372,11 +376,14 @@ const TemplatePrep = ({ selectedBlock, selectedTemplates, selectedVersions }) =>
              Preview
             </Button>
             {
-              selectedRadioUpdateOption === "updateOne" ? (
+              selectedRadioUpdateOption === "updateOne" ? (<>
+                <Button variant="outlined" disabled={mergedHTML ? false : true} sx={{marginTop: "20px"}} onClick={() => handleClear()}>
+                  Clear
+                </Button>
                 <Button variant="contained" disabled={mergedHTML ? false : true} sx={{marginTop: "20px"}} onClick={() => handleUpdateSingle()}>
                   Update single
                 </Button>
-              ): (
+                </>): (
                 <Button variant="contained" sx={{marginTop: "20px"}} onClick={() => handleUpdateAll()}>
                   Update all
                 </Button>
@@ -388,7 +395,7 @@ const TemplatePrep = ({ selectedBlock, selectedTemplates, selectedVersions }) =>
           </Grid>
       </Grid>
 
-      <Grid item xs={4}>
+      <Grid item>
         {
           selectedRadioUpdateOption === "updateOne" ? (<>
             <TemplateRenderer template={mergedHTML ? mergedHTML : htmlWithOptions} placeholderText="Your updated template will render here"/>

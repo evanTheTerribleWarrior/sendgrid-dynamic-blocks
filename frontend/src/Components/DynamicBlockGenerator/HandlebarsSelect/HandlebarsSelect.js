@@ -11,15 +11,16 @@ const HandlebarsSelect = ({ onChange }) => {
     };
 
     const filteredHandlebars = Object.entries(HANDLEBARS).filter(([key]) => {
-        return !excludedKeys.includes(key) && !key.endsWith('_CLOSE');
-      });
-    return (
+        return !excludedKeys.includes(key)
+    });
+    
+      return (
         <FormControl fullWidth>
             <InputLabel>Condition</InputLabel>
             <Select onChange={onChange}>
             {filteredHandlebars.map(([key, { value }]) => (
                 <MenuItem key={key} value={value}>
-                    {removeHandlebarTags(value)}
+                    {key.endsWith("_CLOSE") ? removeHandlebarTags(`${value} - close`) :  removeHandlebarTags(value)}
                 </MenuItem>
             ))}
             </Select>

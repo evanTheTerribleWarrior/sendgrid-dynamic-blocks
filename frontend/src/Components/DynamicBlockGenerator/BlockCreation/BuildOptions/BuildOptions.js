@@ -23,10 +23,10 @@ const BuildOptions = ({onAddNewRow, onhandleImportedBlock, onhandleClearBlock}) 
         <Box display="flex" justifyContent="space-between" alignItems="center">
             <Box>
                 <Button variant="outlined" color="primary" sx={{ mr: 1 }} onClick={() => handleSetItem("condition")}>
-                    Add Condition
+                    Top level Condition
                 </Button>
                 <Button variant="outlined" color="primary" onClick={() => handleSetItem("component")}>
-                    Add Component
+                    Top level Component
                 </Button>
             </Box>
             <Box>

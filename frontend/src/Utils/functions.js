@@ -207,7 +207,6 @@ export async function getSegmentWriteKey () {
         credentials: 'same-origin'
     });
     const data = await response.json();
-    console.log(data)
     return data.key;
   } catch (error) {
       throw new Error(`Failed to get segment key: ${error}`);
@@ -228,7 +227,7 @@ export const getHandlebarsObject = (condition) => {
 export const getCloseHandlebar = (condition) => {
   let closeConditionValue = "";
   Object.keys(HANDLEBARS).forEach((key) => {
-    if (HANDLEBARS[key].value === condition) {
+    if (HANDLEBARS[key].value === condition && HANDLEBARS[key].hasClosingCondition) {
       const closeConditionKey = `${key}_CLOSE`;
       closeConditionValue = HANDLEBARS[closeConditionKey].value;    
     }

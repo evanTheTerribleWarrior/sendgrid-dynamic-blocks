@@ -81,5 +81,14 @@ JWT token
 - As this is a personal work, updates will be published at non-standard intervals. You are of course free to take the code and shape as you wish
 
 ## TODO
-
+- Overall: Cleanup unused code (e.g in variables.js)
+- Overall: Review fail conditions / fail gracefully
+- Update templates: How to exclude templates not valid for drag and drop editor
+- Zip upload: When uploading images, utilise better promises or even exponential backoff?
+- Block creation: Ability to move components up or down in the hierarchy?
+- Block creation: When importing block, dropdowns are reset currently
+- Settings: 2FA?
+- Settings: More segment integration
+- Security: Secondary token for navigation?
+- Security: CSRF?
 
