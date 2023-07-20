@@ -61,7 +61,10 @@ port as the functions backend. This is important to be able to use the SameSite 
 JWT token
 
 ## Blog Post
-The below blog post shows the app and the different sections in place:
+The below blog post shows the app and the different sections in place, along with technical details
+
+## The application structure
+The below diagram provides a high level overview of the application:
 
 
 ## Considerations

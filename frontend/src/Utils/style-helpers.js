@@ -69,16 +69,14 @@ export const constructImageStyles = (imageURL, attributes) => {
     styledText = `<span style="font-size: ${attributes.fontSize}">${styledText}</span>`;
   }
 
-  if (attributes.heading) {
-    let headingSize = attributes.heading.split(" ").pop()
-    styledText = `<h${headingSize}>${styledText}</h${headingSize}>`;
-  }
+  
 
   if (attributes.textColor) {
-    styledText = `<span style="color: ${attributes.textColor}">${styledText}</span>`;
+    styledText = `<span style="color: ${attributes.textColor}; background-color: ${attributes.textHighlightColor || ""}">${styledText}</span>`;
   }
 
   if (attributes.textHighlightColor) {
+    console.log("in")
     styledText = `<span style="background-color: ${attributes.textHighlightColor}">${styledText}</span>`;
   }
 
@@ -90,6 +88,12 @@ export const constructImageStyles = (imageURL, attributes) => {
     styledText = `<div style="text-align: ${attributes.alignment}">${styledText}</div>`;
   }
 
+  if (attributes.heading) {
+    let headingSize = attributes.heading.split(" ").pop()
+    styledText = `<h${headingSize} style="text-align: ${attributes.alignment ? attributes.alignment : "inherit"}">${styledText}</h${headingSize}>`;
+    
+  }
+  console.log(styledText)
 
   return styledText;
   }

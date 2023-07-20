@@ -155,7 +155,7 @@ export const HANDLEBARS = {
         const textFirsPart = `<table class="module" role="module" data-type="text" border="0" cellpadding="0" cellspacing="0" width="100%" style="table-layout: fixed;">
         <tbody>
         <tr>
-          <td style="padding:${attributes.paddingTop || 0}px ${attributes.paddingRight|| 0}px ${attributes.paddingBottom|| 0}px ${attributes.paddingLeft|| 0}px; line-height:${attributes.lineHeight || 22}px text-align:inherit; background-color:${attributes.bgcolor};" height="100%" valign="top" bgcolor="${attributes.bgcolor}" role="module-content">`
+          <td style="padding:${attributes.paddingTop || 18}px ${attributes.paddingRight|| 0}px ${attributes.paddingBottom|| 18}px ${attributes.paddingLeft|| 0}px; line-height:${attributes.lineHeight || 22}px text-align:${attributes.alignment}; background-color:${attributes.bgcolor};" height="100%" valign="top" bgcolor="${attributes.bgcolor}" role="module-content">`
         
         const textMainPart = constructTextStyles(fields[0].value, attributes)      
         const textClosingPart = `</td></tr></tbody></table>`

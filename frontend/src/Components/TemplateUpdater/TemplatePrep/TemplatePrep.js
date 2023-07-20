@@ -8,7 +8,7 @@ const TemplatePrep = ({ selectedBlock, selectedTemplates, selectedVersions }) =>
 
   const [selectedTemplateVersion, setSelectedTemplateVersion] = useState(null);
   const [selectedRadioOption, setSelectedRadioOption] = useState('');
-  const [mergedHTML, setMergedHTML] = useState('')
+  const [mergedHTML, setMergedHTML] = useState(null)
   const [createVersionChecked, setCreateVersionChecked] = useState(false);
   const [selectedRadioUpdateOption, setSelectedRadioUpdateOption] = useState('updateMultiple');
   const [checkBoxList, setCheckBoxList] = useState([])
@@ -56,6 +56,7 @@ const TemplatePrep = ({ selectedBlock, selectedTemplates, selectedVersions }) =>
 
   const handleRadioChange = (event) => {
     setSelectedRadioUpdateOption(event.target.value);
+    setMergedHTML(null)
     setCheckedTemplates([])
   };
 
@@ -377,17 +378,20 @@ const TemplatePrep = ({ selectedBlock, selectedTemplates, selectedVersions }) =>
             </Button>
             {
               selectedRadioUpdateOption === "updateOne" ? (<>
-                <Button variant="outlined" disabled={mergedHTML ? false : true} sx={{marginTop: "20px"}} onClick={() => handleClear()}>
+                <Button variant="outlined" disabled={mergedHTML ? false : true} sx={{marginTop: "20px"}} onClick={() => handleClear(htmlWithOptions)}>
                   Clear
                 </Button>
                 <Button variant="contained" disabled={mergedHTML ? false : true} sx={{marginTop: "20px"}} onClick={() => handleUpdateSingle()}>
                   Update single
                 </Button>
-                </>): (
-                <Button variant="contained" sx={{marginTop: "20px"}} onClick={() => handleUpdateAll()}>
+                </>): (<>
+                  <Button variant="outlined" disabled={mergedHTML ? false : true} sx={{marginTop: "20px"}} onClick={() => setMergedHTML(null)}>
+                  Clear
+                </Button>
+                <Button variant="contained" disabled={mergedHTML ? false : true} sx={{marginTop: "20px"}} onClick={() => handleUpdateAll()}>
                   Update all
                 </Button>
-              )
+                </>)
             }
             
           </FormControl>
