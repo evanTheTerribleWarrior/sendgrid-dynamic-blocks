@@ -63,12 +63,8 @@ JWT token
 ## Blog Post
 The below blog post shows the app and the different sections in place, along with technical details
 
-## The application structure
-The below diagram provides a high level overview of the application:
-
 
 ## Considerations
-
 - This is not an official Twilio Sendgrid repository.
 - As this is a personal work, updates will be published at non-standard intervals. You are of course free to take the code and shape as you wish
 
