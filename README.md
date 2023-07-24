@@ -57,8 +57,7 @@ zsh setup-local-diff-port.sh
 ```
 This will effectively use `npm run start` to start the frontend on the standard 3000 port and have it runninng in the background.
 But in `package.json` we added `proxy: http://localhost:3002/` so that all requests are proxied to the same
-port as the functions backend. This is important to be able to use the SameSite cookie that we set for the
-JWT token
+port as the functions backend. This way we can use `credentials: 'same-origin'` when authenticating
 
 ## Blog Post
 The below blog post shows the app and the different sections in place, along with technical details
