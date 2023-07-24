@@ -177,7 +177,7 @@ import { useNavigate } from 'react-router-dom';
             <MenuIcon />
           </IconButton>
           <Typography variant="h6" noWrap component="div">
-            Sendgrid Template Block Generator
+            SendGrid Template Block Generator
           </Typography>
         </Toolbar>
       </AppBar>
