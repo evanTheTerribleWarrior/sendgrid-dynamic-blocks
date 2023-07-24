@@ -7,7 +7,7 @@ import SectionHeader from '../SectionHeader/SectionHeader'
 
 const sectionHeaderContent = {
   title: "Update Your Templates",
-  subtitle: "Here you can update your Sendgrid templates with a Dynamic Block you have created"
+  subtitle: "Here you can update your SendGrid templates with a Dynamic Block you have created"
 }
 
 
