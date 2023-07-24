@@ -26,7 +26,7 @@ const segmentWebVitals = store.getState().segmentWebVitals.segmentWebVitals;
     
 const sendToSegment = (metrics) => {
   if (analytics){
-    analytics.track('Sendgrid Dynamic Blocks - App Performance', metrics)
+    analytics.track('SendGrid Dynamic Blocks - App Performance', metrics)
   }  
 }
       
