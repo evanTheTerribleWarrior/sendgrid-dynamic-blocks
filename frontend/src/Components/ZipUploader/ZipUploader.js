@@ -328,7 +328,7 @@ const ZipUploader = () => {
             checked={uploadLocalImages}
             onChange={(e) => setUploadLocalImages(e.target.checked)}
           />
-          <Tooltip title="If enabled, we will upload all the local images of the relevant folder to the Sendgrid CDN and use that public URL to update the image URL so they are accessible by Sendgrid Editor. The processing time will be longer">
+          <Tooltip title="If enabled, we will upload all the local images of the relevant folder to the SendGrid CDN and use that public URL to update the image URL so they are accessible by SendGrid Editor. The processing time will be longer">
             <IconButton>
               <HelpOutline />
             </IconButton>
