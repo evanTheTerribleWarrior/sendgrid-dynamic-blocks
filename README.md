@@ -1,18 +1,18 @@
-# Sendgrid Dynamic Blocks
+# SendGrid Dynamic Blocks
 
-Build re-usable component blocks, and update multiple Sendgrid templates at once!
+Build re-usable component blocks, and update multiple SendGrid templates at once!
 
 ![Application screenshot](https://github.com/evanTheTerribleWarrior/sendgrid-dynamic-blocks/assets/54394422/efec0910-a5b3-4ab1-ac0e-4d1a1f5e1775)
 
 ## Key features
- * Create blocks based on Sendgrid drag-and-drop compatible code and components
+ * Create blocks based on SendGrid drag-and-drop compatible code and components
  * Save your collection of blocks and fully manage the collection structure
- * Ability to import existing blocks created on Sendgrid Design Editor
+ * Ability to import existing blocks created on SendGrid Design Editor
  * Export/Import your collections
- * Easy to use interface to update multiple Sendgrid templates with your dynamic block
+ * Easy to use interface to update multiple SendGrid templates with your dynamic block
  * Upload your zip file with the HTML/CSS/IMG structure and automatically create a template out of it
  * Local storage to persist your collections on the browser
- * Twilio Functions middleware to call the Sendgrid APIs and therefore avoid exposing SG API Keys within the app
+ * Twilio Functions middleware to call the SendGrid APIs and therefore avoid exposing SG API Keys within the app
  * Authentication via JWT tokens and httpOnly cookies
  * (Optional) Segment CDP integration to send Web Vitals - or add your own metrics!
 
@@ -20,7 +20,7 @@ Build re-usable component blocks, and update multiple Sendgrid templates at once
 ## Pre-requisites
 1. Install the [Twilio CLI](https://www.twilio.com/docs/twilio-cli/quickstart#install-twilio-cli)
 2. Install the [serverless toolkit](https://www.twilio.com/docs/labs/serverless-toolkit/getting-started)
-3. Create a [Sendgrid API Key](https://docs.sendgrid.com/ui/account-and-settings/api-keys). You don't need to give it full permissions. `Template Engine` should be enough
+3. Create a [SendGrid API Key](https://docs.sendgrid.com/ui/account-and-settings/api-keys). You don't need to give it full permissions. `Template Engine` should be enough
 4. (Optional) Create a [Segment CDP Source](https://segment.com/docs/connections/sources/catalog/libraries/website/javascript/quickstart) If you want to send data like Web Vitals to Segment CDP, create a Javascript Source - we will use the Write Key below
 
 ## Setup
@@ -64,7 +64,7 @@ The below blog post shows the app and the different sections in place, along wit
 
 
 ## Considerations
-- This is not an official Twilio Sendgrid repository.
+- This is not an official Twilio SendGrid repository.
 - As this is a personal work, updates will be published at non-standard intervals. You are of course free to take the code and shape as you wish
 
 ## Limitations
