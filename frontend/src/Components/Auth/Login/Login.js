@@ -51,7 +51,7 @@ const Login = () => {
       <div style={centerStyles}>
     <Container maxWidth="xs">
       <Typography variant="h4" align="center" gutterBottom>
-        Sendgrid Dynamic Blocks
+        SendGrid Dynamic Blocks
       </Typography>
       <form onSubmit={handleFormSubmit}>
         <TextField
