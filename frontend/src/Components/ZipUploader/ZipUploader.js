@@ -11,7 +11,7 @@ import { uploadImageBase64, createNewTemplate } from '../../Utils/functions';
 
 const sectionHeaderContent = {
     title: "Upload your HTML",
-    subtitle: "Here you can upload a .zip file with your own html content and css / image folders so that it can be uploaded to Sendgrid"
+    subtitle: "Here you can upload a .zip file with your own html content and css / image folders so that it can be uploaded to SendGrid"
   }
 
 const fileUploadStyle = {
