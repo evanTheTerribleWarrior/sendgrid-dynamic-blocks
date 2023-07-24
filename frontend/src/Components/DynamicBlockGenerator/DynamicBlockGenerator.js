@@ -9,7 +9,7 @@ import SectionHeader from '../SectionHeader/SectionHeader'
 
 const sectionHeaderContent = {
   title: "Build Your Block",
-  subtitle: "Here you can build your Sendgrid block. Use Conditions like if..else and Components like images and text. Finally save to your library"
+  subtitle: "Here you can build your SendGrid block. Use Conditions like if..else and Components like images and text. Finally save to your library"
 }
 
 const DynamicBlockGenerator = () => {
