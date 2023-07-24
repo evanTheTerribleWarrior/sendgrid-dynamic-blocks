@@ -27,7 +27,7 @@ Build re-usable component blocks, and update multiple SendGrid templates at once
 - Clone the repository and `cd` into it:
 ```shell
 git clone https://github.com/evanTheTerribleWarrior/sendgrid-dynamic-blocks.git
-cd sendgrid-dynamic-blocks
+cd sendgrid-dynamic-blocks/serverless
 ```
 
 - Create .env file and set the SG_API_KEY env variable with the SG Key you created. Also add USERNAME, PASSWORD, JWT_SECRET that are used for authentication. Make them hard to guess if you deploy this!
