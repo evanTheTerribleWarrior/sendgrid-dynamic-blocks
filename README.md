@@ -27,10 +27,16 @@ Build re-usable component blocks, and update multiple SendGrid templates at once
 - Clone the repository and `cd` into it:
 ```shell
 git clone https://github.com/evanTheTerribleWarrior/sendgrid-dynamic-blocks.git
-cd sendgrid-dynamic-blocks/serverless
+cd sendgrid-dynamic-blocks
 ```
 
-- Create .env file and set the SG_API_KEY env variable with the SG Key you created. Also add USERNAME, PASSWORD, JWT_SECRET that are used for authentication. Make them hard to guess if you deploy this!
+- Go to `frontend` directory and run `npm install`:
+```shell
+cd frontend
+npm install
+```
+
+- Go to `serverless` directory and create .env file and set the SG_API_KEY env variable with the SG Key you created. Also add USERNAME, PASSWORD, JWT_SECRET that are used for authentication. Make them hard to guess if you deploy this!
 Optionally, if you want to send Web Vitals to Segment CDP, add your Segment JS Write Key
 ```shell
 cp .env.example .env
