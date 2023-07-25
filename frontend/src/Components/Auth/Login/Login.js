@@ -49,7 +49,7 @@ const Login = () => {
   return (
     <div style={containerStyles}>
       <div style={centerStyles}>
-    <Container maxWidth="xs">
+    <Container>
       <Typography variant="h4" align="center" gutterBottom>
         SendGrid Dynamic Blocks
       </Typography>
