@@ -69,6 +69,7 @@ port as the functions backend. This way we can use `credentials: 'same-origin'` 
 
 ## Blog Post
 The below blog post shows the app and the different sections in place, along with technical details
+https://www.twilio.com/en-us/blog/sendgrid-dynamic-blocks-react-app
 
 
 ## Considerations
